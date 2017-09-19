@@ -2,10 +2,54 @@
 from django.db import models
 
 
+class User(models.Model):
+    name = models.CharField(max_length=50, primary_key=True)
+
+    class Meta:
+        ordering = ('name',)
+
+    def __str__(self):
+        return self.name
+
+
+class Author(models.Model):
+    user = models.ForeignKey(User)
+    question_set = models.ForeignKey('QuestionSet')
+
+    class Meta:
+        ordering = ('user',)
+
+    def __str__(self):
+        return 'Автор: {}'.format(self.user)
+
+
+class Respondent(models.Model):
+    user = models.ForeignKey(User)
+    question_set = models.ForeignKey('QuestionSet')
+
+    class Meta:
+        ordering = ('user',)
+
+    def __str__(self):
+        return 'Респондент: {}'.format(self.user)
+
+
+class QuestionSet(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ('-created', 'author')
+
+    def __str__(self):
+        return 'Автор теста: {}'.format(self.author)
+
+
 class Question(models.Model):
     question = models.CharField(max_length=255)
     ordering = models.PositiveSmallIntegerField(default=1, unique=True)
-    tests = models.ManyToManyField('Test')
+    question_sets = models.ManyToManyField(QuestionSet)
 
     class Meta:
         ordering = ('ordering',)
@@ -14,9 +58,9 @@ class Question(models.Model):
         return self.question
 
 
-class Answer(models.Model):
-    answer = models.CharField(max_length=255)
+class Option(models.Model):
     question = models.ForeignKey(Question)
+    value = models.CharField(max_length=255)
     ordering = models.PositiveSmallIntegerField(default=1, unique=True)
     is_correct = models.BooleanField()
 
@@ -24,55 +68,15 @@ class Answer(models.Model):
         ordering = ('ordering',)
 
     def __str__(self):
-        return self.answer
+        return self.value
 
 
-class Test(models.Model):
-    author = models.ForeignKey('Author', on_delete=models.CASCADE)
-    name = models.CharField(max_length=255)
-    created = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        ordering = ('-created', 'author')
-
-    def __str__(self):
-        return self.author
-
-
-class Author(models.Model):
-    name = models.CharField(max_length=50, primary_key=True)
+class Submission(models.Model):
+    respondent = models.ForeignKey(User)
+    option = models.OneToOneField(Option, on_delete=models.CASCADE)
 
     class Meta:
-        ordering = ('name',)
+        ordering = ('respondent', 'option')
 
     def __str__(self):
-        return self.name
-
-
-class Respondent(models.Model):
-    name = models.CharField(max_length=50, primary_key=True)
-    tests = models.ManyToManyField(Test)
-
-    class Meta:
-        ordering = ('name',)
-
-    def __str__(self):
-        return self.name
-
-
-class Grade(models.Model):
-    grade = models.PositiveSmallIntegerField(default=0)
-    test = models.ForeignKey(Test)
-    respondent = models.ForeignKey(Respondent)
-
-    class Meta:
-        ordering = ('respondent', 'grade')
-
-    def __str__(self):
-        return '{}, {}, {}'.format(self.respondent, self.test, self.grade)
-
-
-class RespondentAnswer(models.Model):
-    respondent = models.ForeignKey(Respondent)
-    answer = models.OneToOneField(Answer, on_delete=models.CASCADE)
-    is_correct = models.BooleanField()
+        return '{} {}'.format(self.respondent, self.option)
