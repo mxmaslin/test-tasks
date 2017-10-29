@@ -3,7 +3,7 @@ from django.db import models
 
 
 class User(models.Model):
-    name = models.CharField(max_length=50, primary_key=True)
+    name = models.CharField(max_length=20, primary_key=True)
 
     class Meta:
         ordering = ('name',)
@@ -13,6 +13,9 @@ class User(models.Model):
 
 
 class Author(models.Model):
+    '''
+        Чувак, который создаёт тесты
+    '''
     user = models.ForeignKey(User)
     question_set = models.ForeignKey('QuestionSet')
 
@@ -24,6 +27,9 @@ class Author(models.Model):
 
 
 class Respondent(models.Model):
+    '''
+        Чувак, который проходит тестирование
+    '''
     user = models.ForeignKey(User)
     question_set = models.ForeignKey('QuestionSet')
 
@@ -35,6 +41,10 @@ class Respondent(models.Model):
 
 
 class QuestionSet(models.Model):
+    '''
+        Тест. Состоит из нескольких вопросов
+    '''
+
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     created = models.DateTimeField(auto_now_add=True)
@@ -47,6 +57,10 @@ class QuestionSet(models.Model):
 
 
 class Question(models.Model):
+    '''
+        Является 'атомом' теста
+    '''
+
     question = models.CharField(max_length=255)
     ordering = models.PositiveSmallIntegerField(default=1, unique=True)
     question_sets = models.ManyToManyField(QuestionSet)
@@ -59,6 +73,9 @@ class Question(models.Model):
 
 
 class Option(models.Model):
+    '''
+        Вариант ответа на вопрос
+    '''
     question = models.ForeignKey(Question)
     value = models.CharField(max_length=255)
     ordering = models.PositiveSmallIntegerField(default=1, unique=True)
@@ -72,6 +89,9 @@ class Option(models.Model):
 
 
 class Submission(models.Model):
+    '''
+        Ответ респондента на вопрос теста
+    '''
     respondent = models.ForeignKey(User)
     option = models.OneToOneField(Option, on_delete=models.CASCADE)
 
