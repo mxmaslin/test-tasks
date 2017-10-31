@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -23,7 +24,7 @@ class User(AbstractUser):
 
     def __str__(self):
         role = ROLE_CHOICES[self.role][1]
-        return '{}: {}'.format(role, self.user)
+        return '{}: {}'.format(role, self.name)
 
 
 class QuestionSet(models.Model):
@@ -31,7 +32,9 @@ class QuestionSet(models.Model):
         Тест. Состоит из нескольких вопросов
     '''
 
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     created = models.DateTimeField(auto_now_add=True)
 
@@ -62,7 +65,9 @@ class Option(models.Model):
     '''
         Вариант ответа на вопрос
     '''
-    question = models.ForeignKey(Question)
+    question = models.ForeignKey(
+        Question,
+        on_delete=models.CASCADE)
     value = models.CharField(max_length=255)
     ordering = models.PositiveSmallIntegerField(default=1, unique=True)
     is_correct = models.BooleanField()
@@ -78,8 +83,10 @@ class Submission(models.Model):
     '''
         Ответ респондента на вопрос теста
     '''
-    respondent = models.ForeignKey(User)
-    option = models.OneToOneField(Option, on_delete=models.CASCADE)
+    respondent = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE)
+    option = models.OneToOneField(Option)
 
     class Meta:
         ordering = ('respondent', 'option')
