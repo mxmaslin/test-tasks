@@ -1,43 +1,29 @@
 # -*- coding: utf-8 -*-
+from django.contrib.auth.models import AbstractBaseUser
 from django.db import models
 
 
-class User(models.Model):
+class User(AbstractBaseUser):
+    '''
+        Автор/респондент
+    '''
+    ROLE_AUTHOR = 0
+    ROLE_RESPONDENT = 1
+
+    ROLE_CHOICES = (
+        (ROLE_AUTHOR, 'Автор'),
+        (ROLE_RESPONDENT, 'Респондент'))
+
     name = models.CharField(max_length=20, primary_key=True)
+    role = models.IntegerField(choices=ROLE_CHOICES, default=ROLE_RESPONDENT)
+    question_set = models.ForeignKey('QuestionSet')
 
     class Meta:
         ordering = ('name',)
 
     def __str__(self):
-        return self.name
-
-
-class Author(models.Model):
-    '''
-        Чувак, который создаёт тесты
-    '''
-    user = models.ForeignKey(User)
-    question_set = models.ForeignKey('QuestionSet')
-
-    class Meta:
-        ordering = ('user',)
-
-    def __str__(self):
-        return 'Автор: {}'.format(self.user)
-
-
-class Respondent(models.Model):
-    '''
-        Чувак, который проходит тестирование
-    '''
-    user = models.ForeignKey(User)
-    question_set = models.ForeignKey('QuestionSet')
-
-    class Meta:
-        ordering = ('user',)
-
-    def __str__(self):
-        return 'Респондент: {}'.format(self.user)
+        role = ROLE_CHOICES[self.role][1]
+        return '{}: {}'.format(role, self.user)
 
 
 class QuestionSet(models.Model):
