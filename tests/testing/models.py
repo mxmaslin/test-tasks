@@ -5,7 +5,7 @@ from django.db import models
 
 class User(AbstractBaseUser):
     '''
-        Автор/респондент
+        Автор либо респондент
     '''
     ROLE_AUTHOR = 0
     ROLE_RESPONDENT = 1
