@@ -86,7 +86,7 @@ class Submission(models.Model):
     respondent = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE)
-    option = models.OneToOneField(Option)
+    option = models.ForeignKey(Option)
 
     class Meta:
         ordering = ('respondent', 'option')
