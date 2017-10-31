@@ -1,11 +1,31 @@
 # -*- coding: utf-8 -*-
 from rest_framework import serializers
 
+from .models import User
+from .models import QuestionSet
 from .models import Question
-from .models import Answer
-from .models import Test
-from .models import Author
-from .models import Respondent
+from .models import Option
+from .models import Submission
+
+
+class UserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = (
+                    'name',
+                    'role',
+                    'question_set')
+
+
+class QuestionSetSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = QuestionSet
+        fields = (
+                    'author',
+                    'name',
+                    'created')
 
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -15,41 +35,24 @@ class QuestionSerializer(serializers.ModelSerializer):
         fields = (
                     'question',
                     'ordering',
-                    'tests')
+                    'question_sets')
 
 
-class AnswerSerializer(serializers.ModelSerializer):
+class OptionSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Answer
+        model = Option
         fields = (
-                    'answer',
                     'question',
+                    'value',
                     'ordering',
                     'is_correct')
 
 
-class TestSerializer(serializers.ModelSerializer):
+class SubmissionSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Test
+        model = Submission
         fields = (
-                    'author',
-                    'created')
-
-
-class AuthorSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Author
-        fields = (
-                    'name',)
-
-
-class RespondentSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Respondent
-        fields = (
-                    'name',
-                    'tests')
+                    'respondent',
+                    'option')

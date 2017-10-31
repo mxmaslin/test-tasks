@@ -4,27 +4,126 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from .models import User
+from .models import QuestionSet
 from .models import Question
-from .models import Answer
-from .models import Test
-from .models import Author
-from .models import Respondent
-from .models import Grade
+from .models import Option
+from .models import Submission
 
+from .serializers import UserSerializer
+from .serializers import QuestionSetSerializer
 from .serializers import QuestionSerializer
-from .serializers import AnswerSerializer
-from .serializers import TestSerializer
-from .serializers import AuthorSerializer
-from .serializers import RespondentSerializer
+from .serializers import OptionSerializer
+from .serializers import SubmissionSerializer
 
+#############################################################
+# <User>
+
+
+class UserList(APIView):
+    '''
+        List all users, or create a new user
+    '''
+    def get(self, request, format=None):
+        users = User.objects.all()
+        serializer = UserSerializer(users, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserDetail(APIView):
+    '''
+        Retrieve, update or delete an user instance
+    '''
+    def get_object(self, pk):
+        try:
+            return User.objects.get(pk=pk)
+        except User.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        user = self.get_object(pk)
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        user = self.get_object(pk)
+        serializer = UserSerializer(user, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        user = self.get_object(pk)
+        user.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+# </User>
+#############################################################
+# <QuestionSet>
+
+
+class QuestionSetList(APIView):
+    """
+        List all questionsets, or create a new question sets
+    """
+    def get(self, request, format=None):
+        question_sets = QuestionSet.objects.all()
+        serializer = QuestionSetSerializer(question_sets, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = QuestionSetSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class QuestionSetDetail(APIView):
+    """
+        Retrieve, update or delete a question set instance
+    """
+    def get_object(self, pk):
+        try:
+            return QuestionSet.objects.get(pk=pk)
+        except QuestionSet.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        question_set = self.get_object(pk)
+        serializer = QuestionSetSerializer(question_set)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        question_set = self.get_object(pk)
+        serializer = QuestionSetSerializer(question_set, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        question_set = self.get_object(pk)
+        question_set.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+# </QuestionSet>
 #############################################################
 # <Question>
 
 
 class QuestionList(APIView):
-    """
-    List all questions, or create a new question.
-    """
+    '''
+        List all questions, or create a new question
+    '''
     def get(self, request, format=None):
         questions = Question.objects.all()
         serializer = QuestionSerializer(questions, many=True)
@@ -39,9 +138,9 @@ class QuestionList(APIView):
 
 
 class QuestionDetail(APIView):
-    """
-    Retrieve, update or delete a question instance.
-    """
+    '''
+        Retrieve, update or delete a question instance
+    '''
     def get_object(self, pk):
         try:
             return Question.objects.get(pk=pk)
@@ -68,203 +167,103 @@ class QuestionDetail(APIView):
 
 # </Question>
 #############################################################
-# <Answer>
+# <Option>
 
 
-class AnswerList(APIView):
-    """
-    List all answers, or create a new answer.
-    """
+class OptionList(APIView):
+    '''
+        List all options, or create a new option
+    '''
     def get(self, request, format=None):
-        answer = Answer.objects.all()
-        serializer = AnswerSerializer(answers, many=True)
+        options = Option.objects.all()
+        serializer = OptionSerializer(options, many=True)
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        serializer = AnswerSerializer(data=request.data)
+        serializer = OptionSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class AnswerDetail(APIView):
-    """
-    Retrieve, update or delete a answer instance.
-    """
+class OptionDetail(APIView):
+    '''
+        Retrieve, update or delete an option instance.
+    '''
     def get_object(self, pk):
         try:
-            return Answer.objects.get(pk=pk)
-        except Answer.DoesNotExist:
+            return Option.objects.get(pk=pk)
+        except Option.DoesNotExist:
             raise Http404
 
     def get(self, request, pk, format=None):
-        answer = self.get_object(pk)
-        serializer = AnswerSerializer(answer)
+        option = self.get_object(pk)
+        serializer = OptionSerializer(option)
         return Response(serializer.data)
 
     def put(self, request, pk, format=None):
-        answer = self.get_object(pk)
-        serializer = AnswerSerializer(answer, data=request.data)
+        option = self.get_object(pk)
+        serializer = OptionSerializer(option, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format=None):
-        answer = self.get_object(pk)
-        answer.delete()
+        option = self.get_object(pk)
+        option.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-# </Answer>
+# </Option>
 #############################################################
-# <Test>
+# <Submission>
 
 
-class TestList(APIView):
-    """
-    List all tests, or create a new test.
-    """
+class SubmissionList(APIView):
+    '''
+        List all submissions, or create a new submission
+    '''
     def get(self, request, format=None):
-        tests = Test.objects.all()
-        serializer = TestSerializer(tests, many=True)
+        submissions = Submission.objects.all()
+        serializer = SubmissionSerializer(submissions, many=True)
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        serializer = TestSerializer(data=request.data)
+        serializer = SubmissionSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class TestDetail(APIView):
-    """
-    Retrieve, update or delete a test instance.
-    """
+class SubmissionDetail(APIView):
+    '''
+        Retrieve, update or delete a submission instance.
+    '''
     def get_object(self, pk):
         try:
-            return Test.objects.get(pk=pk)
-        except Test.DoesNotExist:
+            return Submission.objects.get(pk=pk)
+        except Submission.DoesNotExist:
             raise Http404
 
     def get(self, request, pk, format=None):
-        test = self.get_object(pk)
-        serializer = TestSerializer(answer)
+        submission = self.get_object(pk)
+        serializer = RespondentSerializer(submission)
         return Response(serializer.data)
 
     def put(self, request, pk, format=None):
-        test = self.get_object(pk)
-        serializer = TestSerializer(test, data=request.data)
+        submission = self.get_object(pk)
+        serializer = SubmissionSerializer(submission, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format=None):
-        answer = self.get_object(pk)
-        answer.delete()
+        submission = self.get_object(pk)
+        submission.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-# </Test>
-#############################################################
-# <Author>
-
-
-class AuthorList(APIView):
-    """
-    List all authors, or create a new author.
-    """
-    def get(self, request, format=None):
-        authors = Author.objects.all()
-        serializer = AuthorSerializer(authors, many=True)
-        return Response(serializer.data)
-
-    def post(self, request, format=None):
-        serializer = AuthorSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class AuthorDetail(APIView):
-    """
-    Retrieve, update or delete an author instance.
-    """
-    def get_object(self, pk):
-        try:
-            return Author.objects.get(pk=pk)
-        except Author.DoesNotExist:
-            raise Http404
-
-    def get(self, request, pk, format=None):
-        author = self.get_object(pk)
-        serializer = AuthorSerializer(answer)
-        return Response(serializer.data)
-
-    def put(self, request, pk, format=None):
-        author = self.get_object(pk)
-        serializer = AuthorSerializer(answer, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk, format=None):
-        author = self.get_object(pk)
-        author.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-# </Author>
-#############################################################
-# <Respondent>
-
-
-class RespondentList(APIView):
-    """
-    List all respondents, or create a new respondent.
-    """
-    def get(self, request, format=None):
-        respondents = Respondent.objects.all()
-        serializer = RespondentSerializer(respondents, many=True)
-        return Response(serializer.data)
-
-    def post(self, request, format=None):
-        serializer = RespondentSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class RespondentDetail(APIView):
-    """
-    Retrieve, update or delete a respondent instance.
-    """
-    def get_object(self, pk):
-        try:
-            return Respondent.objects.get(pk=pk)
-        except Respondent.DoesNotExist:
-            raise Http404
-
-    def get(self, request, pk, format=None):
-        respondent = self.get_object(pk)
-        serializer = RespondentSerializer(answer)
-        return Response(serializer.data)
-
-    def put(self, request, pk, format=None):
-        respondent = self.get_object(pk)
-        serializer = RespondentSerializer(respondent, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk, format=None):
-        respondent = self.get_object(pk)
-        respondent.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-# </Respondent>
+# </Submission>
 #############################################################
