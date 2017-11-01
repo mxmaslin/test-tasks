@@ -1,4 +1,5 @@
 from django.http import Http404
+from django.http import HttpResponse
 
 from rest_framework import status
 from rest_framework.response import Response
@@ -15,6 +16,31 @@ from .serializers import QuestionSetSerializer
 from .serializers import QuestionSerializer
 from .serializers import OptionSerializer
 from .serializers import SubmissionSerializer
+
+
+def index(request):
+    return HttpResponse("Hello, world. You're at the polls index.")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #############################################################
 # <User>

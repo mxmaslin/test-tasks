@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{% block title %}Сервис тестирования{% endblock title %}</title>
+    </head>
+    <body>
+        {# Navigation Menu #}
+        <header>
+        </header>
+        {# The Document Body #}
+        <div id="wrapper">
+            {% block content %}
+                if you see this, something is wrong!
+            {% endblock content %}
+        </div>
+        {# The Footer #}
+        <div class="footer">
+        </div>
+    </body>
+</html>

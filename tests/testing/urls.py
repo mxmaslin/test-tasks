@@ -25,4 +25,5 @@ urlpatterns = [
     url(r'^submissions/$', views.SubmissionList.as_view()),
     url(r'^submission/(?P<id>\w)/$', views.SubmissionDetail.as_view()),
 
+    url(r'^$', views.index, name='index')
 ]
