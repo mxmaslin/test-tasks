@@ -17,13 +17,13 @@ class User(AbstractUser):
 
     name = models.CharField(max_length=20, primary_key=True)
     role = models.IntegerField(choices=ROLE_CHOICES, default=ROLE_RESPONDENT)
-    question_set = models.ForeignKey('QuestionSet')
+    question_set = models.ForeignKey('QuestionSet', blank=True, null=True)
 
     class Meta:
         ordering = ('name',)
 
     def __str__(self):
-        role = ROLE_CHOICES[self.role][1]
+        role = User.ROLE_CHOICES[self.role][1]
         return '{}: {}'.format(role, self.name)
 
 
@@ -35,7 +35,7 @@ class QuestionSet(models.Model):
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE)
-    name = models.CharField(max_length=255)
+    title = models.CharField(max_length=255)
     created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
