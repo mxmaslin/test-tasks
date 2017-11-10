@@ -5,26 +5,21 @@ from . import views
 
 urlpatterns = (
 
-    # Предложения
-    url(r'^applications/$',
-        views.ApplicationList.as_view()),
-
-    url(r'^applications/(?P<pk>\S+)/$',
-        views.ApplicationDetail.as_view()),
-
-
-    # Анкеты
+    # PartnerAPI
     url(r'^questionnaires/$',
-        views.QuestionnaireList.as_view()),
+        views.PartnerAPI.as_view()),
 
     url(r'^questionnaires/(?P<pk>\S+)/$',
-        views.QuestionnaireDetail.as_view()),
+        views.PartnerAPI.get_by_pk),
+
+    url(r'^questionnaires/submission/$',
+        views.PartnerAPI.post_submission),
 
 
-    # Заявки
+    # BankAPI
     url(r'^submissions/$',
-        views.SubmissionList.as_view()),
+        views.BankAPI.get_submissions),
 
     url(r'^submissions/(?P<pk>\S+)/$',
-        views.SubmissionDetail.as_view())
+        views.BankAPI.get_submission)
 )
