@@ -6,20 +6,62 @@ from .models import Questionnaire
 from .models import Submission
 
 
+@admin.register(Application)
 class ApplicationAdmin(admin.ModelAdmin):
-    pass
-    exclude = ('bank', )
+    list_display = (
+        'application_name',
+        'application_type',
+        'score_min',
+        'score_max',
+        'created',
+        'modified',
+        'rotation_started',
+        'rotation_ended'
+        )
+    search_fields = (
+        'application_name',)
+    list_filter = (
+        'created',
+        'application_type',
+        'score_min',
+        'score_max')
 
-admin.site.register(Application, ApplicationAdmin)
 
-
+@admin.register(Questionnaire)
 class QuestionnaireAdmin(admin.ModelAdmin):
-    pass
+    list_display = (
+        'name',
+        'birthday',
+        'phone',
+        'passport',
+        'score',
+        'created',
+        'modified'
+        )
+    search_fields = (
+        'name',
+        'phone',
+        'passport')
+    list_filter = (
+        'birthday',
+        'created',
+        'score')
 
-admin.site.register(Questionnaire, QuestionnaireAdmin)
 
-
+@admin.register(Submission)
 class SubmissionAdmin(admin.ModelAdmin):
-    pass
-
-admin.site.register(Submission, SubmissionAdmin)
+    list_display = (
+        'application',
+        'questionnaire',
+        'status',
+        'created',
+        'submitted'
+        )
+    search_fields = (
+        'application',
+        'questionnaire')
+    list_filter = (
+        'application',
+        'questionnaire',
+        'status',
+        'created')

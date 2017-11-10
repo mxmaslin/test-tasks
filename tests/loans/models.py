@@ -18,16 +18,35 @@ class Application(models.Model):
         (APPLICATION_CAR, 'Car'),
         (APPLICATION_BUSINESS, 'Business'))
 
-    created = models.DateField(auto_now_add=True)
-    modified = models.DateField(auto_now=True)
-    rotation_started = models.DateField(blank=True, null=True)
-    rotation_ended = models.DateField(blank=True, null=True)
-    applicaton_name = models.CharField(max_length=255)
+    created = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='Дата создания')
+    modified = models.DateTimeField(
+        auto_now=True,
+        verbose_name='Дата изменения')
+    rotation_started = models.DateTimeField(
+        blank=True,
+        null=True,
+        verbose_name='Дата начала ротации')
+    rotation_ended = models.DateTimeField(
+        blank=True,
+        null=True,
+        verbose_name='Дата окончания ротации')
+    application_name = models.CharField(
+        max_length=255,
+        verbose_name='Название предложения')
     application_type = models.PositiveSmallIntegerField(
         choices=APPLICATION_CHOICES,
-        default=APPLICATION_CUSTOMER)
-    score_min = models.PositiveSmallIntegerField(blank=True, null=True)
-    score_max = models.PositiveSmallIntegerField(blank=True, null=True)
+        default=APPLICATION_CUSTOMER,
+        verbose_name='Тип приложения')
+    score_min = models.PositiveSmallIntegerField(
+        blank=True,
+        null=True,
+        verbose_name='Мин. скоринговый балл')
+    score_max = models.PositiveSmallIntegerField(
+        blank=True,
+        null=True,
+        verbose_name='Макс. скоринговый балл')
     # bank = models.ForeignKey('Bank')
 
     class Meta:
@@ -36,7 +55,7 @@ class Application(models.Model):
         verbose_name_plural = 'Предложения по кредитам'
 
     def __str__(self):
-        return '{}'.format(self.applicaton_name, self.modified)
+        return '{}'.format(self.application_name, self.modified)
 
 
 class Questionnaire(models.Model):
@@ -44,13 +63,33 @@ class Questionnaire(models.Model):
         Анкета клиента
     '''
 
-    created = models.DateField(auto_now_add=True)
-    modified = models.DateField(auto_now=True)
-    name = models.CharField(max_length=255)
-    birthday = models.DateField(blank=True, null=True)
-    phone = models.CharField(max_length=10, blank=True, null=True)
-    passport = models.CharField(max_length=255, blank=True, null=True)
-    score = models.PositiveSmallIntegerField(blank=True, null=True)
+    created = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='Дата создания')
+    modified = models.DateTimeField(
+        auto_now=True,
+        verbose_name='Дата изменения')
+    name = models.CharField(
+        max_length=255,
+        verbose_name='ФИО')
+    birthday = models.DateTimeField(
+        blank=True,
+        null=True,
+        verbose_name='Дата рождения')
+    phone = models.CharField(
+        max_length=10,
+        blank=True,
+        null=True,
+        verbose_name='Телефон')
+    passport = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name='Паспорт')
+    score = models.PositiveSmallIntegerField(
+        blank=True,
+        null=True,
+        verbose_name='Скоринговый балл')
 
     class Meta:
         ordering = ('-created',)
@@ -73,13 +112,23 @@ class Submission(models.Model):
         (STATUS_NEW, 'New'),
         (STATUS_SENT, 'Sent'))
 
-    created = models.DateField(auto_now_add=True)
-    submitted = models.DateField(blank=True, null=True)
-    application = models.ForeignKey(Application)
-    questionnaire = models.ForeignKey(Questionnaire)
+    created = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='Дата создания')
+    submitted = models.DateField(
+        blank=True,
+        null=True,
+        verbose_name='Дата отправки')
+    application = models.ForeignKey(
+        Application,
+        verbose_name='Предложение')
+    questionnaire = models.ForeignKey(
+        Questionnaire,
+        verbose_name='Анкета')
     status = models.PositiveSmallIntegerField(
         choices=STATUS_CHOICES,
-        default=STATUS_NEW)
+        default=STATUS_NEW,
+        verbose_name='Статус заявки')
 
     class Meta:
         ordering = ('-created',)
