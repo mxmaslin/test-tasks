@@ -19,7 +19,7 @@ class Application(models.Model):
         (APPLICATION_BUSINESS, 'Business'))
 
     created = models.DateField(auto_now_add=True)
-    modified = models.DateField(auto_add=True)
+    modified = models.DateField(auto_now=True)
     rotation_started = models.DateField(editable=False)
     rotation_ended = models.DateField(editable=False)
     applicaton_name = models.CharField(max_length=255)
@@ -28,7 +28,7 @@ class Application(models.Model):
         default=APPLICATION_CUSTOMER)
     score_min = models.PositiveSmallIntegerField()
     score_max = models.PositiveSmallIntegerField()
-    bank = models.ForeignKey('Bank')
+    # bank = models.ForeignKey('Bank')
 
     class Meta:
         ordering = ('-created',)
@@ -49,7 +49,7 @@ class Questionnaire(models.Model):
     '''
 
     created = models.DateField(auto_now_add=True)
-    modified = models.DateField(auto_add=True)
+    modified = models.DateField(auto_now=True)
     name = models.CharField(max_length=255)
     birthday = models.DateField()
     phone = models.CharField(max_length=10)
