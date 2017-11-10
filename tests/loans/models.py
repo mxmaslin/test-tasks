@@ -33,14 +33,8 @@ class Application(models.Model):
     class Meta:
         ordering = ('-created',)
 
-    def __unicode__(self):
-        return u'%s' % self.pk
-
-    def get_absolute_url(self):
-        return reverse('loans_application_detail', args=(self.pk,))
-
-    def get_update_url(self):
-        return reverse('loans_application_update', args=(self.pk,))
+    def __str__(self):
+        return '{}'.format(self.applicaton_name, self.modified)
 
 
 class Questionnaire(models.Model):
@@ -59,14 +53,8 @@ class Questionnaire(models.Model):
     class Meta:
         ordering = ('-created',)
 
-    def __unicode__(self):
-        return u'%s' % self.pk
-
-    def get_absolute_url(self):
-        return reverse('loans_questionnaire_detail', args=(self.pk,))
-
-    def get_update_url(self):
-        return reverse('loans_questionnaire_update', args=(self.pk,))
+    def __str__(self):
+        return '{}'.format(self.name, self.modified)
 
 
 class Submission(models.Model):
@@ -92,11 +80,5 @@ class Submission(models.Model):
     class Meta:
         ordering = ('-created',)
 
-    def __unicode__(self):
-        return u'%s' % self.pk
-
-    def get_absolute_url(self):
-        return reverse('loans_submission_detail', args=(self.pk,))
-
-    def get_update_url(self):
-        return reverse('loans_submission_update', args=(self.pk,))
+    def __str__(self):
+        return '{}'.format(self.application)

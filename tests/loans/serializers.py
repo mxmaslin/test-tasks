@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+from django.db import models
+
 from rest_framework import serializers
 
 from .models import Application
@@ -26,7 +29,7 @@ class ApplicationSerializer(serializers.ModelSerializer):
 class QuestionnaireSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = models.Questionnaire
+        model = Questionnaire
         fields = (
             'pk',
             'created',
@@ -42,7 +45,7 @@ class QuestionnaireSerializer(serializers.ModelSerializer):
 class SubmissionSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = models.Submission
+        model = Submission
         fields = (
             'pk',
             'created',
