@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.conf.urls import url, include
-from django.contrib import admin
 
-import views
+from . import views
 
 urlpatterns = (
 
@@ -27,9 +26,5 @@ urlpatterns = (
         views.SubmissionList.as_view()),
 
     url(r'^submissions/(?P<pk>\S+)/$',
-        views.SubmissionDetail.as_view()),
-
-
-    # Админка
-    url(r'^admin/', admin.site.urls)
+        views.SubmissionDetail.as_view())
 )
