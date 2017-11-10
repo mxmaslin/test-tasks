@@ -24,7 +24,8 @@ class ApplicationAdmin(admin.ModelAdmin):
         'application_type',
         'score_min',
         'score_max',
-        'bank']
+        #'bank'
+        ]
     readonly_fields = [
         'created',
         'modified',
@@ -34,7 +35,8 @@ class ApplicationAdmin(admin.ModelAdmin):
         'application_type',
         'score_min',
         'score_max',
-        'bank']
+        #'bank'
+        ]
 
 admin.site.register(Application, ApplicationAdmin)
 
