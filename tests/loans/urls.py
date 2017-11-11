@@ -13,7 +13,7 @@ urlpatterns = (
         views.PartnerAPI.get_by_pk),
 
     url(r'^questionnaires/submission/$',
-        views.PartnerAPI.post_submission),
+        views.PartnerAPI.submit),
 
 
     # BankAPI

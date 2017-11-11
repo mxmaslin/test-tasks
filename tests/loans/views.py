@@ -20,6 +20,7 @@ class PartnerAPI(APIView):
     def get(self, request, format=None):
         '''
             Получение списка анкет
+            http GET http://127.0.0.1:8000/api/loans/questionnaires/
         '''
         questionnaires = Questionnaire.objects.all()
         serializer = QuestionnaireSerializer(questionnaires, many=True)
@@ -30,6 +31,7 @@ class PartnerAPI(APIView):
     def get_by_pk(request, pk):
         '''
             Получение определённой анкеты
+            http GET http://127.0.0.1:8000/api/loans/questionnaires/1/
         '''
         try:
             questionnaire = Questionnaire.objects.get(pk=pk)
@@ -41,6 +43,7 @@ class PartnerAPI(APIView):
     def post(self, request, format=None):
         '''
             Создание анкеты
+            http POST http://127.0.0.1:8000/api/loans/questionnaires/ <<< '{"name": "Давид Соломонович", "birthday": "2017-05-30", "passport": "abc123", "phone": "130-19-32", "score": 5}'
         '''
         serializer = QuestionnaireSerializer(data=request.data)
         if serializer.is_valid():
@@ -50,9 +53,10 @@ class PartnerAPI(APIView):
 
     @staticmethod
     @api_view(['POST'])
-    def post_submission(request, format=None):
+    def submit(request, format=None):
         '''
             Отправка заявки в кредитную организацию
+            http POST http://127.0.0.1:8000/api/loans/questionnaires/submission/ <<< '{"application": 2, "questionnaire": 1, "status": 1, "created": "2017-11-10T18:23:16.913526Z", "submitted": "2017-11-10T18:23:16.913526Z"}'
         '''
         serializer = SubmissionSerializer(data=request.data)
         if serializer.is_valid():
@@ -68,6 +72,7 @@ class BankAPI:
     def get_submissions(request):
         '''
             Получение списка заявок
+            http GET http://127.0.0.1:8000/api/loans/submissions/
         '''
         submissions = Submission.objects.all()
         serializer = SubmissionSerializer(submissions, many=True)
@@ -78,6 +83,7 @@ class BankAPI:
     def get_submission(request, pk):
         '''
             Получение определённой заявки
+            http GET http://127.0.0.1:8000/api/loans/submissions/1/
         '''
         try:
             submission = Submission.objects.get(pk=pk)

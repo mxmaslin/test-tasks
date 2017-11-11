@@ -72,7 +72,7 @@ class Questionnaire(models.Model):
     name = models.CharField(
         max_length=255,
         verbose_name='ФИО')
-    birthday = models.DateTimeField(
+    birthday = models.DateField(
         blank=True,
         null=True,
         verbose_name='Дата рождения')
@@ -115,7 +115,7 @@ class Submission(models.Model):
     created = models.DateTimeField(
         auto_now_add=True,
         verbose_name='Дата создания')
-    submitted = models.DateField(
+    submitted = models.DateTimeField(
         blank=True,
         null=True,
         verbose_name='Дата отправки')
