@@ -18,7 +18,7 @@ class ApplicationSerializer(serializers.ModelSerializer):
             'modified',
             'rotation_started',
             'rotation_ended',
-            'applicaton_name',
+            'application_name',
             'application_type',
             'score_min',
             'score_max',
@@ -43,6 +43,9 @@ class QuestionnaireSerializer(serializers.ModelSerializer):
 
 
 class SubmissionSerializer(serializers.ModelSerializer):
+
+    application = ApplicationSerializer(read_only=True)
+    questionnaire = QuestionnaireSerializer(read_only=True)
 
     class Meta:
         model = Submission

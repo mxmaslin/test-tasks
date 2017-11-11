@@ -56,7 +56,7 @@ class PartnerAPI(APIView):
     def submit(request, format=None):
         '''
             Отправка заявки в кредитную организацию
-            http POST http://127.0.0.1:8000/api/loans/questionnaires/submission/ <<< '{"application": 2, "questionnaire": 1, "status": 1, "created": "2017-11-10T18:23:16.913526Z", "submitted": "2017-11-10T18:23:16.913526Z"}'
+            http POST http://127.0.0.1:8000/api/loans/questionnaires/submit/ <<< '{"application": 1, "questionnaire": 1, "status": 1, "created": "2017-11-10T18:23:16.913526Z", "submitted": "2017-11-10T18:23:16.913526Z"}'
         '''
         serializer = SubmissionSerializer(data=request.data)
         if serializer.is_valid():

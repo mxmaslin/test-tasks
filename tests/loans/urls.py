@@ -6,15 +6,15 @@ from . import views
 urlpatterns = (
 
     # PartnerAPI
+
+    url(r'^questionnaires/submit/$',
+        views.PartnerAPI.submit),
+
     url(r'^questionnaires/$',
         views.PartnerAPI.as_view()),
 
     url(r'^questionnaires/(?P<pk>\S+)/$',
         views.PartnerAPI.get_by_pk),
-
-    url(r'^questionnaires/submission/$',
-        views.PartnerAPI.submit),
-
 
     # BankAPI
     url(r'^submissions/$',
