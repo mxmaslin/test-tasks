@@ -17,10 +17,24 @@ from .serializers import SubmissionSerializer
 
 class PartnerAPI(APIView):
 
+    search_fields = ('name', 'phone', 'passport')
+    ordering_fields = ('created', 'modified', 'birthday', 'score')
+
     def get(self, request, format=None):
         '''
             Получение списка анкет
             http GET http://127.0.0.1:8000/api/loans/questionnaires/
+
+            Поиск среди анкет по критерию:
+            - имя: http GET http://127.0.0.1:8000/api/loans/questionnaires/
+            - phone: http GET http://127.0.0.1:8000/api/loans/questionnaires/
+            - passport: http GET http://127.0.0.1:8000/api/loans/questionnaires/
+
+            Получение отсортированного списка анкет по критерию:
+            - created: http GET http://127.0.0.1:8000/api/loans/questionnaires/
+            - modified: http GET http://127.0.0.1:8000/api/loans/questionnaires/
+            - birthday: http GET http://127.0.0.1:8000/api/loans/questionnaires/
+            - score: http GET http://127.0.0.1:8000/api/loans/questionnaires/
         '''
         questionnaires = Questionnaire.objects.all()
         serializer = QuestionnaireSerializer(questionnaires, many=True)
@@ -67,12 +81,27 @@ class PartnerAPI(APIView):
 
 class BankAPI:
 
+    filter_fields = ('status',)
+    search_fields = ('application', 'questionnaire')
+    ordering_fields = ('created', 'submitted')
+
     @staticmethod
     @api_view(['GET'])
     def get_submissions(request):
         '''
             Получение списка заявок
             http GET http://127.0.0.1:8000/api/loans/submissions/
+
+            Получение отфильтрованного списка заявок по критерию:
+            - status: http GET http://127.0.0.1:8000/api/loans/submissions/
+
+            Поиск среди заявок по критерию:
+            - application: http GET http://127.0.0.1:8000/api/loans/submissions/
+            - questionnaire: http GET http://127.0.0.1:8000/api/loans/submissions/
+
+            Получение отсортированного списка анкет по критерию:
+            - created: http GET http://127.0.0.1:8000/api/loans/submissions/
+            - submitted: http GET http://127.0.0.1:8000/api/loans/submissions/
         '''
         submissions = Submission.objects.all()
         serializer = SubmissionSerializer(submissions, many=True)
