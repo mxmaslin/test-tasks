@@ -8,19 +8,20 @@ urlpatterns = (
 
     # PartnerAPI
 
-    # url(r'^questionnaires/submit/$',
-    #     views.PartnerAPI.submit),
+    url(r'^questionnaires/submit/$',
+        views.submit),
 
     url(r'^questionnaires/$',
         views.PartnerAPI.as_view()),
 
     url(r'^questionnaires/(?P<pk>\S+)/$',
-        views.PartnerAPI.as_view()),
+        views.PartnerAPI.get_by_pk),
+
 
 
     # BankAPI
     url(r'^submissions/$',
-        views.BankAPI.get_submissions),
+        views.BankAPI.as_view()),
 
     url(r'^submissions/(?P<pk>\S+)/$',
         views.BankAPI.get_submission)
