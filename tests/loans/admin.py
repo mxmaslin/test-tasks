@@ -1,9 +1,9 @@
 from django.contrib import admin
-from django import forms
 
-from .models import Application
-from .models import Questionnaire
-from .models import Submission
+from .models import (
+    Application,
+    Questionnaire,
+    Submission)
 
 
 @admin.register(Application)

@@ -3,9 +3,10 @@ from django.db import models
 
 from rest_framework import serializers
 
-from .models import Application
-from .models import Questionnaire
-from .models import Submission
+from .models import (
+    Application,
+    Questionnaire,
+    Submission)
 
 
 class ApplicationSerializer(serializers.ModelSerializer):
