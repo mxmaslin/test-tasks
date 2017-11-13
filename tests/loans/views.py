@@ -62,9 +62,11 @@ class PartnerAPI(generics.ListCreateAPIView):
 
     @staticmethod
     @api_view(['POST'])
-    def submit(request, format=None):
-        serializer = QuestionnaireSerializer(data=request.data)
+    def submit(request):
+        serializer = SubmissionSerializer(data=request.data)
         if serializer.is_valid():
+            print(request.data)
+            print(serializer.validated_data)
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -75,7 +77,7 @@ class BankAPI(generics.ListAPIView):
     queryset = Submission.objects.all()
     serializer_class = SubmissionSerializer
     filter_fields = ('status',)
-    search_fields = ('application', 'questionnaire')
+    search_fields = ('application__application_name', 'questionnaire__name')
     ordering_fields = ('created', 'submitted')
 
     '''
@@ -86,13 +88,13 @@ class BankAPI(generics.ListAPIView):
         http GET http://127.0.0.1:8000/api/loans/submissions/?status=0
 
         Поиск среди заявок по одному из критериев (application, questionnaire):
-        http GET http://127.0.0.1:8000/api/loans/submissions/?=
+        http GET http://127.0.0.1:8000/api/loans/submissions/?=Моё
 
         Получение отсортированного списка анкет по одному из критериев (created, submitted):
         http GET http://127.0.0.1:8000/api/loans/submissions/?ordering=created
 
         Получение определённой заявки
-        http GET http://127.0.0.1:8000/api/loans/submissions/1/
+        http GET http://127.0.0.1:8000/api/loans/submissions/3/
     '''
 
     @staticmethod
