@@ -74,7 +74,7 @@ class Application(models.Model):
         verbose_name='Макс. скоринговый балл')
     bank = models.ForeignKey(
         User,
-        limit_choices_to={'choices': User.ROLE_CHOICES[2][0]})
+        limit_choices_to={'role': User.ROLE_BANK})
 
     class Meta:
         ordering = ('-created',)
