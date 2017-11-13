@@ -15,7 +15,8 @@ from .models import (
 from .serializers import (
     ApplicationSerializer,
     QuestionnaireSerializer,
-    SubmissionSerializer)
+    SubmissionSerializer,
+    SubmissionSerializerPost)
 
 
 class PartnerAPI(generics.ListCreateAPIView):
@@ -63,7 +64,7 @@ class PartnerAPI(generics.ListCreateAPIView):
     @staticmethod
     @api_view(['POST'])
     def submit(request):
-        serializer = SubmissionSerializer(data=request.data)
+        serializer = SubmissionSerializerPost(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)

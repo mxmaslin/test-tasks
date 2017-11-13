@@ -45,8 +45,22 @@ class QuestionnaireSerializer(serializers.ModelSerializer):
 
 class SubmissionSerializer(serializers.ModelSerializer):
 
-    # application = ApplicationSerializer(read_only=True)
-    # questionnaire = QuestionnaireSerializer(read_only=True)
+    application = ApplicationSerializer(read_only=True)
+    questionnaire = QuestionnaireSerializer(read_only=True)
+
+    class Meta:
+        model = Submission
+        fields = (
+            'pk',
+            'created',
+            'submitted',
+            'application',
+            'questionnaire',
+            'status',
+        )
+
+
+class SubmissionSerializerPost(serializers.ModelSerializer):
 
     class Meta:
         model = Submission
