@@ -1,5 +1,30 @@
 # -*- coding: utf-8 -*-
 from django.db import models
+from django.contrib.auth.models import AbstractUser
+
+
+class User(AbstractUser):
+    '''
+        Суперпользователь либо партнер либо кредитная организация
+    '''
+    ROLE_SUPERUSER = 0
+    ROLE_PARTNER = 1
+    ROLE_BANK = 2
+
+    ROLE_CHOICES = (
+        (ROLE_SUPERUSER, 'Суперпользователь'),
+        (ROLE_PARTNER, 'Партнер'),
+        (ROLE_BANK, 'Банк'))
+
+    name = models.CharField(max_length=20, primary_key=True)
+    role = models.IntegerField(choices=ROLE_CHOICES, default=ROLE_PARTNER)
+
+    class Meta:
+        ordering = ('name',)
+
+    def __str__(self):
+        role = User.ROLE_CHOICES[self.role][1]
+        return '{}: {}'.format(role, self.name)
 
 
 class Application(models.Model):
@@ -47,7 +72,7 @@ class Application(models.Model):
         blank=True,
         null=True,
         verbose_name='Макс. скоринговый балл')
-    # bank = models.ForeignKey('Bank')
+    bank = models.ForeignKey(User)
 
     class Meta:
         ordering = ('-created',)
