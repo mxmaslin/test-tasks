@@ -9,7 +9,7 @@ urlpatterns = (
     # PartnerAPI
 
     url(r'^questionnaires/submit/$',
-        views.submit),
+        views.PartnerAPI.submit),
 
     url(r'^questionnaires/$',
         views.PartnerAPI.as_view()),
@@ -18,8 +18,8 @@ urlpatterns = (
         views.PartnerAPI.get_by_pk),
 
 
-
     # BankAPI
+
     url(r'^submissions/$',
         views.BankAPI.as_view()),
 
