@@ -65,8 +65,6 @@ class PartnerAPI(generics.ListCreateAPIView):
     def submit(request):
         serializer = SubmissionSerializer(data=request.data)
         if serializer.is_valid():
-            print(request.data)
-            print(serializer.validated_data)
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
