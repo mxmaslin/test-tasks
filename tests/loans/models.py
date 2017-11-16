@@ -134,10 +134,12 @@ class Submission(models.Model):
 
     STATUS_NEW = 0
     STATUS_SENT = 1
+    STATUS_RECEIVED = 2
 
     STATUS_CHOICES = (
         (STATUS_NEW, 'New'),
-        (STATUS_SENT, 'Sent'))
+        (STATUS_SENT, 'Sent'),
+        (STATUS_RECEIVED), 'Received')
 
     created = models.DateTimeField(
         auto_now_add=True,
@@ -164,3 +166,62 @@ class Submission(models.Model):
 
     def __str__(self):
         return '{}'.format(self.application)
+
+
+
+from django.contrib.auth.models import Permission
+from django.contrib.contenttypes.models import ContentType
+
+
+content_type_application = ContentType.objects.get_for_model(Application)
+
+perm_application_view = Permission.objects.create(
+    codename='can_view',
+    name='Can view Applications',
+    content_type=content_type_application)
+
+perm_application_create = Permission.objects.create(
+    codename='can_create',
+    name='Can create Applications',
+    content_type=content_type_application)
+
+perm_application_delete = Permission.objects.create(
+    codename='can_delete',
+    name='Can create Applications',
+    content_type=content_type_application)
+
+
+content_type_questionnaire = ContentType.objects.get_for_model(Questionnaire)
+
+perm_questionnaire_view = Permission.objects.create(
+    codename='can_view',
+    name='Can view Questionnaires',
+    content_type=content_type_questionnaire)
+
+perm_questionnaire_create = Permission.objects.create(
+    codename='can_create',
+    name='Can create Questionnaires',
+    content_type=content_type_questionnaire)
+
+perm_questionnaire_delete = Permission.objects.create(
+    codename='can_delete',
+    name='Can create Questionnaires',
+    content_type=content_type_questionnaire)
+
+
+content_type_submission = ContentType.objects.get_for_model(Submission)
+
+perm_questionnaire_view = Permission.objects.create(
+    codename='can_view',
+    name='Can view Submissions',
+    content_type=content_type_submission)
+
+perm_application_create = Permission.objects.create(
+    codename='can_create',
+    name='Can create Questionnaire',
+    content_type=content_type_questionnaire)
+
+perm_application_delete = Permission.objects.create(
+    codename='can_delete',
+    name='Can create Questionnaire',
+    content_type=content_type_questionnaire)

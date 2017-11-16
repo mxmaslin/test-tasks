@@ -23,7 +23,7 @@ class ApplicationSerializer(serializers.ModelSerializer):
             'application_type',
             'score_min',
             'score_max',
-            #'bank',
+            'bank',
         )
 
 

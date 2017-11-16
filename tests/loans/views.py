@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from django.contrib.auth.decorators import permission_required
 from django.http import Http404
 
 from rest_framework import generics
