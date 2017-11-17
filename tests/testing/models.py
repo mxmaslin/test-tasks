@@ -1,30 +1,30 @@
 # -*- coding: utf-8 -*-
 from django.conf import settings
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import User
 from django.db import models
 
 
-class User(AbstractUser):
-    '''
-        Автор либо респондент
-    '''
-    ROLE_AUTHOR = 0
-    ROLE_RESPONDENT = 1
+# class User(AbstractUser):
+#     '''
+#         Автор либо респондент
+#     '''
+#     ROLE_AUTHOR = 0
+#     ROLE_RESPONDENT = 1
 
-    ROLE_CHOICES = (
-        (ROLE_AUTHOR, 'Автор'),
-        (ROLE_RESPONDENT, 'Респондент'))
+#     ROLE_CHOICES = (
+#         (ROLE_AUTHOR, 'Автор'),
+#         (ROLE_RESPONDENT, 'Респондент'))
 
-    name = models.CharField(max_length=20, primary_key=True)
-    role = models.IntegerField(choices=ROLE_CHOICES, default=ROLE_RESPONDENT)
-    question_set = models.ForeignKey('QuestionSet', blank=True, null=True)
+#     name = models.CharField(max_length=20, primary_key=True)
+#     role = models.IntegerField(choices=ROLE_CHOICES, default=ROLE_RESPONDENT)
+#     question_set = models.ForeignKey('QuestionSet', blank=True, null=True)
 
-    class Meta:
-        ordering = ('name',)
+#     class Meta:
+#         ordering = ('name',)
 
-    def __str__(self):
-        role = User.ROLE_CHOICES[self.role][1]
-        return '{}: {}'.format(role, self.name)
+#     def __str__(self):
+#         role = User.ROLE_CHOICES[self.role][1]
+#         return '{}: {}'.format(role, self.name)
 
 
 class QuestionSet(models.Model):
@@ -33,7 +33,7 @@ class QuestionSet(models.Model):
     '''
 
     author = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+        User,
         on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     created = models.DateTimeField(auto_now_add=True)
