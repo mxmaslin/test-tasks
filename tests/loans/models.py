@@ -1,31 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from django.contrib.auth.models import User
-# from django.contrib.auth.models import AbstractUser
-
-
-# class User(AbstractUser):
-#     '''
-#         Суперпользователь либо партнер либо кредитная организация
-#     '''
-#     ROLE_SUPERUSER = 0
-#     ROLE_PARTNER = 1
-#     ROLE_BANK = 2
-
-#     ROLE_CHOICES = (
-#         (ROLE_SUPERUSER, 'Суперпользователь'),
-#         (ROLE_PARTNER, 'Партнер'),
-#         (ROLE_BANK, 'Банк'))
-
-#     name = models.CharField(max_length=20, primary_key=True)
-#     role = models.IntegerField(choices=ROLE_CHOICES, default=ROLE_PARTNER)
-
-#     class Meta:
-#         ordering = ('name',)
-
-#     def __str__(self):
-#         role = User.ROLE_CHOICES[self.role][1]
-#         return '{}: {}'.format(role, self.name)
 
 
 class Application(models.Model):
@@ -152,9 +127,11 @@ class Submission(models.Model):
         verbose_name='Дата отправки')
     application = models.ForeignKey(
         Application,
+        on_delete=models.CASCADE,
         verbose_name='Предложение')
     questionnaire = models.ForeignKey(
         Questionnaire,
+        on_delete=models.CASCADE,
         verbose_name='Анкета')
     status = models.PositiveSmallIntegerField(
         choices=STATUS_CHOICES,
@@ -168,62 +145,3 @@ class Submission(models.Model):
 
     def __str__(self):
         return '{}'.format(self.application)
-
-
-
-# from django.contrib.auth.models import Permission
-# from django.contrib.contenttypes.models import ContentType
-
-
-# content_type_application = ContentType.objects.get_for_model(Application)
-
-# perm_application_view = Permission.objects.create(
-#     codename='can_view',
-#     name='Can view Applications',
-#     content_type=content_type_application)
-
-# perm_application_create = Permission.objects.create(
-#     codename='can_create',
-#     name='Can create Applications',
-#     content_type=content_type_application)
-
-# perm_application_delete = Permission.objects.create(
-#     codename='can_delete',
-#     name='Can create Applications',
-#     content_type=content_type_application)
-
-
-# content_type_questionnaire = ContentType.objects.get_for_model(Questionnaire)
-
-# perm_questionnaire_view = Permission.objects.create(
-#     codename='can_view',
-#     name='Can view Questionnaires',
-#     content_type=content_type_questionnaire)
-
-# perm_questionnaire_create = Permission.objects.create(
-#     codename='can_create',
-#     name='Can create Questionnaires',
-#     content_type=content_type_questionnaire)
-
-# perm_questionnaire_delete = Permission.objects.create(
-#     codename='can_delete',
-#     name='Can create Questionnaires',
-#     content_type=content_type_questionnaire)
-
-
-# content_type_submission = ContentType.objects.get_for_model(Submission)
-
-# perm_questionnaire_view = Permission.objects.create(
-#     codename='can_view',
-#     name='Can view Submissions',
-#     content_type=content_type_submission)
-
-# perm_application_create = Permission.objects.create(
-#     codename='can_create',
-#     name='Can create Questionnaire',
-#     content_type=content_type_questionnaire)
-
-# perm_application_delete = Permission.objects.create(
-#     codename='can_delete',
-#     name='Can create Questionnaire',
-#     content_type=content_type_questionnaire)
