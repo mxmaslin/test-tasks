@@ -9,10 +9,13 @@ class Command(BaseCommand):
         partners = Group.objects.create(name='Партнёры')
         banks = Group.objects.create(name='Банки')
 
-        perm_add_questionnaire = Permission.objects.get(name='add_questionnaire')
-        perm_edit_questionnaire = Permission.objects.get(name='change_questionnaire')
-        perm_delete_questionnaire = Permission.objects.get(name='change_questionnaire')
+        perm_add_questionnaire = Permission.objects.get(
+            codename='add_questionnaire')
+        perm_edit_questionnaire = Permission.objects.get(
+            codename='change_questionnaire')
+        perm_delete_questionnaire = Permission.objects.get(
+            codename='change_questionnaire')
 
-        superusers.permissions.add(perm_add_questionnaire)
-        superusers.permissions.add(perm_edit_questionnaire)
-        superusers.permissions.add(perm_delete_questionnaire)
+        superpupers.permissions.add(perm_add_questionnaire)
+        superpupers.permissions.add(perm_edit_questionnaire)
+        superpupers.permissions.add(perm_delete_questionnaire)
