@@ -16,6 +16,6 @@ class Command(BaseCommand):
         perm_delete_questionnaire = Permission.objects.get(
             codename='change_questionnaire')
 
-        superpupers.permissions.add(perm_add_questionnaire)
-        superpupers.permissions.add(perm_edit_questionnaire)
-        superpupers.permissions.add(perm_delete_questionnaire)
+        superusers.permissions.add(perm_add_questionnaire)
+        superusers.permissions.add(perm_edit_questionnaire)
+        superusers.permissions.add(perm_delete_questionnaire)
