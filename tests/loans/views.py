@@ -7,6 +7,8 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+from rest_framework import viewsets
+from rest_framework.permissions import BasePermission
 
 from .models import (
     Application,
@@ -18,6 +20,40 @@ from .serializers import (
     QuestionnaireSerializer,
     SubmissionSerializer,
     SubmissionSerializerPost)
+
+
+# class SuperUserPermission(BasePermission):
+
+#     def has_permission(self, request, view):
+
+
+#         # if request.user.is_anonymous():
+#         #     return False
+
+#         # user_group = request.user.groups.values_list('name', flat=True)
+
+#         # return request.user.has_perms(
+#         #     ['loans.add_vendor', 'probe.delete_vendor']
+#         # )
+
+
+# class VendorViewSet(viewsets.ModelViewSet):
+#     """
+#     API endpoint that allows users to be viewed or edited.
+#     """
+#     queryset = Vendor.objects.all()
+#     serializer_class = VendorSerializer
+#     permission_classes = (VendorPermission,)
+#     # permission_classes = (permissions.DjangoModelPermissions,)
+
+#     def retrieve(self, request, *args, **kwargs):
+#         # TODO поставить признак Прочитано
+#         vnd = Vendor.objects.get(id=kwargs.get('pk'))
+#         vnd.title += ' +1'
+#         vnd.save()
+#         return super(VendorViewSet, self).retrieve(request, *args, **kwargs)
+
+
 
 
 class PartnerAPI(generics.ListCreateAPIView):

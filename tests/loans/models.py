@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 class Application(models.Model):
     '''
-        Предложение
+        Предложение банка
     '''
 
     APPLICATION_CUSTOMER = 0
@@ -39,7 +39,7 @@ class Application(models.Model):
     application_type = models.PositiveSmallIntegerField(
         choices=APPLICATION_CHOICES,
         default=APPLICATION_CUSTOMER,
-        verbose_name='Тип приложения')
+        verbose_name='Тип предложения')
     score_min = models.PositiveSmallIntegerField(
         blank=True,
         null=True,
@@ -48,9 +48,6 @@ class Application(models.Model):
         blank=True,
         null=True,
         verbose_name='Макс. скоринговый балл')
-    # bank = models.ForeignKey(
-    #     User,
-    #     limit_choices_to={'role': User.ROLE_BANK})
     bank = models.ForeignKey(User)
 
     class Meta:
@@ -106,7 +103,7 @@ class Questionnaire(models.Model):
 
 class Submission(models.Model):
     '''
-        Заявка
+        Заявка на кредит
     '''
 
     STATUS_NEW = 0
