@@ -5,7 +5,7 @@ from .models import User
 from .models import QuestionSet
 from .models import Question
 from .models import Option
-from .models import Submission
+from .models import RespondentSubmission
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -52,7 +52,7 @@ class OptionSerializer(serializers.ModelSerializer):
 class SubmissionSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Submission
+        model = RespondentSubmission
         fields = (
                     'respondent',
                     'option')

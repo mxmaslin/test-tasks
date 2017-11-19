@@ -79,7 +79,7 @@ class Option(models.Model):
         return self.value
 
 
-class Submission(models.Model):
+class RespondentSubmission(models.Model):
     '''
         Ответ респондента на вопрос теста
     '''

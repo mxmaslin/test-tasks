@@ -9,7 +9,7 @@ from .models import User
 from .models import QuestionSet
 from .models import Question
 from .models import Option
-from .models import Submission
+from .models import RespondentSubmission
 
 from .serializers import UserSerializer
 from .serializers import QuestionSetSerializer
