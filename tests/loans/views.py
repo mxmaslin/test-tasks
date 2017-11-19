@@ -22,44 +22,34 @@ from .serializers import (
     SubmissionSerializerPost)
 
 
-# class SuperUserPermission(BasePermission):
-
-#     def has_permission(self, request, view):
-
-
-#         # if request.user.is_anonymous():
-#         #     return False
-
-#         # user_group = request.user.groups.values_list('name', flat=True)
-
-#         # return request.user.has_perms(
-#         #     ['loans.add_vendor', 'probe.delete_vendor']
-#         # )
+class SuperuserPermission(BasePermission):
+    def has_permission(self, request, view):
+        if request.user.is_anonymous():
+            return False
+        return request.user.groups.filter(name='Суперпользователи').exists()
 
 
-# class VendorViewSet(viewsets.ModelViewSet):
-#     """
-#     API endpoint that allows users to be viewed or edited.
-#     """
-#     queryset = Vendor.objects.all()
-#     serializer_class = VendorSerializer
-#     permission_classes = (VendorPermission,)
-#     # permission_classes = (permissions.DjangoModelPermissions,)
-
-#     def retrieve(self, request, *args, **kwargs):
-#         # TODO поставить признак Прочитано
-#         vnd = Vendor.objects.get(id=kwargs.get('pk'))
-#         vnd.title += ' +1'
-#         vnd.save()
-#         return super(VendorViewSet, self).retrieve(request, *args, **kwargs)
+class PartnerPermission(BasePermission):
+    def has_permission(self, request, view):
+        if request.user.is_anonymous():
+            return False
+        return request.user.groups.filter(
+            name='Партнёры').exists()
 
 
+class BankPermission(BasePermission):
+    def has_permission(self, request, view):
+        if request.user.is_anonymous():
+            return False
+        return request.user.groups.filter(
+            name='Кредитные организации').exists()
 
 
-class PartnerAPI(generics.ListCreateAPIView):
-
+class PartnerAPI(viewsets.ModelViewSet):
     '''
         Получение списка всех анкет
+        http --auth superuser:qwer1234 GET http://127.0.0.1:8000/api/loans/questionnaires/1/
+
         http GET http://127.0.0.1:8000/api/loans/questionnaires/
 
         Поиск среди анкет по одному из критериев (name, phone, passport):
@@ -82,30 +72,83 @@ class PartnerAPI(generics.ListCreateAPIView):
         Отправка заявки в кредитную организацию
         http POST http://127.0.0.1:8000/api/loans/questionnaires/submit/ <<< '{"application": 2, "questionnaire": 1, "status": 1, "created": "2017-11-10T18:23:16.913526Z", "submitted": "2017-11-10T18:23:16.913526Z"}'
     '''
-
     queryset = Questionnaire.objects.all()
     serializer_class = QuestionnaireSerializer
-    search_fields = ('name', 'phone', 'passport')
-    ordering_fields = ('created', 'modified', 'birthday', 'score')
+    permission_classes = (
+        SuperuserPermission,
+        PartnerPermission,
+        BankPermission)
+    search_fields = (
+        'name',
+        'phone',
+        'passport')
+    ordering_fields = (
+        'created',
+        'modified',
+        'birthday',
+        'score')
 
-    @staticmethod
-    @api_view(['GET'])
-    def get_by_pk(request, pk):
-        try:
-            questionnaire = Questionnaire.objects.get(pk=pk)
-        except Questionnaire.DoesNotExist:
-            raise Http404
-        serializer = QuestionnaireSerializer(questionnaire)
-        return Response(serializer.data)
+    def get_permissions(self):
+        """
+        Instantiates and returns the list of permissions that this view requires.
+        """
+        print(self.request.user)
 
-    @staticmethod
-    @api_view(['POST'])
-    def submit(request):
-        serializer = SubmissionSerializerPost(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return [permission() for permission in self.permission_classes]
+
+
+# class PartnerAPI(generics.ListCreateAPIView):
+
+#     '''
+#         Получение списка всех анкет
+#         http GET http://127.0.0.1:8000/api/loans/questionnaires/
+
+#         Поиск среди анкет по одному из критериев (name, phone, passport):
+#         http GET http://127.0.0.1:8000/api/loans/questionnaires/?search=Иван
+#         http GET http://127.0.0.1:8000/api/loans/questionnaires/?search=123
+#         http GET http://127.0.0.1:8000/api/loans/questionnaires/?search=abc
+
+#         Получение отсортированного списка анкет по одному из критериев (created, modified, birthday, score):
+#         http GET http://127.0.0.1:8000/api/loans/questionnaires/?ordering=created
+#         http GET http://127.0.0.1:8000/api/loans/questionnaires/?ordering=modified
+#         http GET http://127.0.0.1:8000/api/loans/questionnaires/?ordering=birthday
+#         http GET http://127.0.0.1:8000/api/loans/questionnaires/?ordering=score
+
+#         Создание анкеты
+#         http POST http://127.0.0.1:8000/api/loans/questionnaires/ <<< '{"name": "Давид Соломонович", "birthday": "2017-05-30", "passport": "abc123", "phone": "130-19-32", "score": 5}'
+
+#         Получение определённой анкеты
+#         http GET http://127.0.0.1:8000/api/loans/questionnaires/1/
+
+#         Отправка заявки в кредитную организацию
+#         http POST http://127.0.0.1:8000/api/loans/questionnaires/submit/ <<< '{"application": 2, "questionnaire": 1, "status": 1, "created": "2017-11-10T18:23:16.913526Z", "submitted": "2017-11-10T18:23:16.913526Z"}'
+#     '''
+
+#     queryset = Questionnaire.objects.all()
+#     serializer_class = QuestionnaireSerializer
+#     search_fields = ('name', 'phone', 'passport')
+#     ordering_fields = ('created', 'modified', 'birthday', 'score')
+
+#     @staticmethod
+#     @api_view(['GET'])
+#     def get_by_pk(request, pk):
+#         print(request.user.groups.all()[0].name == 'Суперпользователи')
+
+#         try:
+#             questionnaire = Questionnaire.objects.get(pk=pk)
+#         except Questionnaire.DoesNotExist:
+#             raise Http404
+#         serializer = QuestionnaireSerializer(questionnaire)
+#         return Response(serializer.data)
+
+#     @staticmethod
+#     @api_view(['POST'])
+#     def submit(request):
+#         serializer = SubmissionSerializerPost(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class BankAPI(generics.ListAPIView):
