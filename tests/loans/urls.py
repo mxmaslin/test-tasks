@@ -4,10 +4,8 @@ from rest_framework.routers import DefaultRouter
 from . import views
 
 router = DefaultRouter()
-router.register(r'questionnaires', views.PartnerAPI)
+router.register(r'questionnaires', views.QuestionnaireViewSet)
 
-# make_submission = views.PartnerAPI.as_view({
-#     'post': 'make_submission'})
 
 urlpatterns = (
 

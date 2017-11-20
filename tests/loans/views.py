@@ -9,7 +9,6 @@ from rest_framework.response import Response
 
 from rest_framework import viewsets
 from rest_framework.permissions import BasePermission
-from rest_condition import Or
 
 
 from .models import (
@@ -24,11 +23,16 @@ from .serializers import (
     SubmissionSerializerPost)
 
 
-class SuperuserPermission(BasePermission):
+class QuestionnairePermission(BasePermission):
     def has_permission(self, request, view):
         if request.user.is_anonymous():
             return False
-        return request.user.groups.filter(name='Суперпользователи').exists()
+        return request.user.has_perms([
+            'loans.view_questionnaire',
+            'loans.add_questionnaire',
+            'loans.change_questionnaire',
+            'loans.delete_questionnaire'
+        ])
 
 
 class PartnerPermission(BasePermission):
@@ -47,7 +51,7 @@ class BankPermission(BasePermission):
             name='Кредитные организации').exists()
 
 
-class PartnerAPI(viewsets.ModelViewSet):
+class QuestionnaireViewSet(viewsets.ModelViewSet):
     '''
         Получение списка всех анкет
         http --auth superuser:qwer1234 GET http://127.0.0.1:8000/api/loans/questionnaires/1/
@@ -76,10 +80,7 @@ class PartnerAPI(viewsets.ModelViewSet):
     '''
     queryset = Questionnaire.objects.all()
     serializer_class = QuestionnaireSerializer
-    permission_classes = (Or(
-        SuperuserPermission,
-        PartnerPermission,
-        BankPermission),)
+    permission_classes = (QuestionnairePermission,)
     search_fields = (
         'name',
         'phone',
@@ -89,6 +90,12 @@ class PartnerAPI(viewsets.ModelViewSet):
         'modified',
         'birthday',
         'score')
+
+    def get_permissions(self):
+        """
+        Instantiates and returns the list of permissions that this view requires.
+        """
+        return [permission() for permission in self.permission_classes if permission()]
 
 
 # class PartnerAPI(generics.ListCreateAPIView):
