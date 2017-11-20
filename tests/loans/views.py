@@ -9,6 +9,8 @@ from rest_framework.response import Response
 
 from rest_framework import viewsets
 from rest_framework.permissions import BasePermission
+from rest_condition import Or
+
 
 from .models import (
     Application,
@@ -74,10 +76,10 @@ class PartnerAPI(viewsets.ModelViewSet):
     '''
     queryset = Questionnaire.objects.all()
     serializer_class = QuestionnaireSerializer
-    permission_classes = (
+    permission_classes = (Or(
         SuperuserPermission,
         PartnerPermission,
-        BankPermission)
+        BankPermission),)
     search_fields = (
         'name',
         'phone',
@@ -87,14 +89,6 @@ class PartnerAPI(viewsets.ModelViewSet):
         'modified',
         'birthday',
         'score')
-
-    def get_permissions(self):
-        """
-        Instantiates and returns the list of permissions that this view requires.
-        """
-        print(self.request.user)
-
-        return [permission() for permission in self.permission_classes]
 
 
 # class PartnerAPI(generics.ListCreateAPIView):
