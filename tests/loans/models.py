@@ -171,9 +171,8 @@ class Submission(models.Model):
         return '{}'.format(self.application)
 
     @staticmethod
+    @authenticated_users
     def has_read_permission(request):
-        if request.user.is_anonymous():
-            return False
         return request.user.groups.filter(
             name='Кредитные организации').exists()
 
@@ -184,9 +183,8 @@ class Submission(models.Model):
             name='Кредитные организации').exists()
 
     @staticmethod
+    @authenticated_users
     def has_write_permission(request):
-        if request.user.is_anonymous():
-            return False
         return \
             request.user.groups.filter(
                 name='Суперпользователи').exists() or \
@@ -194,16 +192,14 @@ class Submission(models.Model):
                 name='Партнёры').exists()
 
     @staticmethod
+    @authenticated_users
     def has_update_permission(request):
-        if request.user.is_anonymous():
-            return False
+        return True
 
     def has_object_update_permission(self, request):
         return request.user.groups.filter(
             name='Суперпользователи').exists()
 
     def has_object_destroy_permission(self, request):
-        if request.user.is_anonymous():
-            return False
         return request.user.groups.filter(
             name='Суперпользователи').exists()
