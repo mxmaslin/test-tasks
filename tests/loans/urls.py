@@ -7,16 +7,24 @@ router = DefaultRouter()
 router.register(r'partner_api/questionnaires', views.QuestionnaireViewSet)
 
 
+submissions_list = views.SubmissionViewSet.as_view({
+    'get': 'list'})
+submission_detail = views.SubmissionViewSet.as_view({
+    'get': 'retrieve',
+    'put': 'update',
+    'delete': 'destroy'})
+make_submission = views.SubmissionViewSet.as_view({
+    'post': 'create'})
+
+
 urlpatterns = (
 
     # PartnerAPI
     url(r'^', include(router.urls)),
-    url(r'^partner_api/make_submission/$', views.SubmissionCreate.as_view()),
+    url(r'^partner_api/make_submission/$', make_submission),
 
     # BankAPI
-    url(r'^submissions/$',
-        views.BankAPI.as_view()),
-
-    url(r'^submissions/(?P<pk>\S+)/$',
-        views.BankAPI.get_submission)
+    url(r'^bank_api/submissions/$',
+        submissions_list),
+    url(r'^bank_api/submissions/(?P<pk>[0-9]+)/$', submission_detail)
 )
