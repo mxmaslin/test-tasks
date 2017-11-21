@@ -100,6 +100,33 @@ class Questionnaire(models.Model):
     def __str__(self):
         return '{}'.format(self.name, self.modified)
 
+    @staticmethod
+    def has_read_permission(request):
+        return True
+
+    def has_object_read_permission(self, request):
+        return True
+
+    @staticmethod
+    def has_write_permission(request):
+        return True
+
+    @staticmethod
+    def has_create_permission(request):
+        return True
+
+    @staticmethod
+    def has_update_permission(request):
+        return True
+
+    def has_object_update_permission(self, request):
+        return request.user.groups.filter(
+            name='Суперпользователи').exists()
+
+    def has_object_destroy_permission(self, request):
+        return request.user.groups.filter(
+            name='Суперпользователи').exists()
+
 
 class Submission(models.Model):
     '''

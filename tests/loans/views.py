@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from django.contrib.auth.decorators import permission_required
 from django.http import Http404
 
 from rest_framework import generics
@@ -10,6 +9,7 @@ from rest_framework.response import Response
 from rest_framework import viewsets
 from rest_framework.permissions import BasePermission
 
+from dry_rest_permissions.generics import DRYPermissions
 
 from .models import (
     Application,
@@ -23,32 +23,34 @@ from .serializers import (
     SubmissionSerializerPost)
 
 
-class QuestionnairePermission(BasePermission):
-    def has_permission(self, request, view):
-        if request.user.is_anonymous():
-            return False
-        return request.user.has_perms([
-            'loans.view_questionnaire',
-            'loans.add_questionnaire',
-            'loans.change_questionnaire',
-            'loans.delete_questionnaire'
-        ])
+# class QuestionnairePermission(BasePermission):
+#     def has_permission(self, request, view):
+#         if request.user.is_anonymous():
+#             return False
+#         return request.user.groups.filter(
+#             name='Партнёры').exists()
+#         # return request.user.has_perms([
+#         #     'loans.view_questionnaire',
+#         #     'loans.add_questionnaire',
+#         #     'loans.change_questionnaire',
+#         #     'loans.delete_questionnaire'
+#         # ])
 
 
-class PartnerPermission(BasePermission):
-    def has_permission(self, request, view):
-        if request.user.is_anonymous():
-            return False
-        return request.user.groups.filter(
-            name='Партнёры').exists()
+# class PartnerPermission(BasePermission):
+#     def has_permission(self, request, view):
+#         if request.user.is_anonymous():
+#             return False
+#         return request.user.groups.filter(
+#             name='Партнёры').exists()
 
 
-class BankPermission(BasePermission):
-    def has_permission(self, request, view):
-        if request.user.is_anonymous():
-            return False
-        return request.user.groups.filter(
-            name='Кредитные организации').exists()
+# class BankPermission(BasePermission):
+#     def has_permission(self, request, view):
+#         if request.user.is_anonymous():
+#             return False
+#         return request.user.groups.filter(
+#             name='Кредитные организации').exists()
 
 
 class QuestionnaireViewSet(viewsets.ModelViewSet):
@@ -78,9 +80,9 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
         Отправка заявки в кредитную организацию
         http POST http://127.0.0.1:8000/api/loans/questionnaires/submit/ <<< '{"application": 2, "questionnaire": 1, "status": 1, "created": "2017-11-10T18:23:16.913526Z", "submitted": "2017-11-10T18:23:16.913526Z"}'
     '''
+    permission_classes = (DRYPermissions,)
     queryset = Questionnaire.objects.all()
     serializer_class = QuestionnaireSerializer
-    permission_classes = (QuestionnairePermission,)
     search_fields = (
         'name',
         'phone',
@@ -90,12 +92,6 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
         'modified',
         'birthday',
         'score')
-
-    def get_permissions(self):
-        """
-        Instantiates and returns the list of permissions that this view requires.
-        """
-        return [permission() for permission in self.permission_classes if permission()]
 
 
 # class PartnerAPI(generics.ListCreateAPIView):
