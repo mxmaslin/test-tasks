@@ -169,3 +169,36 @@ class Submission(models.Model):
 
     def __str__(self):
         return '{}'.format(self.application)
+
+    @staticmethod
+    def has_read_permission(request):
+        return request.user.groups.filter(
+            name='Кредитные организации').exists()
+
+    def has_object_read_permission(self, request):
+        return request.user.groups.filter(
+            name='Кредитные организации').exists()
+
+    @staticmethod
+    def has_write_permission(request):
+        return True
+
+    @staticmethod
+    def has_create_permission(request):
+        return \
+            request.user.groups.filter(
+                name='Суперпользователи').exists() or \
+            request.user.groups.filter(
+                name='Партнёры').exists()
+
+    @staticmethod
+    def has_update_permission(request):
+        return True
+
+    def has_object_update_permission(self, request):
+        return request.user.groups.filter(
+            name='Суперпользователи').exists()
+
+    def has_object_destroy_permission(self, request):
+        return request.user.groups.filter(
+            name='Суперпользователи').exists()
