@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from django.contrib.auth.models import User
+from dry_rest_permissions.generics import authenticated_users
 
 
 class Application(models.Model):
@@ -101,26 +102,21 @@ class Questionnaire(models.Model):
         return '{}'.format(self.name, self.modified)
 
     @staticmethod
+    @authenticated_users
     def has_read_permission(request):
-        if request.user.is_anonymous():
-            return False
         return True
 
     def has_object_read_permission(self, request):
-        if request.user.is_anonymous():
-            return False
         return True
 
     @staticmethod
+    @authenticated_users
     def has_write_permission(request):
-        if request.user.is_anonymous():
-            return False
         return True
 
     @staticmethod
+    @authenticated_users
     def has_update_permission(request):
-        if request.user.is_anonymous():
-            return False
         return True
 
     def has_object_update_permission(self, request):
