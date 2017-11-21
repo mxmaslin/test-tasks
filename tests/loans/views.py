@@ -48,9 +48,21 @@ class SubmissionViewSet(viewsets.ModelViewSet):
     search_fields = ('application__application_name', 'questionnaire__name')
     ordering_fields = ('created', 'submitted')
 
-    def create(self, request):
-        serializer = SubmissionSerializerPost(data=request.data)
+    def create(self, request, *args, **kwargs):
+        serializer = SubmissionSerializerPost(
+            data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        return Response(
+            serializer.data,
+            status=status.HTTP_201_CREATED,
+            headers=headers)
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if request.user.groups.filter(name='Кредитные организации').exists():
+            instance.status = 2
+            instance.save()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
