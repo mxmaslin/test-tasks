@@ -77,6 +77,8 @@ pip install -r requirements.txt
 
     http --auth bank:qwer1234 GET http://127.0.0.1:8000/loans/bank_api/submissions/{id}/
 
+При просмотре заявки Кредитной организацией статус заявки меняется на RECEIVED
+
 ## Создание заявки
 
     http --auth {superuser, partner, bank}:qwer1234 POST http://127.0.0.1:8000/loans/bank_api/submissions/ <<< '{"application": 1, "questionnaire": 1, "status": 2}'
