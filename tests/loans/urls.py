@@ -11,24 +11,9 @@ urlpatterns = (
 
     # PartnerAPI
     url(r'^', include(router.urls)),
-    # url(r'^make_submission/$', make_submission),
-
-
-
-
-
-    # url(r'^questionnaires/submit/$',
-    #     views.PartnerAPI.submit),
-
-    # url(r'^questionnaires/$',
-    #     views.PartnerAPI.as_view()),
-
-    # url(r'^questionnaires/(?P<pk>\S+)/$',
-    #     views.PartnerAPI.get_by_pk),
-
+    url(r'^make_submission/$', views.SubmissionCreate.as_view()),
 
     # BankAPI
-
     url(r'^submissions/$',
         views.BankAPI.as_view()),
 
