@@ -11,15 +11,11 @@ bank = User.objects.get(username='bank')
 
 
 def create_questionnaire(**kwargs):
-    defaults = {}
-    defaults.update(**kwargs)
-    return Questionnaire.objects.create(**defaults)
+    return Questionnaire.objects.create(**kwargs)
 
 
 def create_submission(**kwargs):
-    defaults = {}
-    defaults.update(**kwargs)
-    return Submission.objects.create(**defaults)
+    return Submission.objects.create(**kwargs)
 
 
 class QuestionnaireViewTest(unittest.TestCase):
