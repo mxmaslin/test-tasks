@@ -94,8 +94,7 @@ def prepare_environment(apps, schema_editor):
         name='Соломон Моисеевич',
         phone='123',
         passport='abc123',
-        score=2,
-        owner=superuser)
+        score=2)
     Submission.objects.create(
         application=a,
         questionnaire=q)
