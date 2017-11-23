@@ -3,7 +3,7 @@ chardet==3.0.4
 Django==1.11.7
 django-admin-view-permission==1.1
 django-filter==1.1.0
-djangorestframework==3.7.1
+djangorestframework==3.7.3
 dry-rest-permissions==0.1.9
 httpie==0.9.9
 idna==2.6
