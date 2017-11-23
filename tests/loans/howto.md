@@ -1,11 +1,18 @@
+# Требования к программной части
+
+- python >= 3.5
+- pip
+
 # Начало работы
 
-Выполните в папке проекта в консоли команды:
+1. Клонируйте проект из репозитория https://github.com/mxmaslin/unicom
+2. Выполните в папке проекта в консоли команды:
 
 ```
 pip install -r requirements.txt
 ./manage.py makemigrations
 ./manage.py migrate
+./manage.py prepare_environment
 ```
 
 В результате создадутся
@@ -16,6 +23,8 @@ pip install -r requirements.txt
 - экземпляры Предложения, Анкеты клиента, Заявки в кредитную организацию.
 
 Всё это будет доступно через админку `http://{ip}:{port}/admin/`, логин: admin, пароль: qwer1234.
+
+По поводу фикстур официальное руководство говорит следующее: "If you want to automatically load initial data for an app, don’t use fixtures. Instead, create a migration for your application with RunPython or RunSQL operations."
 
 # Как делать запросы к API
 

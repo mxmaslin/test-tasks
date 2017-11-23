@@ -2,6 +2,7 @@ from django.contrib.auth.models import (
     Group,
     Permission,
     User)
+from django.contrib.contenttypes.models import ContentType
 from django.core.management.base import BaseCommand
 from loans.models import (
     Application,
@@ -16,32 +17,47 @@ class Command(BaseCommand):
         partners = Group.objects.create(name='Партнёры')
         banks = Group.objects.create(name='Кредитные организации')
 
+        ct_application = ContentType.objects.get_for_model(Application)
         perm_view_application = Permission.objects.get(
-            codename='view_application')
+            codename='view_application',
+            content_type=ct_application)
         perm_add_application = Permission.objects.get(
-            codename='add_application')
+            codename='add_application',
+            content_type=ct_application)
         perm_change_application = Permission.objects.get(
-            codename='change_application')
+            codename='change_application',
+            content_type=ct_application)
         perm_delete_application = Permission.objects.get(
-            codename='delete_application')
+            codename='delete_application',
+            content_type=ct_application)
 
+        ct_questionnaire = ContentType.objects.get_for_model(Questionnaire)
         perm_view_questionnaire = Permission.objects.get(
-            codename='view_questionnaire')
+            codename='view_questionnaire',
+            content_type=ct_questionnaire)
         perm_add_questionnaire = Permission.objects.get(
-            codename='add_questionnaire')
+            codename='add_questionnaire',
+            content_type=ct_questionnaire)
         perm_change_questionnaire = Permission.objects.get(
-            codename='change_questionnaire')
+            codename='change_questionnaire',
+            content_type=ct_questionnaire)
         perm_delete_questionnaire = Permission.objects.get(
-            codename='delete_questionnaire')
+            codename='delete_questionnaire',
+            content_type=ct_questionnaire)
 
+        ct_submission = ContentType.objects.get_for_model(Submission)
         perm_view_submission = Permission.objects.get(
-            codename='view_submission')
+            codename='view_submission',
+            content_type=ct_submission)
         perm_add_submission = Permission.objects.get(
-            codename='add_submission')
+            codename='add_submission',
+            content_type=ct_submission)
         perm_change_submission = Permission.objects.get(
-            codename='change_submission')
+            codename='change_submission',
+            content_type=ct_submission)
         perm_delete_submission = Permission.objects.get(
-            codename='delete_submission')
+            codename='delete_submission',
+            content_type=ct_submission)
 
         superusers.permissions.add(perm_view_questionnaire)
         superusers.permissions.add(perm_add_questionnaire)
