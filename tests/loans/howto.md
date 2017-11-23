@@ -42,11 +42,11 @@ pip install -r requirements.txt
 
 ## Поиск среди анкет по одному из критериев (name, phone, passport)
 
-    http --auth {superuser, partner, bank}:qwer1234 GET http://127.0.0.1:8000/loans/partner_api/questionnaires/?search={name,phone,passport}
+    http --auth {superuser, partner, bank}:qwer1234 GET http://127.0.0.1:8000/loans/partner_api/questionnaires/?search={name,phone,passport}/
 
 ## Получение отсортированного списка анкет по одному из критериев (created, modified, birthday, score)
 
-    http --auth {superuser, partner, bank}:qwer1234 GET http://127.0.0.1:8000/loans/partner_api/questionnaires/?ordering={created,modified,birthday,score} 
+    http --auth {superuser, partner, bank}:qwer1234 GET http://127.0.0.1:8000/loans/partner_api/questionnaires/?ordering={created,modified,birthday,score}/
 
 ## Создание анкеты
 
@@ -54,7 +54,7 @@ pip install -r requirements.txt
 
 ## Изменение анкеты
 
-    http --auth superuser:qwer1234 PUT http://127.0.0.1:8000/loans/partner_api/questionnaires/ <<< '{"name": "Исаак Моисеевич", "birthday": "1977-05-30", "passport": "cba981", "phone": "425-58-12", "score": 11}'
+    http --auth superuser:qwer1234 PUT http://127.0.0.1:8000/loans/partner_api/questionnaires/{id}/ <<< '{"name": "Исаак Моисеевич", "birthday": "1977-05-30", "passport": "cba981", "phone": "425-58-12", "score": 11}'
 
 ## Удаление анкеты
 
@@ -72,15 +72,15 @@ pip install -r requirements.txt
 
 ## Получение отфильтрованного списка заявок по критерию status:
     
-    http --auth bank:qwer1234 GET http://127.0.0.1:8000/loans/bank_api/submissions/?status={0,1,2}
+    http --auth bank:qwer1234 GET http://127.0.0.1:8000/loans/bank_api/submissions/?status={0,1,2}/
 
 ## Поиск среди заявок по одному из критериев (application, questionnaire):
     
-    http --auth bank:qwer1234 GET http://127.0.0.1:8000/loans/bank_api/submissions/?search={application data,questionnaire data}
+    http --auth bank:qwer1234 GET http://127.0.0.1:8000/loans/bank_api/submissions/?search={application data,questionnaire data}/
 
 ## Получение отсортированного списка анкет по одному из критериев (created, submitted):
 
-    http --auth bank:qwer1234 GET http://127.0.0.1:8000/loans/bank_api/submissions/?ordering={created, submitted}
+    http --auth bank:qwer1234 GET http://127.0.0.1:8000/loans/bank_api/submissions/?ordering={created, submitted}/
 
 ## Получение определённой заявки
 
@@ -88,13 +88,9 @@ pip install -r requirements.txt
 
 При просмотре заявки Кредитной организацией статус заявки меняется на RECEIVED
 
-## Создание заявки
-
-    http --auth {superuser, partner, bank}:qwer1234 POST http://127.0.0.1:8000/loans/bank_api/submissions/ <<< '{"application": 1, "questionnaire": 1, "status": 2}'
-
 ## Изменение заявки
 
-    http --auth superuser:qwer1234 PUT http://127.0.0.1:8000/loans/bank_api/submissions/ <<< '{"application": 1, "questionnaire": 1, "status": 1}'
+    http --auth superuser:qwer1234 PUT http://127.0.0.1:8000/loans/bank_api/submissions/{id}/ <<< '{"application": 1, "questionnaire": 1, "status": 1}'
 
 ## Удаление заявки
 
