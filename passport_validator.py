@@ -21,6 +21,12 @@ def is_passport_valid(birthday, issued):
         print(e)
         return
 
+    try:
+        date_issued_current_passport = dt.strptime(issued, '%Y-%m-%d')
+    except ValueError as e:
+        print(e)
+        return
+
     date_passport_first_issue = date_birthday + relativedelta(years=14)
     date_passport_first_due = date_birthday + relativedelta(years=20)
 
@@ -31,16 +37,10 @@ def is_passport_valid(birthday, issued):
     date_passport_third_issue = date_passport_second_due + relativedelta(
         months=1)
 
-    try:
-        date_issued_current_passport = dt.strptime(issued, '%Y-%m-%d')
-    except ValueError as e:
-        print(e)
-        return
-
-    return \
-        date_passport_first_issue <= date_issued_current_passport < date_passport_first_due or \
-        date_passport_second_issue <= date_issued_current_passport < date_passport_second_due or \
-        date_passport_third_issue <= date_issued_current_passport
+    return any([
+        date_passport_first_issue <= date_issued_current_passport < date_passport_first_due,
+        date_passport_second_issue <= date_issued_current_passport < date_passport_second_due,
+        date_passport_third_issue <= date_issued_current_passport])
 
 
 if __name__ == '__main__':
