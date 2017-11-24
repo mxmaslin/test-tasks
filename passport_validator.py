@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime as dt
-# sudo pip install python-dateutil
 from dateutil.relativedelta import relativedelta
 
 
@@ -12,19 +11,21 @@ def is_passport_valid(birthday, issued):
         Функция должна принимать две даты - дата рождения и дату выдачи паспорта, возвращать должна True если паспорт действителен, False - есть нет.
 
         Мой комментарий:
+	Для работы скрипта нужен python 2
+	Перед началом использования надо сделать sudo pip install python-dateutil (проблема в том, что datetime.timedelta не принимает годы)
         Даты принимаются в формате YYYY-MM-DD
         Исходим из того, что в течение выделенного на замену месяца паспорт является недействительным
     '''
     try:
         date_birthday = dt.strptime(birthday, '%Y-%m-%d')
     except ValueError as e:
-        print(e)
+        print e
         return
 
     try:
         date_issued_current_passport = dt.strptime(issued, '%Y-%m-%d')
     except ValueError as e:
-        print(e)
+        print e
         return
 
     date_passport_first_issue = date_birthday + relativedelta(years=14)
