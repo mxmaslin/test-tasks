@@ -187,7 +187,9 @@ class Submission(models.Model):
             request.user.groups.filter(
                 name='Суперпользователи').exists(),
             request.user.groups.filter(
-                name='Партнёры').exists()])
+                name='Партнёры').exists(),
+            request.user.groups.filter(
+                name='Кредитные организации').exists()])
 
     @staticmethod
     @authenticated_users
