@@ -177,19 +177,17 @@ class Submission(models.Model):
             name='Кредитные организации').exists()
 
     def has_object_read_permission(self, request):
-        if request.user.is_anonymous():
-            return False
         return request.user.groups.filter(
             name='Кредитные организации').exists()
 
     @staticmethod
     @authenticated_users
     def has_write_permission(request):
-        return \
+        return any([
             request.user.groups.filter(
-                name='Суперпользователи').exists() or \
+                name='Суперпользователи').exists(),
             request.user.groups.filter(
-                name='Партнёры').exists()
+                name='Партнёры').exists()])
 
     @staticmethod
     @authenticated_users
