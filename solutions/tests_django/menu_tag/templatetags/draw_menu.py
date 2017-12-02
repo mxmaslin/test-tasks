@@ -11,7 +11,13 @@ register = template.Library()
 def draw_menu(context, menu_slug):
     request = context['request']
     url = request.build_absolute_uri().split('?')[0]
-    menu_obj = Menu.objects.get(slug=menu_slug)
+    try:
+        menu_obj = Menu.objects.get(slug=menu_slug)
+    except Menu.DoesNotExist:
+        return format_html(
+            'Menu {} is absent in DB'.format(menu_slug))
+    else:
+        pass
     item_slug = request.GET.get('item', None)
 
     def walk_items(item_list):

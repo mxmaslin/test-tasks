@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            {% block title %}
+            {% endblock title %}
+        </title>
+    </head>
+    <body>
+        <header>
+        </header>
+        <div id="wrapper">
+            {% block content %}
+                If you see this, something is wrong!
+            {% endblock content %}
+        </div>
+        <div class="footer">
+        </div>
+    </body>
+</html>

@@ -12,7 +12,7 @@
 pip install -r requirements.txt
 ./manage.py makemigrations
 ./manage.py migrate
-./manage.py prepare_environment
+./manage.py prepare_loans
 ```
 
 В результате создадутся
