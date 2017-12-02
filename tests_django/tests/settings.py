@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'dry_rest_permissions',
     'testing',
     'loans',
+    'menu_tag'
 ]
 
 MIDDLEWARE = [
