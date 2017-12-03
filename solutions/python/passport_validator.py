@@ -9,7 +9,6 @@ def is_passport_valid(birthday, issued):
     except ValueError as e:
         print e
         return
-
     try:
         date_issued_current_passport = dt.strptime(issued, '%Y-%m-%d')
     except ValueError as e:
