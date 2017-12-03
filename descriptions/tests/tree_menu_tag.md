@@ -19,4 +19,4 @@ You need a django-app, which allows you to add a menu (one or more) to the datab
 
 You should use only Django and Python's standard library for this task, with no additional 3rd-party libraries.
 
-[Решение](https://github.com/mxmaslin/Test-tasks/blob/master/solutions/python/passport_validator.py "Решение задания на валидацию паспорта")
+[Решение](https://github.com/mxmaslin/Test-tasks/tree/master/solutions/tests_django/menu_tag " Решение задания на реализацию кастомного тега для древовидного меню")
