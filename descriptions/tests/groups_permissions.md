@@ -74,3 +74,5 @@
 python django, rest framework
 
 Вы можете использовать свои технологии, тогда решение нужно будет обосновать. Желаем успеха в решении тестового задания.
+
+[Решение].(https://github.com/mxmaslin/Test-tasks/tree/master/solutions/tests_django/loans "Решение задачи на группы и права")
