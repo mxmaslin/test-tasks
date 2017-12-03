@@ -17,4 +17,4 @@
 
 ## Python
 
-- [Валидация паспорта](https://github.com/mxmaslin/Test-tasks/blob/master/solutions/python/passport_validator.py "Задание на валидацию паспорта"). [Решение](https://github.com/mxmaslin/Test-tasks/blob/master/solutions/python/passport_validator.py "Решение задания на валидацию паспорта")
+- [Валидация паспорта](https://github.com/mxmaslin/Test-tasks/blob/master/descriptions/tests/passport_validation.md "Задание на валидацию паспорта"). [Решение](https://github.com/mxmaslin/Test-tasks/blob/master/solutions/python/passport_validator.py "Решение задания на валидацию паспорта")
