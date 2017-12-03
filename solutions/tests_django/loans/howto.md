@@ -1,4 +1,4 @@
-# [Описание задачи](https://github.com/mxmaslin/Test-tasks/blob/master/solutions/python/passport_validator.py "Описание задачи на создание групп и прав")
+# [Описание задачи](https://github.com/mxmaslin/Test-tasks/blob/master/descriptions/tests/groups_permissions.md "Описание задачи на создание групп и прав")
 
 # Требования к программной части
 

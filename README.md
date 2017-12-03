@@ -10,7 +10,7 @@
 
 ## Django
 
-- [Реализация групп, полномочий](https://github.com/mxmaslin/Test-tasks/blob/master/descriptions/tests/test12.md "Задание на реализацию групп и полномочий в Django"). [Решение](https://github.com/mxmaslin/Test-tasks/tree/master/solutions/tests_django/loans "Решение задания на реализацию групп и полномочий в Django")
+- [Реализация групп, полномочий](https://github.com/mxmaslin/Test-tasks/blob/master/descriptions/tests/groups_permissions.md "Задание на реализацию групп и полномочий в Django"). [Решение](https://github.com/mxmaslin/Test-tasks/tree/master/solutions/tests_django/loans "Решение задания на реализацию групп и полномочий в Django")
 - [Кастомный тег, реализующий древовидное меню]( "Задание на реализацию кастомного тега для древовидного меню"). [Решение](https://github.com/mxmaslin/Test-tasks/tree/master/solutions/tests_django/menu_tag " Решение задания на реализацию кастомного тега для древовидного меню")
 
 ## Flask
