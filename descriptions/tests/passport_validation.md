@@ -4,7 +4,7 @@
 
 Функция должна принимать две даты - дата рождения и дату выдачи паспорта, возвращать должна True если паспорт действителен, False - есть нет.
 
-Решение: https://github.com/mxmaslin/Test-tasks/blob/master/solutions/python/passport_validator.py
+[Решение](https://github.com/mxmaslin/Test-tasks/blob/master/solutions/python/passport_validator.py "Решение задания на валидацию паспорта").
 
 Моё примечание:
 - Скрипт работает в python 2.
