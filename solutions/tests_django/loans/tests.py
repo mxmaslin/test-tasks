@@ -43,16 +43,36 @@ class PartnerAPITestCase(TestCase):
         self.assertEqual(response.status_code, 403)
 
     def test_get_questionnaire_by_id_superuser(self):
-        pass
+        self.client.login(
+            username='superuser',
+            password='qwer1234')
+        response = self.client.get('/loans/partner_api/questionnaires/1/')
+        self.client.logout()
+        self.assertEqual(response.status_code, 200)
 
     def test_get_questionnaire_by_id_partner(self):
-        pass
+        self.client.login(
+            username='partner',
+            password='qwer1234')
+        response = self.client.get('/loans/partner_api/questionnaires/1/')
+        self.client.logout()
+        self.assertEqual(response.status_code, 200)
 
     def test_get_questionnaire_by_id_bank(self):
-        pass
+        self.client.login(
+            username='bank',
+            password='qwer1234')
+        response = self.client.get('/loans/partner_api/questionnaires/1/')
+        self.client.logout()
+        self.assertEqual(response.status_code, 200)
 
     def test_get_questionnaire_by_id_wrong_guy(self):
-        pass
+        self.client.login(
+            username='wrong_guy',
+            password='qwer1234')
+        response = self.client.get('/loans/partner_api/questionnaires/1/')
+        self.client.logout()
+        self.assertEqual(response.status_code, 403)
 
     def test_create_questionnaire_superuser(self):
         pass
