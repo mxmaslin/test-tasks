@@ -1,14 +1,22 @@
+import base64
 from django.test import Client, TestCase
 
 from .models import Application, Questionnaire, Submission
 
 
 class PartnerAPITestCase(TestCase):
+    fixtures = ['testdata', 'user']
+
     def setUp(self):
         self.client = Client()
 
     def test_get_all_questionnaires_superuser(self):
-        pass
+        self.client.login(
+            username='superuser',
+            password='qwer1234')
+        response = self.client.get('/loans/partner_api/questionnaires/')
+        self.client.logout()
+        self.assertEqual(response.status_code, 200)
 
     def test_get_all_questionnaires_partner(self):
         pass
@@ -17,7 +25,12 @@ class PartnerAPITestCase(TestCase):
         pass
 
     def test_get_all_questionnaires_wrong_guy(self):
-        pass
+        self.client.login(
+            username='wrong_guy',
+            password='qwer1234')
+        response = self.client.get('/loans/partner_api/questionnaires/')
+        self.client.logout()
+        self.assertEqual(response.status_code, 403)
 
     def test_get_questionnaire_by_id_superuser(self):
         pass
