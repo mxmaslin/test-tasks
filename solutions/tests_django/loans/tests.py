@@ -1,4 +1,5 @@
 import base64
+import json
 from django.test import Client, TestCase
 
 from .models import Application, Questionnaire, Submission
@@ -75,19 +76,56 @@ class PartnerAPITestCase(TestCase):
         self.assertEqual(response.status_code, 403)
 
     def test_create_questionnaire_superuser(self):
-        pass
+        self.client.login(
+            username='superuser',
+            password='qwer1234')
+        response = self.client.post(
+            '/loans/partner_api/questionnaires/',
+            {'name': 'John Doe'})
+        self.client.logout()
+        self.assertEqual(response.status_code, 201)
 
     def test_create_questionnaire_partner(self):
-        pass
+        self.client.login(
+            username='partner',
+            password='qwer1234')
+        response = self.client.post(
+            '/loans/partner_api/questionnaires/',
+            {'name': 'John Doe'})
+        self.client.logout()
+        self.assertEqual(response.status_code, 201)
 
     def test_create_questionnaire_bank(self):
-        pass
+        self.client.login(
+            username='bank',
+            password='qwer1234')
+        response = self.client.post(
+            '/loans/partner_api/questionnaires/',
+            {'name': 'John Doe'})
+        self.client.logout()
+        self.assertEqual(response.status_code, 201)
 
     def test_create_questionnaire_wrong_guy(self):
-        pass
+        self.client.login(
+            username='wrong_guy',
+            password='qwer1234')
+        response = self.client.post(
+            '/loans/partner_api/questionnaires/',
+            {'name': 'John Doe'})
+        self.client.logout()
+        self.assertEqual(response.status_code, 403)
 
     def test_modify_questionnaire_superuser(self):
-        pass
+        self.client.login(
+            username='superuser',
+            password='qwer1234')
+        response = self.client.put(
+            '/loans/partner_api/questionnaires/1/',
+            data=json.dumps({"name": "Jane Doe"}),
+            content_type='application/json')
+        print(response.request['wsgi.input'].read())
+        self.client.logout()
+        self.assertEqual(response.status_code, 200)
 
     def test_modify_questionnaire_partner(self):
         pass
