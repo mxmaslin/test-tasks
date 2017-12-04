@@ -19,10 +19,20 @@ class PartnerAPITestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_get_all_questionnaires_partner(self):
-        pass
+        self.client.login(
+            username='partner',
+            password='qwer1234')
+        response = self.client.get('/loans/partner_api/questionnaires/')
+        self.client.logout()
+        self.assertEqual(response.status_code, 200)
 
     def test_get_all_questionnaires_bank(self):
-        pass
+        self.client.login(
+            username='bank',
+            password='qwer1234')
+        response = self.client.get('/loans/partner_api/questionnaires/')
+        self.client.logout()
+        self.assertEqual(response.status_code, 200)
 
     def test_get_all_questionnaires_wrong_guy(self):
         self.client.login(
