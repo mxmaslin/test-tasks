@@ -6,7 +6,7 @@ from .models import Application, Questionnaire, Submission
 
 
 class PartnerAPITestCase(TestCase):
-    fixtures = ['testdata', 'user']
+    fixtures = ['testdata', 'auth']
 
     def setUp(self):
         self.client = Client()
@@ -121,20 +121,47 @@ class PartnerAPITestCase(TestCase):
             password='qwer1234')
         response = self.client.put(
             '/loans/partner_api/questionnaires/1/',
-            data=json.dumps({"name": "Jane Doe"}),
-            content_type='application/json')
-        print(response.request['wsgi.input'].read())
+            '{"name": "Jane Doe"}',
+            'application/json',
+            )
         self.client.logout()
         self.assertEqual(response.status_code, 200)
 
     def test_modify_questionnaire_partner(self):
-        pass
+        self.client.login(
+            username='partner',
+            password='qwer1234')
+        response = self.client.put(
+            '/loans/partner_api/questionnaires/1/',
+            '{"name": "Jane Doe"}',
+            'application/json',
+            )
+        self.client.logout()
+        self.assertEqual(response.status_code, 403)
 
     def test_modify_questionnaire_bank(self):
-        pass
+        self.client.login(
+            username='bank',
+            password='qwer1234')
+        response = self.client.put(
+            '/loans/partner_api/questionnaires/1/',
+            '{"name": "Jane Doe"}',
+            'application/json',
+            )
+        self.client.logout()
+        self.assertEqual(response.status_code, 403)
 
     def test_modify_questionnaire_wrong_guy(self):
-        pass
+        self.client.login(
+            username='wrong_guy',
+            password='qwer1234')
+        response = self.client.put(
+            '/loans/partner_api/questionnaires/1/',
+            '{"name": "Jane Doe"}',
+            'application/json',
+            )
+        self.client.logout()
+        self.assertEqual(response.status_code, 403)
 
     def test_delete_questionnaire_superuser(self):
         pass
