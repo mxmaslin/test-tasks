@@ -200,45 +200,131 @@ class PartnerAPITestCase(TestCase):
         self.assertEqual(response.status_code, 403)
 
     def test_create_submission_superuser(self):
-        pass
+        self.client.login(
+            username='superuser',
+            password='qwer1234')
+        response = self.client.post(
+            '/loans/partner_api/make_submission/', {
+                "application": 1,
+                "questionnaire": 1,
+                "status": 1,
+                "created": "2017-11-10T18:23:16.913526Z",
+                "submitted": "2017-11-10T18:23:16.913526Z"})
+        self.client.logout()
+        self.assertEqual(response.status_code, 201)
 
     def test_create_submission_partner(self):
-        pass
+        self.client.login(
+            username='partner',
+            password='qwer1234')
+        response = self.client.post(
+            '/loans/partner_api/make_submission/', {
+                "application": 1,
+                "questionnaire": 1,
+                "status": 1,
+                "created": "2017-11-10T18:23:16.913526Z",
+                "submitted": "2017-11-10T18:23:16.913526Z"})
+        self.client.logout()
+        self.assertEqual(response.status_code, 201)
 
     def test_create_submission_bank(self):
-        pass
+        self.client.login(
+            username='bank',
+            password='qwer1234')
+        response = self.client.post(
+            '/loans/partner_api/make_submission/', {
+                "application": 1,
+                "questionnaire": 1,
+                "status": 1,
+                "created": "2017-11-10T18:23:16.913526Z",
+                "submitted": "2017-11-10T18:23:16.913526Z"})
+        self.client.logout()
+        self.assertEqual(response.status_code, 201)
 
     def test_create_submission_wrong_guy(self):
-        pass
+        self.client.login(
+            username='wrong_guy',
+            password='qwer1234')
+        response = self.client.post(
+            '/loans/partner_api/make_submission/', {
+                "application": 1,
+                "questionnaire": 1,
+                "status": 1,
+                "created": "2017-11-10T18:23:16.913526Z",
+                "submitted": "2017-11-10T18:23:16.913526Z"})
+        self.client.logout()
+        self.assertEqual(response.status_code, 403)
 
 
 class BankAPITestCase(TestCase):
+    fixtures = ['testdata', 'auth']
+
     def setUp(self):
         self.client = Client()
 
     def test_get_all_submissions_superuser(self):
-        pass
+        self.client.login(
+            username='superuser',
+            password='qwer1234')
+        response = self.client.get('/loans/bank_api/submissions/')
+        self.client.logout()
+        self.assertEqual(response.status_code, 403)
 
     def test_get_all_submissions_partner(self):
-        pass
+        self.client.login(
+            username='partner',
+            password='qwer1234')
+        response = self.client.get('/loans/bank_api/submissions/')
+        self.client.logout()
+        self.assertEqual(response.status_code, 403)
 
     def test_get_all_submissions_bank(self):
-        pass
+        self.client.login(
+            username='bank',
+            password='qwer1234')
+        response = self.client.get('/loans/bank_api/submissions/')
+        self.client.logout()
+        self.assertEqual(response.status_code, 200)
 
     def test_get_all_submissions_wrong_guy(self):
-        pass
+        self.client.login(
+            username='wrong_guy',
+            password='qwer1234')
+        response = self.client.get('/loans/bank_api/submissions/')
+        self.client.logout()
+        self.assertEqual(response.status_code, 403)
 
     def test_get_submission_by_id_superuser(self):
-        pass
+        self.client.login(
+            username='superuser',
+            password='qwer1234')
+        response = self.client.get('/loans/bank_api/submissions/1/')
+        self.client.logout()
+        self.assertEqual(response.status_code, 403)
 
     def test_get_submission_by_id_partner(self):
-        pass
+        self.client.login(
+            username='partner',
+            password='qwer1234')
+        response = self.client.get('/loans/bank_api/submissions/1/')
+        self.client.logout()
+        self.assertEqual(response.status_code, 403)
 
     def test_get_submission_by_id_bank(self):
-        pass
+        self.client.login(
+            username='bank',
+            password='qwer1234')
+        response = self.client.get('/loans/bank_api/submissions/1/')
+        self.client.logout()
+        self.assertEqual(response.status_code, 200)
 
     def test_get_submission_by_id_wrong_guy(self):
-        pass
+        self.client.login(
+            username='wrong_guy',
+            password='qwer1234')
+        response = self.client.get('/loans/bank_api/submissions/1/')
+        self.client.logout()
+        self.assertEqual(response.status_code, 403)
 
     def test_modify_submission_superuser(self):
         pass
