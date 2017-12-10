@@ -327,25 +327,85 @@ class BankAPITestCase(TestCase):
         self.assertEqual(response.status_code, 403)
 
     def test_modify_submission_superuser(self):
-        pass
+        self.client.login(
+            username='superuser',
+            password='qwer1234')
+        response = self.client.put(
+            '/loans/bank_api/submissions/1/',
+            '{"application": 1, "questionnaire": 1, "status": 2}',
+            'application/json',
+            )
+        self.client.logout()
+        self.assertEqual(response.status_code, 200)
 
     def test_modify_submission_partner(self):
-        pass
+        self.client.login(
+            username='partner',
+            password='qwer1234')
+        response = self.client.put(
+            '/loans/bank_api/submissions/1/',
+            '{"application": 1, "questionnaire": 1, "status": 2}',
+            'application/json',
+            )
+        self.client.logout()
+        self.assertEqual(response.status_code, 403)
 
     def test_modify_submission_bank(self):
-        pass
+        self.client.login(
+            username='bank',
+            password='qwer1234')
+        response = self.client.put(
+            '/loans/bank_api/submissions/1/',
+            '{"application": 1, "questionnaire": 1, "status": 2}',
+            'application/json',
+            )
+        self.client.logout()
+        self.assertEqual(response.status_code, 403)
 
     def test_modify_submission_wrong_guy(self):
-        pass
+        self.client.login(
+            username='wrong_guy',
+            password='qwer1234')
+        response = self.client.put(
+            '/loans/bank_api/submissions/1/',
+            '{"application": 1, "questionnaire": 1, "status": 2}',
+            'application/json',
+            )
+        self.client.logout()
+        self.assertEqual(response.status_code, 403)
 
     def test_delete_submission_superuser(self):
-        pass
+        self.client.login(
+            username='superuser',
+            password='qwer1234')
+        response = self.client.delete(
+            '/loans/bank_api/submissions/1/')
+        self.client.logout()
+        self.assertEqual(response.status_code, 204)
 
     def test_delete_submission_partner(self):
-        pass
+        self.client.login(
+            username='partner',
+            password='qwer1234')
+        response = self.client.delete(
+            '/loans/bank_api/submissions/1/')
+        self.client.logout()
+        self.assertEqual(response.status_code, 403)
 
     def test_delete_submission_bank(self):
-        pass
+        self.client.login(
+            username='bank',
+            password='qwer1234')
+        response = self.client.delete(
+            '/loans/bank_api/submissions/1/')
+        self.client.logout()
+        self.assertEqual(response.status_code, 403)
 
     def test_delete_submission_wrong_guy(self):
-        pass
+        self.client.login(
+            username='wrong_guy',
+            password='qwer1234')
+        response = self.client.delete(
+            '/loans/bank_api/submissions/1/')
+        self.client.logout()
+        self.assertEqual(response.status_code, 403)
