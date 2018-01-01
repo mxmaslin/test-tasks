@@ -7,7 +7,7 @@ from .models import Menu, MenuItem
 
 @admin.register(Menu)
 class MenuAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('title', 'slug')
 
 
 class MenuAdminForm(forms.ModelForm):
@@ -24,4 +24,9 @@ class MenuAdminForm(forms.ModelForm):
 @admin.register(MenuItem)
 class MenuAdmin(admin.ModelAdmin):
     form = MenuAdminForm
-    pass
+
+    list_display = (
+        'title',
+        'slug',
+        'menu',
+        'parent')
