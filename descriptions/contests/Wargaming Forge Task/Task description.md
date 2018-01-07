@@ -25,9 +25,11 @@
 **Выходные данные**
 
 |Рейтинги игроков|Команды|
+|---|---|
 |Сбалансированные пары команды|Username_task_1_team_pairs/{test_name}_pairs.txt|
-|Обоснование алгоритма|Username_task_1_Report.pdf|
 |Исходный код программы|Username_task_1_src/*|
 
 Вместо каждого {test_name}, подставь названия тестов (название папок, в которых лежат тесты). Каждый выходной файл {test_name}_pairs.txt должен иметь формат
 "<team_id> <team_id>". Если команд нечетное количество, то без пары должна остаться только одна команда.
+
+[Решение](https://github.com/mxmaslin/Test-tasks/blob/master/descriptions/contests/Wargaming%20Forge%20Task/Username_task_1_src.py "Решение алгоритмического задания конкурса Wargaming Forge")
