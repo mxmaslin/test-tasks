@@ -17,5 +17,5 @@
 ## Python
 
 - [Валидация паспорта](https://github.com/mxmaslin/Test-tasks/blob/master/descriptions/tasks/passport_validation.md "Задание на валидацию паспорта"). [Решение](https://github.com/mxmaslin/Test-tasks/blob/master/solutions/tests_python/passport_validator.py "Решение задания на валидацию паспорта")
-- [Получение из MongoDB данных и их форматирование](https://github.com/mxmaslin/Test-tasks/blob/master/descriptions/tasks/extract_from_mongo.md). [Решение](https://github.com/mxmaslin/Test-tasks/blob/master/solutions/tests_python/extract_from_mongo.py "Решение задания на получение из MongoDB данных и их форматирование")
+- [Получение из MongoDB данных и их форматирование](https://github.com/mxmaslin/Test-tasks/blob/master/descriptions/tasks/extract_from_mongo.md). [Решение](https://github.com/mxmaslin/Test-tasks/blob/master/solutions/tests_python/extract_from_mongo/task.py "Решение задания на получение из MongoDB данных и их форматирование")
 - TODO: https://gist.github.com/sayplastic/76bcebc3a554ea03e3cf296412b60b77

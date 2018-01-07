@@ -39,4 +39,4 @@
 
 Все модели данных есть в файле task.py. Запуск теста автоматически создаст необходимые записи в базе. Для запуска проекта используйте docker-compose, в папке проекта выполните команду docker-compose up.
 
-[Решение](https://github.com/mxmaslin/Test-tasks/blob/master/solutions/tests_python/extract_from_mongo/task.py "Решение задания на получение из MongoDB данных и их форматирование").
+[Решение](https://github.com/mxmaslin/Test-tasks/blob/master/solutions/tests_python/extract_from_mongo/task.py "Решение задания на получение из MongoDB данных и их форматирование")
