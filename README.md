@@ -14,9 +14,8 @@
 - [Кастомный тег, реализующий древовидное меню](https://github.com/mxmaslin/Test-tasks/blob/master/descriptions/tests/tree_menu_tag.md "Задание на реализацию кастомного тега для древовидного меню"). [Решение](https://github.com/mxmaslin/Test-tasks/tree/master/solutions/tests_django/menu_tag " Решение задания на реализацию кастомного тега для древовидного меню")
 - https://docs.google.com/document/d/1r5g-Mb0rp7_a20bpXCS-UJamDxXTPUyhmgymWwKaCPA/edit
 
-## Flask
-
 ## Python
 
 - [Валидация паспорта](https://github.com/mxmaslin/Test-tasks/blob/master/descriptions/tests/passport_validation.md "Задание на валидацию паспорта"). [Решение](https://github.com/mxmaslin/Test-tasks/blob/master/solutions/tests_python/passport_validator.py "Решение задания на валидацию паспорта")
 - https://gist.github.com/sayplastic/76bcebc3a554ea03e3cf296412b60b77
+- [Получение из MongoDB данных и их форматирование]()
