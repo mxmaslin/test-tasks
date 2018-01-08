@@ -5,6 +5,7 @@ import random
 import unittest
 
 from pprint import pprint
+from jsonschema import validate
 
 class ImagesEnum(enum.Enum):
     cover = 'cover'
@@ -179,10 +180,62 @@ class TestTask(unittest.TestCase):
                         episode_dict['files'].append(file_dict)
                     season_dict['episodes'].append(episode_dict)
                 serie_dict['seasons'].append(season_dict)
-
-
             result.append(serie_dict)
         return result
+
+    def test_03_validate_result(self):
+        schema = {
+                    "type": "object",
+                    "properties": {
+                        "path": {"type": "string"},
+                        "title": {"type": "string"},
+                        "description": {"type": "string"},
+                        "cover": {"type": "string"},
+                        "quote": {"type": "string"},
+                        "quote_source": {"type": "string"},
+                        "slide": {
+                            "type": "object",
+                            "properties": {
+                                "background": {"type": "string"},
+                                "foreground": {"type": "string"}
+                            }
+                        },
+                        "seasons": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "path": {"type": "string"},
+                                    "title": {"type": "number"},
+                                    "episodes": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": { 
+                                                "path": {"type": "string"},
+                                                "title": {"type": "string"},
+                                                "files": {                                               
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "path": {"type": "string"},
+                                                            "label": {"type": "string"},
+                                                            "quality": {"type": "number"}
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+        inst = self.test_02_create_documents()[0]
+        self.assertIsNone(validate(inst, schema))
+
 
 if __name__ == '__main__':
     unittest.main()
