@@ -9,8 +9,7 @@ class QuestionSet(models.Model):
         Тест. Состоит из нескольких вопросов
     '''
 
-    author = models.ForeignKey(
-        User)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     created = models.DateTimeField(auto_now_add=True)
 
@@ -41,8 +40,7 @@ class Option(models.Model):
     '''
         Вариант ответа на вопрос
     '''
-    question = models.ForeignKey(
-        Question)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
     value = models.CharField(max_length=255)
     ordering = models.PositiveSmallIntegerField(default=1, unique=True)
     is_correct = models.BooleanField()
@@ -58,9 +56,8 @@ class RespondentSubmission(models.Model):
     '''
         Ответ респондента на вопрос теста
     '''
-    respondent = models.ForeignKey(
-        User)
-    option = models.ForeignKey(Option)
+    respondent = models.ForeignKey(User, on_delete=models.CASCADE)
+    option = models.ForeignKey(Option, on_delete=models.CASCADE)
 
     class Meta:
         ordering = ('respondent', 'option')

@@ -24,13 +24,17 @@ class MenuItem(models.Model):
         max_length=50)
     slug = models.SlugField(unique=True)
     menu = models.ForeignKey(
-        Menu, related_name='menu_items', verbose_name='Меню')
+        Menu,
+        related_name='menu_items',
+        verbose_name='Меню',
+        on_delete=models.CASCADE)
     parent = models.ForeignKey(
         'self',
         blank=True,
         null=True,
         related_name='children',
-        verbose_name='Родитель')
+        verbose_name='Родитель',
+        on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = 'Элемент меню'

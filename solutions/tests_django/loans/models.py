@@ -49,7 +49,7 @@ class Application(models.Model):
         blank=True,
         null=True,
         verbose_name='Макс. скоринговый балл')
-    bank = models.ForeignKey(User)
+    bank = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
         ordering = ('-created',)
