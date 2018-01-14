@@ -7,6 +7,7 @@ import unittest
 from pprint import pprint
 from jsonschema import validate
 
+
 class ImagesEnum(enum.Enum):
     cover = 'cover'
     background = 'background'
@@ -181,6 +182,7 @@ class TestTask(unittest.TestCase):
                     season_dict['episodes'].append(episode_dict)
                 serie_dict['seasons'].append(season_dict)
             result.append(serie_dict)
+        pprint(result)
         return result
 
     def test_03_validate_result(self):
