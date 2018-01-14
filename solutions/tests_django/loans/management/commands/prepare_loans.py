@@ -13,9 +13,9 @@ from loans.models import (
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
-        superusers = Group.objects.create(name='Суперпользователи')
-        partners = Group.objects.create(name='Партнёры')
-        banks = Group.objects.create(name='Кредитные организации')
+        superusers = Group.objects.get_or_create(name='Суперпользователи')[0]
+        partners = Group.objects.get_or_create(name='Партнёры')[0]
+        banks = Group.objects.get_or_create(name='Кредитные организации')[0]
 
         ct_application = ContentType.objects.get_for_model(Application)
         perm_view_application = Permission.objects.get(
@@ -76,27 +76,33 @@ class Command(BaseCommand):
         banks.permissions.add(perm_view_submission)
         banks.permissions.add(perm_add_submission)
 
-        User.objects.create_superuser(
-            username='admin',
-            password='qwer1234',
-            email='admin@site.com')
+        User.objects.filter(username='admin').exists() or \
+            User.objects.create_superuser(
+                username='admin',
+                password='qwer1234',
+                email='admin@site.com')
 
-        superuser = User.objects.create_user(
-            username='superuser',
-            password='qwer1234',
-            is_staff=True)
-        superusers.user_set.add(superuser)
+        if not User.objects.filter(username='superuser').exists():
+            superuser = User.objects.create_user(
+                username='superuser',
+                password='qwer1234',
+                is_staff=True)
+            superusers.user_set.add(superuser)
 
-        partner = User.objects.create_user(
-            username='partner',
-            password='qwer1234',
-            is_staff=True)
-        partners.user_set.add(partner)
+        if not User.objects.filter(username='partner').exists():
+            partner = User.objects.create_user(
+                username='partner',
+                password='qwer1234',
+                is_staff=True)
+            partners.user_set.add(partner)
 
-        bank = User.objects.create_user(
-            username='bank',
-            password='qwer1234',
-            is_staff=True)
+        if not User.objects.filter(username='bank').exists():
+            bank = User.objects.create_user(
+                username='bank',
+                password='qwer1234',
+                is_staff=True)
+        else:
+            bank = User.objects.get(username='bank')
         banks.user_set.add(bank)
 
         a = Application.objects.create(
