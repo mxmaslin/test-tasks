@@ -16,6 +16,6 @@
 
 ## Python
 
-- [Валидация паспорта](https://github.com/mxmaslin/Test-tasks/blob/master/descriptions/tasks/passport_validation.md "Задание на валидацию паспорта"). [Решение](https://github.com/mxmaslin/Test-tasks/blob/master/solutions/tests_python/passport_validator.py "Решение задания на валидацию паспорта")
+- [Валидация паспорта](https://github.com/mxmaslin/Test-tasks/tree/master/solutions/tests_python/passport_validator)
 - [Получение из MongoDB данных и их форматирование](https://github.com/mxmaslin/Test-tasks/tree/master/solutions/tests_python/yellowblackwhite-test01_python-9615024cdffa)
 - TODO: https://gist.github.com/sayplastic/76bcebc3a554ea03e3cf296412b60b77
