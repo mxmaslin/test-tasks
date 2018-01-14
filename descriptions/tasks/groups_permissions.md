@@ -76,3 +76,6 @@ python django, rest framework
 Вы можете использовать свои технологии, тогда решение нужно будет обосновать. Желаем успеха в решении тестового задания.
 
 [Решение](https://github.com/mxmaslin/Test-tasks/tree/master/solutions/tests_django/loans "Решение задачи на группы и права")
+
+К сожалению, приведённое выше решение не будет работать, пока зависимость [dry-rest-permissions](https://github.com/dbkaplan/dry-rest-permissions) не получит совместимость с Django 2.0.
+Cм. [мой pull-request](https://github.com/dbkaplan/dry-rest-permissions/pull/48)
