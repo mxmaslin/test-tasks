@@ -4,7 +4,7 @@
 
 ## [Wargaming Forge](http://wgforge.wargaming.com/)
 
-- [Алгоритмы и неравные матчи](https://github.com/mxmaslin/Test-tasks/blob/master/descriptions/contests/Wargaming%20Forge%20Task/Task%20description.md "Алгоритмическое задание конкурса Wargaming Forge"). [Решение](https://github.com/mxmaslin/Test-tasks/blob/master/descriptions/contests/Wargaming%20Forge%20Task/Username_task_1_src.py "Решение алгоритмического задания конкурса Wargaming Forge")
+- [Алгоритмы и неравные матчи](https://github.com/mxmaslin/Test-tasks/tree/master/tests_python/Wargaming%20Forge%20Task "Алгоритмическое задание конкурса Wargaming Forge")
 
 # Тестовые задания
 
