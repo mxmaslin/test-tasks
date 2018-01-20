@@ -41,19 +41,21 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'dry_rest_permissions',
+    'debug_toolbar',
     'testing',
     'loans',
     'menu_tag'
 ]
 
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware'
 ]
 
 ROOT_URLCONF = 'tests.urls'
@@ -87,8 +89,6 @@ DATABASES = {
     }
 }
 
-
-# AUTH_USER_MODEL = 'loans.User'
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -137,3 +137,5 @@ REST_FRAMEWORK = {
         'rest_framework.filters.OrderingFilter'
         )
 }
+
+INTERNAL_IPS = ['127.0.0.1']
