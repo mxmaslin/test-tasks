@@ -43,4 +43,4 @@
 Запуск теста автоматически создаст необходимые записи в базе.
 Для запуска проекта используйте docker-compose, в папке проекта выполните команду docker-compose up.
 
-Решение содержится в файле [task.py](https://github.com/mxmaslin/Test-tasks/blob/master/solutions/tests_python/yellowblackwhite-test01_python-9615024cdffa/task.py)
+Решение содержится в файле [task.py](https://github.com/mxmaslin/Test-tasks/blob/master/tests_python/yellowblackwhite-test01_python-9615024cdffa/task.py)
