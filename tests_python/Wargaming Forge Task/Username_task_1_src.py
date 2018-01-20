@@ -41,7 +41,6 @@ for root, dirs, files in os.walk(os.path.join('Wargaming Forge Task', 'task_1_da
             teams[team_id] = sum(map(lambda x: int(users[x]), user_ids))
 
     # ищем подходящую пару
-
     teams_sorted = sorted(teams, key=teams.__getitem__)
 
     for p, c, n in zip([None]+teams_sorted[:-1],
