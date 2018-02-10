@@ -18,4 +18,5 @@
 
 - [Валидация паспорта](https://github.com/mxmaslin/Test-tasks/tree/master/tests_python/passport_validator "Задание на реализацию валидации паспорта")
 - [Получение из MongoDB данных и их форматирование](https://github.com/mxmaslin/Test-tasks/tree/master/tests_python/yellowblackwhite-test01_python-9615024cdffa "Задание на извлечение данных из MongoDB и их форматирование")
+- [Определение эмоциональной окраски твитов]( "Задание на определение эмоциональной окраски твитов")
 - [TODO](https://gist.github.com/sayplastic/76bcebc3a554ea03e3cf296412b60b77)
