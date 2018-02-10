@@ -1,8 +1,7 @@
 Необходимо:
-1. Написать скрипт на Python который загружает в БД (sqlite3) данные по каждому твитту из файла “three_minutes_tweets.json.txt”:
+1. Написать скрипт на Python который загружает в БД (sqlite3) данные по каждому твиту из файла “three_minutes_tweets.json.txt”:
 Таблица Tweet
   name, tweet_text, country_code, display_url, lang, created_at, location
-Все необходимые файлы находятся во вложенном файле Documrnts.zip
 2. Добавить новую колонку tweet_sentiment
 3. Подумать как можно провести нормализацию данной таблицы, создать и применить SQL скрипт
 для нормализации
