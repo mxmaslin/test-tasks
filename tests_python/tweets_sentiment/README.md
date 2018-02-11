@@ -1,7 +1,5 @@
 Необходимо:
-1. Написать скрипт на Python который загружает в БД (sqlite3) данные по каждому твиту из файла [three_minutes_tweets.json.txt](https://raw.githubusercontent.com/mxmaslin/Test-tasks/master/tests_python/tweets_sentiment/three_minutes_tweets.json.txt):
-Таблица Tweet
-  name, tweet_text, country_code, display_url, lang, created_at, location
+1. Написать скрипт на Python который загружает в БД (sqlite3) данные по каждому твиту из файла [three_minutes_tweets.json.txt](https://raw.githubusercontent.com/mxmaslin/Test-tasks/master/tests_python/tweets_sentiment/three_minutes_tweets.json.txt) в таблицу tweet (name, tweet_text, country_code, display_url, lang, created_at, location)
 2. Добавить новую колонку tweet_sentiment
 3. Подумать как можно провести нормализацию данной таблицы, создать и применить SQL скрипт
 для нормализации
