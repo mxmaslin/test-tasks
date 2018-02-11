@@ -3,12 +3,16 @@ import string
 
 from peewee import *
 
-from models import TweetInitial, TweetNormalized, Language, Country, User, db
+from models import (TweetInitial,
+                    TweetNormalized,
+                    Language,
+                    Country,
+                    User,
+                    db)
 
 
 def fill_tweet_table():
     counter = 0
-    print('Start writing tweets to tweets table')
     with open('three_minutes_tweets.json.txt') as f:
         for tweet in f:
             tweet = json.loads(tweet)
@@ -23,7 +27,8 @@ def fill_tweet_table():
                     location=tweet['user']['location'])
                 t.save()
                 counter += 1
-                print('Tweet {} is written to tweetinitial table'.format(counter))
+                message = 'Tweet {} is written to tweetinitial table'
+                print(message.format(counter))
     print('{} tweets written to tweetinitial table'.format(counter))
 
 
@@ -88,7 +93,6 @@ def calculate_tweet_sentiment(tweet, sentiment_dict):
 
 
 def calculate_tweets_sentiment():
-    print('Start calculating sentiments')
     sentiment_dict = create_sentiment_dict()
     tweets_initial = TweetInitial.select()
     counter = tweets_initial.count()
