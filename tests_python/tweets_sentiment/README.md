@@ -10,3 +10,11 @@ AFINN ReadMe:
 AFINN is a list of English words rated for valence with an integer between minus five (negative) and plus five (positive). The words have been manually labeled by Finn Årup Nielsen in 2009-2011. The file is tab-separated. There are two versions:
 AFINN-111: Newest version with 2477 words and phrases.
 5. Написать 1 SQL скрипт, который выводит наиболее и наименее счастливую страну, локацию и пользователя
+
+**Решение** содержится в файле [calculate.py](https://github.com/mxmaslin/Test-tasks/blob/master/tests_python/tweets_sentiment/calculate.py)
+
+Для работы скрипта необходимы
+- библиотека [peewee](http://docs.peewee-orm.com/en/latest/)
+- файл [models.py](https://github.com/mxmaslin/Test-tasks/blob/master/tests_python/tweets_sentiment/models.py)
+- файл [three_minutes_tweets.json.txt](https://raw.githubusercontent.com/mxmaslin/Test-tasks/master/tests_python/tweets_sentiment/three_minutes_tweets.json.txt)
+- файл [AFINN-111.txt](https://github.com/mxmaslin/Test-tasks/blob/master/tests_python/tweets_sentiment/AFINN-111.txt)
