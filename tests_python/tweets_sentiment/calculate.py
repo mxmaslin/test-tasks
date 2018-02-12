@@ -13,7 +13,8 @@ from models import (TweetInitial,
 
 def fill_tweet_table():
     with open('three_minutes_tweets.json.txt') as f:
-        for i, tweet in enumerate(f, 1):
+        counter = 0
+        for tweet in f:
             tweet = json.loads(tweet)
             if 'user' in tweet:
                 t = TweetInitial.create(
@@ -25,9 +26,10 @@ def fill_tweet_table():
                     created_at=tweet['created_at'],
                     location=tweet['user']['location'])
                 t.save()
+                counter += 1
                 message = 'Tweet {} is written to tweetinitial table'
-                print(message.format(i))
-    print('{} tweets written to tweetinitial table'.format(i))
+                print(message.format(counter))
+    print('{} tweets written to tweetinitial table'.format(counter))
 
 
 def fill_user_table():
@@ -61,9 +63,8 @@ def fill_language_table():
     lang_quantity = lang_query.count()
     for i, lang in enumerate(lang_query, 1):
         Language.create(lang=lang.lang).save()
-        counter -= 1
         message = 'Creating language {} of {} total'
-        print(message.format(counter))
+        print(message.format(i, lang_quantity))
 
 
 def create_sentiment_dict():
@@ -92,7 +93,7 @@ def calculate_tweets_sentiment():
     sentiment_dict = create_sentiment_dict()
     tweets_initial = TweetInitial.select()
     tweets_quantity = tweets_initial.count()
-    for tweet in enumerate(tweets_initial, 1):
+    for i, tweet in enumerate(tweets_initial, 1):
         user = (User
             .select()
             .where(User.name == tweet.name)
@@ -116,8 +117,7 @@ def calculate_tweets_sentiment():
             location=tweet.location,
             tweet_sentiment=sentiment)
         t.save()
-        counter -= 1
-        message = 'Tweet sentiment {} calculated out of {} total'
+        message = 'Tweet sentiment {} of {} total calculated'
         print(message.format(i, tweets_quantity))
 
 
