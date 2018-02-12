@@ -12,9 +12,8 @@ from models import (TweetInitial,
 
 
 def fill_tweet_table():
-    counter = 0
     with open('three_minutes_tweets.json.txt') as f:
-        for tweet in f:
+        for i, tweet in enumerate(f, 1):
             tweet = json.loads(tweet)
             if 'user' in tweet:
                 t = TweetInitial.create(
@@ -26,47 +25,44 @@ def fill_tweet_table():
                     created_at=tweet['created_at'],
                     location=tweet['user']['location'])
                 t.save()
-                counter += 1
                 message = 'Tweet {} is written to tweetinitial table'
-                print(message.format(counter))
-    print('{} tweets written to tweetinitial table'.format(counter))
+                print(message.format(i))
+    print('{} tweets written to tweetinitial table'.format(i))
 
 
 def fill_user_table():
     user_query = (TweetInitial
         .select(TweetInitial.name, TweetInitial.location))
-    counter = user_query.count()
-    for user in user_query:
+    user_quantity = user_query.count()
+    for i, user in enumerate(user_query, 1):
         User.create(
             name=user.name,
             location=user.location).save()
-        counter -= 1
-        message = 'Creating user, units remaining: {}'
-        print(message.format(counter))
+        message = 'Creating user {} of {} total'
+        print(message.format(i, user_quantity))
 
 
 def fill_country_table():
     cc_query = (TweetInitial
         .select(TweetInitial.country_code)
         .distinct())
-    counter = cc_query.count()
-    for cc in cc_query:
+    cc_quantity = cc_query.count()
+    for i, cc in enumerate(cc_query, 1):
         Country.create(
             country_code=cc.country_code).save()
-        counter -= 1
-        message = 'Creating country, units remaining: {}'
-        print(message.format(counter))
+        message = 'Creating country {} of {} total'
+        print(message.format(i, cc_quantity))
 
 
 def fill_language_table():
     lang_query = (TweetInitial
         .select(TweetInitial.lang)
         .distinct())
-    counter = lang_query.count()
-    for lang in lang_query:
+    lang_quantity = lang_query.count()
+    for i, lang in enumerate(lang_query, 1):
         Language.create(lang=lang.lang).save()
         counter -= 1
-        message = 'Creating language, units remaining: {}'
+        message = 'Creating language {} of {} total'
         print(message.format(counter))
 
 
@@ -95,8 +91,8 @@ def calculate_tweet_sentiment(tweet, sentiment_dict):
 def calculate_tweets_sentiment():
     sentiment_dict = create_sentiment_dict()
     tweets_initial = TweetInitial.select()
-    counter = tweets_initial.count()
-    for tweet in tweets_initial:
+    tweets_quantity = tweets_initial.count()
+    for tweet in enumerate(tweets_initial, 1):
         user = (User
             .select()
             .where(User.name == tweet.name)
@@ -121,8 +117,8 @@ def calculate_tweets_sentiment():
             tweet_sentiment=sentiment)
         t.save()
         counter -= 1
-        message = 'Tweet sentiment calculated, {} units remaining'
-        print(message.format(counter))
+        message = 'Tweet sentiment {} calculated out of {} total'
+        print(message.format(i, tweets_quantity))
 
 
 def print_results():
