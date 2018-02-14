@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import json
 import string
 
@@ -89,7 +90,7 @@ def calculate_tweet_sentiment(tweet, sentiment_dict):
     return sentiment
 
 
-def calculate_tweets_sentiment():
+def calculate_tweets_sentiment(sentiment_dict):
     sentiment_dict = create_sentiment_dict()
     tweets_initial = TweetInitial.select()
     tweets_quantity = tweets_initial.count()
@@ -152,6 +153,19 @@ def print_results():
     print('Unhappiest user is: {}'.format(unhappiest_user))
     print('Unhappiest location is: {}'.format(unhappiest_location))
 
+
+def test(sentiment_dict):
+    tweet1 = '@16_Pirates any shots?'
+    tweet2 = 'RT @Cancer_gk: A #Cancer may act shy and quiet, but will adamantly defend a loved one against outsiders.'
+    tweet3 = '@ShivamDRao are you dumb blud.... You have missed more games than me and you are missing the most crucial bit'
+    tweet4 = 'Naging malake ung uniform ko dahil sa buhol ko 😂😂'
+    tweet5 = 'самый любимый вайн с лм, где они говорят: лав ю. \n я прям чувствую, что мои девочки говорят это мне'
+    tweets = [tweet1, tweet2, tweet3, tweet4, tweet5]
+    sentiments = list(map(
+        lambda x: calculate_tweet_sentiment(x, sentiment_dict), tweets))
+    assert(sentiments == [0, 1, -7, 0, 0])
+
+
 if __name__ == '__main__':
 
     db.connect()
@@ -160,6 +174,8 @@ if __name__ == '__main__':
     fill_user_table()
     fill_country_table()
     fill_language_table()
-    calculate_tweets_sentiment()
+    sentiment_dict = create_sentiment_dict()
+    calculate_tweets_sentiment(sentiment_dict)
+    test(sentiment_dict)
     print_results()
     db.close()
