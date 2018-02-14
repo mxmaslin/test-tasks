@@ -5,28 +5,35 @@ from django import forms
 from .models import Menu, MenuItem
 
 
-@admin.register(Menu)
-class MenuAdmin(admin.ModelAdmin):
-    list_display = ('title', 'slug')
+class MenuItemInLine(admin.TabularInline):
+    model = MenuItem
+    exclude = ('slug', )
 
 
-class MenuAdminForm(forms.ModelForm):
+class MenuItemForm(forms.ModelForm):
     class Meta:
         model = MenuItem
-        fields = '__all__'
+        exclude = ('slug', )
 
     def __init__(self, *args, **kwargs):
         # мы не хотим, чтобы в админке пункт меню можно было указать собственным родителем
-        super(MenuAdminForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields['parent'].queryset = self.fields['parent'].queryset.exclude(pk=self.instance.pk)
 
 
 @admin.register(MenuItem)
-class MenuAdmin(admin.ModelAdmin):
-    form = MenuAdminForm
+class MenuItemAdmin(admin.ModelAdmin):
+    form = MenuItemForm
 
     list_display = (
         'title',
-        'slug',
         'menu',
         'parent')
+    exclude = ('slug', )
+
+
+@admin.register(Menu)
+class MenuAdmin(admin.ModelAdmin):
+    list_display = ('title',)
+    exclude = ('slug', )
+    inlines = (MenuItemInLine, )
