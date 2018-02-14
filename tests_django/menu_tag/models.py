@@ -5,6 +5,8 @@ from unidecode import unidecode
 from django.db import models
 from django.template.defaultfilters import slugify
 
+MAX_SLUG_LEN = 50
+
 
 class Menu(models.Model):
     title = models.CharField(
@@ -20,21 +22,13 @@ class Menu(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
-        max_slug_len = 49
-        if not self.pk:
-            slug = slugify(unidecode(self.title[:max_slug_len]))
-            print(slug)
-            for x in itertools.count(1):
-                if not Menu.objects.filter(
-                        title=self.title,
-                        slug=self.slug).exists():
-                    break
-                trailing_number_len = len(str(x))
-                slug = self.slug[:max_slug_len - trailing_number_len]
-                slug = '{slug}-{x}'.format(slug, x)
-            self.slug = slug
+        self.slug = slugify(unidecode(self.title))[:MAX_SLUG_LEN]
+        for x in itertools.count(1):
+            if not Menu.objects.filter(slug=self.slug).exists():
+                break
+            self.slug = "%s-%d" % (self.slug[:MAX_SLUG_LEN - len(str(x)) - 1], x)
         print(self.slug)
-        super().save(*args, **kwargs)
+        super(Menu, self).save(*args, **kwargs)
 
 
 class MenuItem(models.Model):
@@ -64,16 +58,10 @@ class MenuItem(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
-        max_slug_len = 49
-        if not self.pk:
-            slug = slugify(unidecode(self.title[:max_slug_len]))
-            for x in itertools.count(1):
-                if not MenuItem.objects.filter(
-                        title=self.title,
-                        slug=self.slug).exists():
-                    break
-                trailing_number_len = len(str(x))
-                slug = self.slug[:max_slug_len - trailing_number_len]
-                slug = '{slug}-{x}'.format(slug, x)
-            self.slug = slug
-        super().save(*args, **kwargs)
+        self.slug = slugify(unidecode(self.title))[:MAX_SLUG_LEN]
+        for x in itertools.count(1):
+            if not MenuItem.objects.filter(slug=self.slug).exists():
+                break
+            self.slug = "%s-%d" % (self.slug[:MAX_SLUG_LEN - len(str(x)) - 1], x)
+        print(self.slug)
+        super(MenuItem, self).save(*args, **kwargs)
