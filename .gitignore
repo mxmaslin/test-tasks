@@ -106,6 +106,8 @@ venv.bak/
 # Pycharm
 .idea*
 
-# mac OS
+# other
 
 .DS_Store
+.dropbox
+Icon
