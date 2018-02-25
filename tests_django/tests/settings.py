@@ -42,9 +42,11 @@ INSTALLED_APPS = [
     'django_filters',
     'dry_rest_permissions',
     'debug_toolbar',
+    'djmoney',
     'testing',
     'loans',
-    'menu_tag'
+    'menu_tag',
+    'transfer'
 ]
 
 MIDDLEWARE = [
