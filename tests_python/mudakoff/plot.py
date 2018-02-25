@@ -104,9 +104,9 @@ def main():
             s3.write(dict(x=x, y=reposts_change))
 
             print(x)
-            print(likes_change, likes_now)
-            print(comments_change, comments_now)
-            print(reposts_change, reposts_now)
+            print(likes_change, likes_now, likes_prev)
+            print(comments_change, comments_now, comments_prev)
+            print(reposts_change, reposts_now, reposts_prev)
             print('')
 
             time.sleep(1)

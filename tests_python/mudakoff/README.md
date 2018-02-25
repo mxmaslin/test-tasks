@@ -4,3 +4,4 @@
 
 Для работы скрипта необходимы
 - библиотека [vk-api](https://github.com/python273/vk_api)
+- библиотека [plotly](https://plot.ly)
