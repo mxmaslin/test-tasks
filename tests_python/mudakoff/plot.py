@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-import time, datetime
+from functools import reduce
 import plotly
 import plotly.graph_objs as go
 import plotly.plotly as py
 import plotly.tools as tls
+import time, datetime
 import vk_api
 
 plotly.tools.set_credentials_file(username='mxmaslin', api_key='SxjPplGYZgYgbi69kwrc')
@@ -16,16 +17,16 @@ def count_posts_portion(vk):
     comments = 0
     reposts = 0
     while offset_counter < posts_amount:
-        for post in vk.wall.get(domain='mudakoff', count=100, offset=offset_counter)['items']:
-            likes += post['likes']['count']
-            comments += post['comments']['count']
-            reposts += post['reposts']['count']
+        posts = vk.wall.get(domain='mudakoff', count=100, offset=offset_counter)['items']
+        likes += reduce(lambda a, post: a + post['likes']['count'], posts, 0)
+        comments += reduce(lambda a, post: a + post['comments']['count'], posts, 0)
+        reposts += reduce(lambda a, post: a + post['reposts']['count'], posts, 0)
         offset_counter += 100
     return likes, comments, reposts
 
 
 def set_vk_session():
-    login, password = 'your_login', 'your_password'
+    login, password = 'mfilimonova2007@yandex.ru', 'MamAni'
     vk_session = vk_api.VkApi(login, password)
     try:
         vk_session.auth()
