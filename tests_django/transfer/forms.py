@@ -8,7 +8,7 @@ from .models import Client
 
 
 class SendMoneyForm(forms.Form):
-    donor = forms.ModelMultipleChoiceField(
+    donor = forms.ModelChoiceField(
         queryset=Client.objects.all(), label='Отправитель')
     recipients = forms.CharField(widget=forms.Textarea, label='Получатели')
     amount = MoneyField(label='Сумма')
@@ -25,10 +25,9 @@ class SendMoneyForm(forms.Form):
 
     def clean_amount(self):
         amount = self.cleaned_data['amount']
+        donor = self.cleaned_data['donor']
         if amount.amount < 0.01:
             raise forms.ValidationError('Это поле не может быть меньше 0.01')
-        donor_id = self.cleaned_data['donor'].split()[0]
-        donor = Client.objects.get(id=donor_id)
         if amount > donor.balance:
             raise forms.ValidationError('Сумма превышает баланс отправителя')
         return amount
