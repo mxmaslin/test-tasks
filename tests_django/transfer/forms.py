@@ -1,15 +1,17 @@
 import string
+from decimal import Decimal
 
 from django import forms
-from djmoney.models.fields import MoneyField
+from djmoney.forms.fields import MoneyField
 
 from .models import Client
 
 
 class SendMoneyForm(forms.Form):
-    donor = forms.ModelMultipleChoiceField(queryset=Client.objects.all())
-    recipients = forms.CharField(widget=forms.Textarea)
-    amount = MoneyField()
+    donor = forms.ModelMultipleChoiceField(
+        queryset=Client.objects.all(), label='Отправитель')
+    recipients = forms.CharField(widget=forms.Textarea, label='Получатели')
+    amount = MoneyField(label='Сумма')
 
     def clean_recipients(self):
         data = self.cleaned_data['recipients']
@@ -17,16 +19,16 @@ class SendMoneyForm(forms.Form):
         inns = data.translate(translator).split()
         clients_inn_list = Client.objects.all().values_list('inn', flat=True)
         for inn in inns:
-            if inn not in clients_inn_list:
+            if int(inn) not in clients_inn_list:
                 raise forms.ValidationError('Инн {} отсутствует в базе данных'.format(inn))
         return data
 
-    def clean_amount_non_negative(self):
+    def clean_amount(self):
         amount = self.cleaned_data['amount']
-        if amount <= 0:
-            raise forms.ValidationError('Это поле не может иметь отрицательное значение')
+        if amount.amount < 0.01:
+            raise forms.ValidationError('Это поле не может быть меньше 0.01')
+        donor_id = self.cleaned_data['donor'].split()[0]
+        donor = Client.objects.get(id=donor_id)
+        if amount > donor.balance:
+            raise forms.ValidationError('Сумма превышает баланс отправителя')
         return amount
-
-    def clean_amount_less_than_balance(self):
-        print(self.amount)
-        pass

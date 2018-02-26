@@ -3,7 +3,7 @@ from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 from djmoney.models.fields import MoneyField
-
+from djmoney.models.validators import MinMoneyValidator
 
 
 class Client(models.Model):
@@ -15,12 +15,12 @@ class Client(models.Model):
     balance = MoneyField(
         max_digits=10,
         decimal_places=2,
-        default_currency='USD',
-        verbose_name='Баланс счёта')
+        verbose_name='Баланс счёта',
+        validators=[MinMoneyValidator(0)])
 
     class Meta:
         verbose_name = 'Клиент'
         verbose_name_plural = 'Клиенты'
 
     def __str__(self):
-        return str(self.inn)
+        return '{id} {inn}'.format(id=str(self.id), inn=str(self.inn))
