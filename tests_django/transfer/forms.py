@@ -1,3 +1,5 @@
+import string
+
 from django import forms
 from djmoney.forms import MoneyWidget
 from djmoney.models.fields import MoneyField
@@ -12,6 +14,13 @@ class SendMoneyForm(forms.Form):
 
     def clean_recipients(self):
         data = self.cleaned_data['recipients']
+        translator = str.maketrans(string.punctuation, ' '*len(string.punctuation))
+        inns = data.translate(translator).split()
+        clients_inn_list = Client.objects.all().values_list('inn', flat=True)
+        for inn in inns:
+            if inn not in clients_inn_list:
+                raise forms.ValidationError('Инн {} отсутствует в базе данных'.format(inn))
+        return data
 
     def clean_amount(self):
         amount = self.cleaned_data['amount']

@@ -20,8 +20,7 @@ class ApplicationAdmin(admin.ModelAdmin):
         'rotation_ended'
         )
 
-    search_fields = (
-        'application_name',)
+    search_fields = ('application_name',)
 
     list_filter = (
         'created',
