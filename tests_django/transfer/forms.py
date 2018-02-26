@@ -1,7 +1,6 @@
 import string
 
 from django import forms
-from djmoney.forms import MoneyWidget
 from djmoney.models.fields import MoneyField
 
 from .models import Client
@@ -9,8 +8,8 @@ from .models import Client
 
 class SendMoneyForm(forms.Form):
     donor = forms.ModelMultipleChoiceField(queryset=Client.objects.all())
-    recipients = forms.CharField(widget=forms.TextInput)
-    amount = MoneyField(widget=MoneyWidget)
+    recipients = forms.CharField(widget=forms.Textarea)
+    amount = MoneyField()
 
     def clean_recipients(self):
         data = self.cleaned_data['recipients']
@@ -22,8 +21,12 @@ class SendMoneyForm(forms.Form):
                 raise forms.ValidationError('Инн {} отсутствует в базе данных'.format(inn))
         return data
 
-    def clean_amount(self):
+    def clean_amount_non_negative(self):
         amount = self.cleaned_data['amount']
         if amount <= 0:
             raise forms.ValidationError('Это поле не может иметь отрицательное значение')
         return amount
+
+    def clean_amount_less_than_balance(self):
+        print(self.amount)
+        pass
