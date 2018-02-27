@@ -19,7 +19,11 @@ class SendMoneyForm(forms.Form):
         inns = data.translate(translator).split()
         clients_inn_list = Client.objects.all().values_list('inn', flat=True)
         for inn in inns:
-            if int(inn) not in clients_inn_list:
+            try:
+                int_inn = int(inn)
+            except ValueError:
+                raise forms.ValidationError('Инн {} должен состоять только из цифр'.format(inn))
+            if int_inn not in clients_inn_list:
                 raise forms.ValidationError('Инн {} отсутствует в базе данных'.format(inn))
         return data
 

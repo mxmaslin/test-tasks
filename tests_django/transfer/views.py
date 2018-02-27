@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import string
-from django.http import HttpResponse
+from django.http import JsonResponse
 from django.shortcuts import render
 
 from .forms import SendMoneyForm
@@ -9,6 +9,7 @@ from .models import Client
 
 def index(request):
     form = SendMoneyForm(request.POST or None)
+    clients = Client.objects.all()
     if form.is_valid():
         donor = form.cleaned_data['donor']
         recipients_string = form.cleaned_data['recipients']
@@ -22,5 +23,9 @@ def index(request):
         for recipient in recipients:
             recipient.balance += payment_for_each_recipient
             recipient.save()
-        return HttpResponse('thanks')
-    return render(request, 'transfer/index.html', {'form': form})
+        # return JsonResponse({})
+
+    return render(
+        request,
+        'transfer/index.html',
+        {'form': form, 'clients': clients})

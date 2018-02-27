@@ -3,12 +3,44 @@
     Transfer money
 {% endblock %}
 {% block content %}
-    <h1>Выполнение перевода >= 1 количеству клиентов</h1>
+<h1>Выполнение перевода >= 1 количеству клиентов</h1>
     <div>
-        <form action="" method="post">
+        <form id="form" action="" method="post">
             {% csrf_token %}
             {{ form.as_p }}
             <input type="submit" value="Отправить">
         </form>
     </div>
+    <table>
+        <th>
+            <tr>
+                <td>ID</td>
+                <td>ИНН</td>
+                <td>Баланс</td>
+            </tr>
+        </th>
+        <tbody>
+            {% for client in clients %}
+                <tr>
+                    <td>{{client.id}}</td>
+                    <td>{{client.inn}}</td>
+                    <td>{{client.balance}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        $(function(){
+            $("#form").onsubmit(function(){
+            var form_data = $("#form").serializeArray;
+            $.ajax({
+                url: '/transfer',
+                type: 'POST',
+                data: form_data
+                });
+            });
+        });
+    </script>
+
 {% endblock %}
