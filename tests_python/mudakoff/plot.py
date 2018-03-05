@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-from bokeh.plotting import figure, output_file, show
-from functools import reduce
-import time, datetime
 import vk_api
+from datetime import datetime
+from functools import reduce
+
+from bokeh.plotting import figure, output_file, show
 
 
 def count_posts_portion(vk):
@@ -21,7 +22,7 @@ def count_posts_portion(vk):
 
 
 def set_vk_session():
-    login, password = 'mfilimonova2007@yandex.ru', 'MamAni'
+    login, password = 'login', 'password'
     vk_session = vk_api.VkApi(login, password)
     try:
         vk_session.auth()
@@ -30,10 +31,25 @@ def set_vk_session():
         return
     return vk_session.get_api()
 
+
 def main():
     vk = set_vk_session()
     likes_prev, comments_prev, reposts_prev = count_posts_portion(vk)
     first_iteration = True
+
+    output_file('plot.html')
+    x = [datetime.now()]
+    y_likes_change = [0]
+    y_comments_change = [0]
+    y_reposts_change = [0]
+    p = figure(
+        title='Динамика лайков, комментариев, репостов в mudakoff',
+        x_axis_label='Время',
+        y_axis_label='Количество')
+    p.line(x, y_likes_change, legend='Лайки', line_width=2, line_color='red')
+    p.line(x, y_comments_change, legend='Комментарии', line_width=2, line_color='green')
+    p.line(x, y_reposts_change, legend='Репосты', line_width=2, line_color='blue')
+    show(p)
 
     while True:
         if first_iteration:
@@ -48,20 +64,14 @@ def main():
             comments_change = comments_now - comments_prev
             reposts_change = reposts_now - reposts_prev
 
-            output_file('bokeh_test.html')
-            p = figure(
-            title='bokeh test',
-            x_axis_label='x',
-            y_axis_label='y')
-            datetime.now()
-            p.line(x=datetime.now(),
-                   y=likes_change,
-                   legend='bokeh test',
-                   line_width=2)
-
-
-
-
+            x.append(datetime.now())
+            y_likes_change.append(likes_change)
+            y_comments_change.append(comments_change)
+            y_reposts_change.append(reposts_change)
+            p.line(x, y_likes_change, legend='Лайки', line_width=2, line_color='red')
+            p.line(x, y_comments_change, legend='Комментарии', line_width=2, line_color='green')
+            p.line(x, y_reposts_change, legend='Репосты', line_width=2, line_color='blue')
+            show(p)
 
 
 if __name__ == '__main__':
