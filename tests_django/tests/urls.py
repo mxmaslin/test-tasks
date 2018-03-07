@@ -8,7 +8,7 @@ urlpatterns = [
     url(r'^loans/', include('loans.urls')),
     url(r'^menu_tag/', include('menu_tag.urls')),
     url(r'^testing/', include('testing.urls')),
-    url(r'^transfer/', include('transfer.urls')),
+    url(r'^transfer_money/', include('transfer_money.urls')),
 
     url(r'^admin/', admin.site.urls)
 ]

@@ -1,1 +1,0 @@
-[{"model": "transfer.client", "pk": 1, "fields": {"user": 1, "inn": 100, "balance_currency": "RUB", "balance": "3.99"}}, {"model": "transfer.client", "pk": 2, "fields": {"user": 2, "inn": 101, "balance_currency": "RUB", "balance": "1.50"}}, {"model": "transfer.client", "pk": 3, "fields": {"user": 3, "inn": 102, "balance_currency": "RUB", "balance": "4.50"}}]

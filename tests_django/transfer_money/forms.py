@@ -18,13 +18,25 @@ class SendMoneyForm(forms.Form):
         translator = str.maketrans(string.punctuation, ' '*len(string.punctuation))
         inns = data.translate(translator).split()
         clients_inn_list = Client.objects.all().values_list('inn', flat=True)
+        errors = []
+        non_digit_inns = []
+        absent_inns = []
         for inn in inns:
             try:
                 int_inn = int(inn)
             except ValueError:
-                raise forms.ValidationError('Инн {} должен состоять только из цифр'.format(inn))
-            if int_inn not in clients_inn_list:
-                raise forms.ValidationError('Инн {} отсутствует в базе данных'.format(inn))
+                if inn not in non_digit_inns:
+                    non_digit_inns.append(inn)
+            else:
+                if int_inn not in clients_inn_list:
+                    if str(int_inn) not in absent_inns:
+                        absent_inns.append(str(int_inn))
+        for inn in non_digit_inns:
+            errors.append('Инн {} должен состоять только из цифр'.format(inn))
+        for inn in absent_inns:
+            errors.append('Инн {} отсутствует в базе данных'.format(inn))
+        if errors:
+            raise forms.ValidationError(errors)
         return data
 
     def clean_amount(self):

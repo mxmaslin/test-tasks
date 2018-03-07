@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'testing',
     'loans',
     'menu_tag',
-    'transfer'
+    'transfer_money'
 ]
 
 MIDDLEWARE = [
