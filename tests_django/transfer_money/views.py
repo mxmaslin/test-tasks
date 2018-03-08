@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import string
 from django.http import JsonResponse
-from django.shortcuts import render
 from django.views.generic.edit import FormView
 
 from .forms import SendMoneyForm
@@ -44,33 +43,9 @@ class SendMoneyFormView(FormView):
             for recipient in recipients:
                 recipient.balance += payment_for_each_recipient
                 recipient.save()
-            data = {'message': 'Форма успешно отправлена'}
+            clients = list(Client.objects.values())
+            data = {'message': 'Форма успешно отправлена',
+                    'clients': clients}
             return JsonResponse(data)
         else:
             return response
-
-
-
-
-def index(request):
-    form = SendMoneyForm(request.POST or None)
-    clients = Client.objects.all()
-    if form.is_valid():
-        donor = form.cleaned_data['donor']
-        recipients_string = form.cleaned_data['recipients']
-        translator = str.maketrans(string.punctuation, ' '*len(string.punctuation))
-        recipient_inns = list(map(int, recipients_string.translate(translator).split()))
-        recipients = Client.objects.filter(inn__in=recipient_inns)
-        amount = form.cleaned_data['amount']
-        donor.balance -= amount
-        donor.save()
-        payment_for_each_recipient = amount / len(recipients)
-        for recipient in recipients:
-            recipient.balance += payment_for_each_recipient
-            recipient.save()
-        # return JsonResponse({})
-
-    return render(
-        request,
-        'transfer_money/index.html',
-        {'form': form, 'clients': clients})

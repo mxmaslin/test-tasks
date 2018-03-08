@@ -38,6 +38,13 @@
             $myForm[0].reset(); // сброс данных формы
             $('#recipients_err').remove();
             $('#amount_err').remove();
+            $('table').remove();
+            var table = '<table><th><tr><td>ID</td><td>ИНН</td><td>Баланс</td></tr></th><tbody>';
+            for (let client of data.clients){
+                table += `<tr><td>${client.id}</td><td>${client.inn}</td><td>${client.balance} руб.</td></tr>`;
+            }
+            table += '</tbody><table>';
+            $('#form').parent().append(table);
         }
 
         function handleFormError(jqXHR, textStatus, errorThrown){
