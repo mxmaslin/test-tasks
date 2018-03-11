@@ -6,7 +6,7 @@ from .models import Application, Questionnaire, Submission
 
 
 class PartnerAPITestCase(TestCase):
-    fixtures = ['testdata', 'auth']
+    fixtures = ['loans']
 
     def setUp(self):
         self.client = Client()
@@ -257,7 +257,7 @@ class PartnerAPITestCase(TestCase):
 
 
 class BankAPITestCase(TestCase):
-    fixtures = ['testdata', 'auth']
+    fixtures = ['loans']
 
     def setUp(self):
         self.client = Client()
