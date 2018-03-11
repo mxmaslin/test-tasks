@@ -5,7 +5,7 @@ from .models import Client
 
 
 class SendMoneyFormTestCase(TestCase):
-    fixtures = ['testdata', 'auth', 'contenttypes']
+    fixtures = ['transfer_money']
 
     def test_valid_recipient(self):
         form_data = {
