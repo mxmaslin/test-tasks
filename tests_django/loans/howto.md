@@ -1,4 +1,4 @@
-.# [Описание задачи](https://github.com/mxmaslin/Test-tasks/blob/master/descriptions/tests/groups_permissions.md "Описание задачи на создание групп и прав")
+# [Описание задачи](https://github.com/mxmaslin/Test-tasks/tree/master/tests_django/loans "Описание задачи на создание групп и прав")
 
 # Требования к программной части
 
@@ -25,8 +25,6 @@ pip install -r requirements.txt
 - экземпляры Предложения, Анкеты клиента, Заявки в кредитную организацию.
 
 Всё это будет доступно через админку `http://{ip}:{port}/admin/`, логин: admin, пароль: qwer1234.
-
-По поводу фикстур официальное руководство говорит следующее: "If you want to automatically load initial data for an app, don’t use fixtures. Instead, create a migration for your application with RunPython or RunSQL operations."
 
 # Как делать запросы к API
 
