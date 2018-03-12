@@ -24,10 +24,10 @@ class Menu(models.Model):
     def save(self, *args, **kwargs):
         self.slug = slugify(unidecode(self.title))[:MAX_SLUG_LEN]
         for x in itertools.count(1):
-            if not Menu.objects.filter(slug=self.slug).exists():
+            if not Menu.objects.filter(
+                    slug=self.slug).exclude(pk=self.pk).exists():
                 break
             self.slug = "%s-%d" % (self.slug[:MAX_SLUG_LEN - len(str(x)) - 1], x)
-        print(self.slug)
         super(Menu, self).save(*args, **kwargs)
 
 
