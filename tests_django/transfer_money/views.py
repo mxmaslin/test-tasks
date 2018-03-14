@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import string
+
+from django.db import transaction
 from django.http import JsonResponse
 from django.views.generic.edit import FormView
 
@@ -43,6 +45,16 @@ class SendMoneyFormView(FormView):
             for recipient in recipients:
                 recipient.balance += payment_for_each_recipient
                 recipient.save()
+
+            with transaction.atomic():
+                amount = form.cleaned_data['amount']
+                donor.balance -= amount
+                donor.save()
+                payment_for_each_recipient = amount / len(recipients)
+                for recipient in recipients:
+                    recipient.balance += payment_for_each_recipient
+                    recipient.save()
+
             clients = list(Client.objects.values())
             data = {'message': 'Форма успешно отправлена',
                     'clients': clients}
