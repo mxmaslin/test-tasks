@@ -40,6 +40,7 @@ class SendMoneyFormView(FormView):
             with transaction.atomic():
                 amount = form.cleaned_data['amount']
                 payment_for_each_recipient = amount / recipients.count()
+                correct_payment_for_each_recipient = Money(round(float(payment_for_each_recipient) - 0.005, 2), 'RUB')
                 actual_payment = Money(
                     round(float(payment_for_each_recipient), 2) * recipients.count(), 'RUB')
                 correction_amount = Money(0.01, 'RUB') if actual_payment != amount else Money(0, 'RUB')
@@ -47,7 +48,7 @@ class SendMoneyFormView(FormView):
                 donor.balance -= amount
                 donor.save()
                 for recipient in recipients:
-                    recipient.balance += payment_for_each_recipient
+                    recipient.balance += correct_payment_for_each_recipient
                     recipient.save()
             clients = list(Client.objects.values())
             data = {'message': 'Форма успешно отправлена',
