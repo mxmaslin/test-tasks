@@ -9,7 +9,7 @@ from .views import SendMoneyFormView
 
 
 class SendMoneyFormTestCase(TestCase):
-    fixtures = ['testdata']
+    fixtures = ['transfer_money']
 
     def setUp(self):
         self.client = TestClient()
