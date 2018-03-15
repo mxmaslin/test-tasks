@@ -1,7 +1,7 @@
 import string
-from decimal import Decimal
 
 from django import forms
+
 from djmoney.forms.fields import MoneyField
 
 from .models import Client
@@ -42,7 +42,7 @@ class SendMoneyForm(forms.Form):
     def clean_amount(self):
         amount = self.cleaned_data['amount']
         donor = self.cleaned_data['donor']
-        if amount.amount < 0.01:
+        if float(amount.amount) < 0.01:
             raise forms.ValidationError('Это поле не может быть меньше 0.01')
         if amount > donor.balance:
             raise forms.ValidationError('Сумма превышает баланс отправителя')
