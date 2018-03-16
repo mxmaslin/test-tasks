@@ -15,9 +15,8 @@ def draw_menu(context, menu_slug):
         menu_obj = Menu.objects.get(slug=menu_slug)
     except Menu.DoesNotExist:
         return format_html(
-            'Menu {} is absent in DB'.format(menu_slug))
-    else:
-        pass
+            f'<ul id={menu_slug}>Menu {menu_slug} is absent in DB</ul>')
+
     item_slug = request.GET.get('item', None)
 
     def walk_items(item_list):
@@ -44,21 +43,13 @@ def draw_menu(context, menu_slug):
         except StopIteration:
             pass
 
-    def list_formatter(item_list, tabs=1):
-        indent = '\t' * tabs
+    def list_formatter(item_list):
         output = []
         for item, children in walk_items(item_list):
             sublist = ''
             if children:
-                sublist = '{indent}<ul>{l_f}{indent}</ul>{indent}'.format(
-                    indent=indent,
-                    l_f=list_formatter(children, tabs + 1))
-            output.append('{indent}<li><a href="{url}?item={item.slug}">{item.title}</a>{sublist}</li>'.format(
-                indent=indent,
-                url=url,
-                item_slug=item_slug,
-                item=item,
-                sublist=sublist))
+                sublist = f'<ul>{list_formatter(children)}</ul>'
+            output.append(f'<li><a href="{url}?item={item.slug}">{item.title}</a>{sublist}</li>')
         output = ''.join(output)
         return output
 
@@ -110,8 +101,8 @@ def draw_menu(context, menu_slug):
     branch_item, branch_as_list = item_branch(item_slug)
     m = menu_as_list(branch_item, branch_as_list)
     if not m:
-        m_html = 'The menu \'{}\' does not contain items'.format(menu_slug)
+        m_html = f'The menu "{menu_slug}" does not contain items'
     else:
         m_html = list_formatter(m)
-    m_html = '<ul>{}</ul>'.format(m_html)
+    m_html = f'<ul id={menu_slug}>{m_html}</ul>'
     return format_html(m_html)
