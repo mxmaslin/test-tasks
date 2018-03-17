@@ -1,9 +1,6 @@
 from bs4 import BeautifulSoup
-from pprint import pprint
 
 from django.test import Client, TestCase
-
-from .html_to_json import HTMLtoJSONParser as dictifier
 
 from .fixtures.menus import (absent,
                              empty,
@@ -11,52 +8,59 @@ from .fixtures.menus import (absent,
                              single_subbranch1,
                              single_subbranch2,
                              single_subbranch3,
-                             multiple_subbranches)
+                             multiple_subbranches1,
+                             multiple_subbranches2)
 
 
 class MenuTagTestCase(TestCase):
     fixtures = ['menu_tag']
 
     def setUp(self):
-        client = Client()
-        html_bytes = client.get('/menu_tag/').content
+        self.client = Client()
+        self.maxDiff = None
+
+    def get_menu_content(self, url, menu_id):
+        html_bytes = self.client.get(url).content
         html = html_bytes.decode('utf-8')
         self.soup = BeautifulSoup(html, 'lxml')
-
-    def get_menu_content(self, menu_id):
         return str(self.soup.find('ul', {'id': menu_id}))
 
     def test_absent_menu(self):
-        menu_html = self.get_menu_content('meniu0')
-        menu_dict = dictifier.to_json(menu_html)
-        self.assertEqual(menu_dict, absent)
+        url = '/menu_tag/'
+        menu = self.get_menu_content(url, 'meniu0')
+        self.assertEqual(menu, absent)
 
     def test_empty_menu(self):
-        menu_html = self.get_menu_content('meniu1')
-        menu_dict = dictifier.to_json(menu_html)
-        self.assertEqual(menu_dict, empty)
+        url = '/menu_tag/'
+        menu = self.get_menu_content(url, 'meniu1')
+        self.assertEqual(menu, empty)
 
     def test_only_top(self):
-        menu_html = self.get_menu_content('meniu2')
-        menu_dict = dictifier.to_json(menu_html)
-        self.assertEqual(menu_dict, no_subbranches)
+        url = '/menu_tag/'
+        menu = self.get_menu_content(url, 'meniu2')
+        self.assertEqual(menu, no_subbranches)
 
     def test_single_subbranch1(self):
-        menu_html = self.get_menu_content('meniu3')
-        menu_dict = dictifier.to_json(menu_html)
-        self.assertEqual(menu_dict, single_subbranch1)
+        url = '/menu_tag/?item=meniu3-punkt1'
+        menu = self.get_menu_content(url, 'meniu3')
+        self.assertEqual(menu, single_subbranch1)
 
     def test_single_subbranch2(self):
-        menu_html = self.get_menu_content('meniu4')
-        menu_dict = dictifier.to_json(menu_html)
-        self.assertEqual(menu_dict, single_subbranch2)
+        url = '/menu_tag/?item=meniu4-punkt2'
+        menu = self.get_menu_content(url, 'meniu4')
+        self.assertEqual(menu, single_subbranch2)
 
     def test_single_subbranch3(self):
-        menu_html = self.get_menu_content('meniu5')
-        menu_dict = dictifier.to_json(menu_html)
-        self.assertEqual(menu_dict, single_subbranch3)
+        url = '/menu_tag/?item=meniu5-punkt3'
+        menu = self.get_menu_content(url, 'meniu5')
+        self.assertEqual(menu, single_subbranch3)
 
-    def test_multiple_subbranches(self):
-        menu_html = self.get_menu_content('meniu6')
-        menu_dict = dictifier.to_json(menu_html)
-        self.assertEqual(menu_dict, multiple_subbranches)
+    def test_multiple_subbranches1(self):
+        url = '/menu_tag/?item=meniu6-punkt2'
+        menu = self.get_menu_content(url, 'meniu6')
+        self.assertEqual(menu, multiple_subbranches1)
+
+    def test_multiple_subbranches2(self):
+        url = '/menu_tag/?item=meniu6-punkt3'
+        menu = self.get_menu_content(url, 'meniu6')
+        self.assertEqual(menu, multiple_subbranches2)

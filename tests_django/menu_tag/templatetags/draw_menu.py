@@ -101,8 +101,8 @@ def draw_menu(context, menu_slug):
     branch_item, branch_as_list = item_branch(item_slug)
     m = menu_as_list(branch_item, branch_as_list)
     if not m:
-        m_html = f'The menu "{menu_slug}" does not contain items'
+        m_html = f'The menu {menu_slug} does not contain items'
     else:
         m_html = list_formatter(m)
-    m_html = f'<ul id={menu_slug}>{m_html}</ul>'
+    m_html = f'<ul id="{menu_slug}">{m_html}</ul>'
     return format_html(m_html)
