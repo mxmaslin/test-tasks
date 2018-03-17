@@ -1,0 +1,290 @@
+[
+{
+    "model": "menu_tag.menu",
+    "pk": 4,
+    "fields": {
+        "title": "\u043c\u0435\u043d\u044e1",
+        "slug": "meniu1"
+    }
+},
+{
+    "model": "menu_tag.menu",
+    "pk": 5,
+    "fields": {
+        "title": "\u043c\u0435\u043d\u044e2",
+        "slug": "meniu2"
+    }
+},
+{
+    "model": "menu_tag.menu",
+    "pk": 6,
+    "fields": {
+        "title": "\u043c\u0435\u043d\u044e3",
+        "slug": "meniu3"
+    }
+},
+{
+    "model": "menu_tag.menu",
+    "pk": 10,
+    "fields": {
+        "title": "\u043c\u0435\u043d\u044e4",
+        "slug": "meniu4"
+    }
+},
+{
+    "model": "menu_tag.menu",
+    "pk": 11,
+    "fields": {
+        "title": "\u043c\u0435\u043d\u044e5",
+        "slug": "meniu5"
+    }
+},
+{
+    "model": "menu_tag.menu",
+    "pk": 12,
+    "fields": {
+        "title": "\u043c\u0435\u043d\u044e6",
+        "slug": "meniu6"
+    }
+},
+{
+    "model": "menu_tag.menuitem",
+    "pk": 7,
+    "fields": {
+        "title": "\u043c\u0435\u043d\u044e2 \u043f\u0443\u043d\u043a\u04421",
+        "slug": "meniu2-punkt1",
+        "menu": 5,
+        "parent": null
+    }
+},
+{
+    "model": "menu_tag.menuitem",
+    "pk": 8,
+    "fields": {
+        "title": "\u043c\u0435\u043d\u044e2 \u043f\u0443\u043d\u043a\u04422",
+        "slug": "meniu2-punkt2",
+        "menu": 5,
+        "parent": null
+    }
+},
+{
+    "model": "menu_tag.menuitem",
+    "pk": 9,
+    "fields": {
+        "title": "\u043c\u0435\u043d\u044e2 \u043f\u0443\u043d\u043a\u04423",
+        "slug": "meniu2-punkt3",
+        "menu": 5,
+        "parent": null
+    }
+},
+{
+    "model": "menu_tag.menuitem",
+    "pk": 10,
+    "fields": {
+        "title": "\u043c\u0435\u043d\u044e3 \u043f\u0443\u043d\u043a\u04421",
+        "slug": "meniu3-punkt1",
+        "menu": 6,
+        "parent": null
+    }
+},
+{
+    "model": "menu_tag.menuitem",
+    "pk": 11,
+    "fields": {
+        "title": "\u043c\u0435\u043d\u044e3 \u043f\u0443\u043d\u043a\u04422",
+        "slug": "meniu3-punkt2",
+        "menu": 6,
+        "parent": null
+    }
+},
+{
+    "model": "menu_tag.menuitem",
+    "pk": 12,
+    "fields": {
+        "title": "\u043c\u0435\u043d\u044e3 \u043f\u0443\u043d\u043a\u04423",
+        "slug": "meniu3-punkt3",
+        "menu": 6,
+        "parent": null
+    }
+},
+{
+    "model": "menu_tag.menuitem",
+    "pk": 13,
+    "fields": {
+        "title": "\u043c\u0435\u043d\u044e3 \u043f\u0443\u043d\u043a\u04421 \u043f\u043e\u0434\u043f\u0443\u043d\u043a\u04421",
+        "slug": "meniu3-punkt1-podpunkt1",
+        "menu": 6,
+        "parent": 10
+    }
+},
+{
+    "model": "menu_tag.menuitem",
+    "pk": 14,
+    "fields": {
+        "title": "\u043c\u0435\u043d\u044e4 \u043f\u0443\u043d\u043a\u04421",
+        "slug": "meniu4-punkt1",
+        "menu": 10,
+        "parent": null
+    }
+},
+{
+    "model": "menu_tag.menuitem",
+    "pk": 15,
+    "fields": {
+        "title": "\u043c\u0435\u043d\u044e4 \u043f\u0443\u043d\u043a\u04422",
+        "slug": "meniu4-punkt2",
+        "menu": 10,
+        "parent": null
+    }
+},
+{
+    "model": "menu_tag.menuitem",
+    "pk": 16,
+    "fields": {
+        "title": "\u043c\u0435\u043d\u044e4 \u043f\u0443\u043d\u043a\u04423",
+        "slug": "meniu4-punkt3",
+        "menu": 10,
+        "parent": null
+    }
+},
+{
+    "model": "menu_tag.menuitem",
+    "pk": 17,
+    "fields": {
+        "title": "\u043c\u0435\u043d\u044e4 \u043f\u0443\u043d\u043a\u04422 \u043f\u043e\u0434\u043f\u0443\u043d\u043a\u04421",
+        "slug": "meniu4-punkt2-podpunkt1",
+        "menu": 10,
+        "parent": 15
+    }
+},
+{
+    "model": "menu_tag.menuitem",
+    "pk": 18,
+    "fields": {
+        "title": "\u043c\u0435\u043d\u044e5 \u043f\u0443\u043d\u043a\u04421",
+        "slug": "meniu5-punkt1",
+        "menu": 11,
+        "parent": null
+    }
+},
+{
+    "model": "menu_tag.menuitem",
+    "pk": 19,
+    "fields": {
+        "title": "\u043c\u0435\u043d\u044e5 \u043f\u0443\u043d\u043a\u04422",
+        "slug": "meniu5-punkt2",
+        "menu": 11,
+        "parent": null
+    }
+},
+{
+    "model": "menu_tag.menuitem",
+    "pk": 20,
+    "fields": {
+        "title": "\u043c\u0435\u043d\u044e5 \u043f\u0443\u043d\u043a\u04423",
+        "slug": "meniu5-punkt3",
+        "menu": 11,
+        "parent": null
+    }
+},
+{
+    "model": "menu_tag.menuitem",
+    "pk": 21,
+    "fields": {
+        "title": "\u043c\u0435\u043d\u044e5 \u043f\u0443\u043d\u043a\u04423 \u043f\u043e\u0434\u043f\u0443\u043d\u043a\u04421",
+        "slug": "meniu5-punkt3-podpunkt1",
+        "menu": 11,
+        "parent": 20
+    }
+},
+{
+    "model": "menu_tag.menuitem",
+    "pk": 22,
+    "fields": {
+        "title": "\u043c\u0435\u043d\u044e6 \u043f\u0443\u043d\u043a\u04421",
+        "slug": "meniu6-punkt1",
+        "menu": 12,
+        "parent": null
+    }
+},
+{
+    "model": "menu_tag.menuitem",
+    "pk": 23,
+    "fields": {
+        "title": "\u043c\u0435\u043d\u044e6 \u043f\u0443\u043d\u043a\u04422",
+        "slug": "meniu6-punkt2",
+        "menu": 12,
+        "parent": null
+    }
+},
+{
+    "model": "menu_tag.menuitem",
+    "pk": 24,
+    "fields": {
+        "title": "\u043c\u0435\u043d\u044e6 \u043f\u0443\u043d\u043a\u04423",
+        "slug": "meniu6-punkt3",
+        "menu": 12,
+        "parent": null
+    }
+},
+{
+    "model": "menu_tag.menuitem",
+    "pk": 25,
+    "fields": {
+        "title": "\u043c\u0435\u043d\u044e6 \u043f\u0443\u043d\u043a\u04421 \u043f\u043e\u0434\u043f\u0443\u043d\u043a\u04421",
+        "slug": "meniu6-punkt1-podpunkt1",
+        "menu": 12,
+        "parent": 22
+    }
+},
+{
+    "model": "menu_tag.menuitem",
+    "pk": 26,
+    "fields": {
+        "title": "\u043c\u0435\u043d\u044e6 \u043f\u0443\u043d\u043a\u04422 \u043f\u043e\u0434\u043f\u0443\u043d\u043a\u04421",
+        "slug": "meniu6-punkt2-podpunkt1",
+        "menu": 12,
+        "parent": 23
+    }
+},
+{
+    "model": "menu_tag.menuitem",
+    "pk": 27,
+    "fields": {
+        "title": "\u043c\u0435\u043d\u044e6 \u043f\u0443\u043d\u043a\u04422 \u043f\u043e\u0434\u043f\u0443\u043d\u043a\u04422",
+        "slug": "meniu6-punkt2-podpunkt2",
+        "menu": 12,
+        "parent": 23
+    }
+},
+{
+    "model": "menu_tag.menuitem",
+    "pk": 28,
+    "fields": {
+        "title": "\u043c\u0435\u043d\u044e6 \u043f\u0443\u043d\u043a\u04423 \u043f\u043e\u0434\u043f\u0443\u043d\u043a\u04421",
+        "slug": "meniu6-punkt3-podpunkt1",
+        "menu": 12,
+        "parent": 24
+    }
+},
+{
+    "model": "menu_tag.menuitem",
+    "pk": 29,
+    "fields": {
+        "title": "\u043c\u0435\u043d\u044e6 \u043f\u0443\u043d\u043a\u04423 \u043f\u043e\u0434\u043f\u0443\u043d\u043a\u04422",
+        "slug": "meniu6-punkt3-podpunkt2",
+        "menu": 12,
+        "parent": 24
+    }
+},
+{
+    "model": "menu_tag.menuitem",
+    "pk": 30,
+    "fields": {
+        "title": "\u043c\u0435\u043d\u044e6 \u043f\u0443\u043d\u043a\u04423 \u043f\u043e\u0434\u043f\u0443\u043d\u043a\u04423",
+        "slug": "meniu6-punkt3-podpunkt3",
+        "menu": 12,
+        "parent": 24
+    }
+}
+]

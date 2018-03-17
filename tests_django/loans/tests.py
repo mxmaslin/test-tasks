@@ -1,8 +1,4 @@
-import base64
-import json
 from django.test import Client, TestCase
-
-from .models import Application, Questionnaire, Submission
 
 
 class PartnerAPITestCase(TestCase):
