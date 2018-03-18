@@ -38,7 +38,7 @@ for root, dirs, files in os.walk(os.path.join('Wargaming Forge Task', 'task_1_da
         for line in f_teams:
             print(line)
             team_id, *user_ids = line.split()
-            teams[team_id] = sum(map(lambda x: int(users[x]), user_ids))
+            teams[team_id] = sum([int(users[x]) for x in user_ids])
 
     # ищем подходящую пару
     teams_sorted = sorted(teams, key=teams.__getitem__)
@@ -52,9 +52,8 @@ for root, dirs, files in os.walk(os.path.join('Wargaming Forge Task', 'task_1_da
 
         print(c, t2)
 
-        with open(os.path.join('Username_task_1_team_pairs',
-                               '{}_pairs.txt'.format(test_name)), 'a') as f_result:
+        with open(os.path.join(f'Username_task_1_team_pairs', f'{test_name}_pairs.txt'), 'a') as f_result:
             if c != t2:
-                f_result.write('{} {}\n'.format(c, t2))
+                f_result.write(f'{c} {t2}\n')
             else:
                 f_result.write(c)

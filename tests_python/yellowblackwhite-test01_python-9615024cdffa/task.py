@@ -165,13 +165,13 @@ class TestTask(unittest.TestCase):
             serie_dict['seasons'] = []
             for season in serie.seasons:
                 season_dict = dict()
-                season_dict['path'] = '{}/{}'.format(serie_dict['path'], season.alias)
+                season_dict['path'] = f'{serie_dict["path"]}/{season.alias}'
                 season_dict['title'] = season.num
                 season_dict['episodes'] = []
                 for episode in season.episodes:
                     episode_dict = dict()
-                    episode_dict['path'] = '{}/{}'.format(season_dict['path'], episode.alias)
-                    episode_dict['title'] = 'Эпизод {}'.format(episode.num)
+                    episode_dict['path'] = f'{season_dict["path"]}/{episode.alias}'
+                    episode_dict['title'] = f'Эпизод {episode.num}'
                     episode_dict['files'] = []
                     for file in episode.files:
                         file_dict = dict()
