@@ -15,4 +15,4 @@
 5. Результат нужно оформить в виде репозитория на github.com
 6. Также в репку положить тот тестовый csv файл, на котором можно утилиту проверить.
 
-[Пример]: https://github.com/mxmaslin/Test-tasks/blob/master/tests_python/pdf/example.jpg
+![Что должно напечататься](https://github.com/mxmaslin/Test-tasks/blob/master/tests_python/pdf/example.jpg)
