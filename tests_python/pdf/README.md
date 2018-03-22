@@ -28,5 +28,8 @@
     
 3. Запустить скрипт generate_pdfs.py
 
-    python generate_pdfs.py <путь к csv-файлу с данными получателей дипломов> 
+    python generate_pdfs.py
+    
+    Скрипт попросит указать файл к csv-файлу с данными получателей дипломов 
+    
 ![Что должно напечататься](https://github.com/mxmaslin/Test-tasks/blob/master/tests_python/pdf/example.jpg)
