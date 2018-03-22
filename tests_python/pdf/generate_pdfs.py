@@ -2,11 +2,16 @@
 import os
 import csv
 
+from reportlab.graphics.barcode.qr import QrCodeWidget
+from reportlab.graphics.shapes import Drawing
+from reportlab.lib.pagesizes import A4, landscape, portrait
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import A4, landscape, portrait
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
+from reportlab.platypus import Paragraph
+
+
+from reportlab.graphics import renderPDF
 
 from mxdata import (where,
                     when,
@@ -80,12 +85,17 @@ def build_diploma(person_data):
     reg_number_para.wrapOn(c, 300, 10)
     reg_number_para.drawOn(c, 28, 480)
 
+    qrw = QrCodeWidget(person_data['diploma_id'])
+    dr = Drawing(45, 45)
+    dr.add(qrw)
+    renderPDF.draw(dr, c, 101, 485)
+
     c.save()
 
 
 if __name__ == '__main__':
-    # fname = raw_input('Введите путь к файлу с исходными данными: ')
-    fname = 'persons.csv'
+    fname = raw_input('Введите путь к файлу с исходными данными: ')
+    # fname = 'persons.csv'
     if not os.path.exists(fname):
         print('Файл %s не найден' % fname)
         exit()
