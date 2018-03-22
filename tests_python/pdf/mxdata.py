@@ -35,9 +35,11 @@ module = 'модуль «Особенности применения техно�
 
 volume = 'в объёме 24 (двадцати четырёх) часов'
 
-director = 'М.П. Директор %(director)s' % guys
+director = 'М.П. &nbsp;&nbsp;&nbsp;&nbsp;\
+Директор &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\
+%(director)s' % guys
 some_boss = 'Начальник<br />\
-учебной части %(some_boss)s' % guys
+учебной части &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; %(some_boss)s' % guys
 
 city = 'Москва, 2015'
 
@@ -52,8 +54,8 @@ def stylesheet():
         'default': ParagraphStyle(
             'default',
             fontName='Arial',
-            fontSize=8,
-            leading=10,
+            fontSize=10,
+            leading=12,
             leftIndent=0,
             rightIndent=0,
             firstLineIndent=0,
@@ -81,6 +83,11 @@ def stylesheet():
         'diploma_info',
         parent=styles['default'],
         fontName='Arial-Bold',
+    )
+    styles['some_boss'] = ParagraphStyle(
+        'diploma_info',
+        parent=styles['default'],
+        alignment=TA_LEFT
     )
     return styles
 
