@@ -16,3 +16,15 @@
 6. Также в репку положить тот тестовый csv файл, на котором можно утилиту проверить.
 
 [Пример]: https://github.com/mxmaslin/Test-tasks/blob/master/tests_python/pdf/example.jpg
+
+Решение:
+§
+1. Установить пакеты из requirements.txt
+
+    pip install -r requirements.txt
+    
+2. Опционально: сгенерировать тестовые данные (уже сгенерированы, лежат в persons.csv)
+
+    python generate_persons <количество персон>
+    
+3.  
