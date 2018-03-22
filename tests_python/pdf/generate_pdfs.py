@@ -4,11 +4,9 @@ import csv
 
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4, landscape, portrait
-
-from reportlab.lib.enums import TA_CENTER
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 
 from mxdata import (where,
                     when,
@@ -19,86 +17,74 @@ from mxdata import (where,
                     some_boss,
                     city,
                     diploma_info,
-                    reg_number)
+                    reg_number,
+                    stylesheet)
 
 
-pdfmetrics.registerFont(TTFont('Verdana', 'Verdana.ttf'))
+pdfmetrics.registerFont(TTFont('Arial', 'Arial.ttf'))
+pdfmetrics.registerFont(TTFont('Arial-Bold', 'Arial Bold.ttf'))
 
 
 def build_diploma(person_data):
     diploma_fname = 'diplom%s.pdf' % person_data['diploma_id']
     path_to_diploma = os.path.join('diplomas', diploma_fname)
 
-    doc = SimpleDocTemplate(
-        path_to_diploma,
-        pagesize=landscape(A4),
-        rightMargin=72,
-        leftMargin=72,
-        topMargin=72,
-        bottomMargin=18)
+    c = canvas.Canvas(path_to_diploma, pagesize=landscape(A4), bottomup=0)
 
-    styles = getSampleStyleSheet()
-    styles.add(ParagraphStyle(name='Justify', alignment=TA_CENTER, fontname='Verdana'))
+    person_text = '%(family)s %(name)s %(patronymic)s' % person_data
+    person_para = Paragraph(person_text, stylesheet()['person_name'])
+    person_para.wrapOn(c, 200, 100)
+    person_para.drawOn(c, 600, 300)
 
-    story = []
+    where_text = 'прошел(а) обучение в %(where)s' % where
+    where_para = Paragraph(where_text, stylesheet()['default'])
+    where_para.wrapOn(c, 300, 600)
+    where_para.drawOn(c, 300, 600)
 
-    person = '<font size=8 name=Verdana>\
-    %(family)s %(name)s %(patronymic)s</font>' % person_data
-    story.append(Paragraph(person, styles["Justify"]))
-    story.append(Spacer(1, 8))
+    when_text = 'c «%(when_begin_day)s» %(when_begin_month)s %(when_begin_year)s \
+    по «%(when_end_day)s» %(when_end_month)s %(when_end_year)s' % when
+    when_para = Paragraph(when_text, stylesheet()['default'])
+    when_para.wrapOn(c, 300, 600)
+    when_para.drawOn(c, 300, 600)
 
-    diploma_where = '<font size=8 name=Verdana>\
-    прошел(а) обучение в %(where)s\
-    </font>' % where
-    story.append(Paragraph(diploma_where, styles["Justify"]))
+    program_para = Paragraph(program, stylesheet()['default'])
+    program_para.wrapOn(c, 300, 600)
+    program_para.drawOn(c, 10, 20)
 
-    diploma_when = '<font size=8 name=Verdana>\
-    c «%(when_begin_day)s» %(when_begin_month)s %(when_begin_year)s \
-    по «%(when_end_day)s» %(when_end_month)s %(when_end_year)s \
-    </font>' % when
-    story.append(Paragraph(diploma_when, styles["Justify"]))
-    story.append(Spacer(1, 8))
+    module_para = Paragraph(module, stylesheet()['default'])
+    module_para.wrapOn(c, 300, 600)
+    module_para.drawOn(c, 10, 20)
 
-    diploma_program = '<font size=8 name=Verdana>%s</font>' % program
-    story.append(Paragraph(diploma_program, styles["Justify"]))
-    story.append(Spacer(1, 8))
+    volume_para = Paragraph(volume, stylesheet()['default'])
+    volume_para.wrapOn(c, 300, 600)
+    volume_para.drawOn(c, 10, 20)
 
-    diploma_module = '<font size=8 name=Verdana>%s</font>' % module
-    story.append(Paragraph(diploma_module, styles["Justify"]))
-    story.append(Spacer(1, 8))
+    director_para = Paragraph(director, stylesheet()['default'])
+    director_para.wrapOn(c, 300, 600)
+    director_para.drawOn(c, 10, 20)
 
-    diploma_volume = '<font size=8 name=Verdana>%s</font>' % volume
-    story.append(Paragraph(diploma_volume, styles["Justify"]))
-    story.append(Spacer(1, 8))
-    story.append(Spacer(1, 8))
+    some_boss_para = Paragraph(some_boss, stylesheet()['default'])
+    some_boss_para.wrapOn(c, 300, 600)
+    some_boss_para.drawOn(c, 10, 20)
 
-    diploma_director = '<font size=8 name=Verdana>%s</font>' % director
-    story.append(Paragraph(diploma_director, styles["Justify"]))
-    story.append(Spacer(1, 8))
+    city_para = Paragraph(city, stylesheet()['default'])
+    city_para.wrapOn(c, 300, 600)
+    city_para.drawOn(c, 10, 20)
 
-    diploma_some_boss = '<font size=8 name=Verdana>%s</font>' % some_boss
-    story.append(Paragraph(diploma_some_boss, styles["Justify"]))
-    story.append(Spacer(1, 8))
+    diploma_info_para = Paragraph(diploma_info, stylesheet()['default'])
+    diploma_info_para.wrapOn(c, 300, 600)
+    diploma_info_para.drawOn(c, 10, 20)
 
-    diploma_city = '<font size=8 name=Verdana>%s</font>' % city
-    story.append(Paragraph(diploma_city, styles["Justify"]))
-    story.append(Spacer(1, 8))
+    reg_number_para = Paragraph(reg_number, stylesheet()['default'])
+    reg_number_para.wrapOn(c, 300, 600)
+    reg_number_para.drawOn(c, 10, 20)
 
-    diploma_diploma_info = '<font size=8 name=Verdana>%s</font>' % diploma_info
-    story.append(Paragraph(diploma_diploma_info, styles["Justify"]))
-    story.append(Spacer(1, 8))
-    story.append(Spacer(1, 8))
-    story.append(Spacer(1, 8))
-
-    diploma_reg_number = '<font size=8 name=Verdana>%s %s</font>' % (reg_number, person_data['diploma_id'])
-    story.append(Paragraph(diploma_reg_number, styles["Justify"]))
-    story.append(Spacer(1, 8))
-    
-    doc.build(story)
+    c.save()
 
 
 if __name__ == '__main__':
-    fname = raw_input('Введите путь к файлу с исходными данными: ')
+    # fname = raw_input('Введите путь к файлу с исходными данными: ')
+    fname = 'persons.csv'
     if not os.path.exists(fname):
         print('Файл %s не найден' % fname)
         exit()

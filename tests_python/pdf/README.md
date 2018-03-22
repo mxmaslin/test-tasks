@@ -18,7 +18,7 @@
 [Пример]: https://github.com/mxmaslin/Test-tasks/blob/master/tests_python/pdf/example.jpg
 
 Решение:
-§
+
 1. Установить пакеты из requirements.txt
 
     pip install -r requirements.txt
@@ -27,4 +27,6 @@
 
     python generate_persons <количество персон>
     
-3.  
+3. Запустить скрипт generate_pdfs.py
+
+    python generate_pdfs.py <путь к csv-файлу с данными получателей дипломов> 
