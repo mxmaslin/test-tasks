@@ -21,16 +21,18 @@
 
 1. Установить пакеты из requirements.txt
 
-    pip install -r requirements.txt
+    `pip install -r requirements.txt`
     
 2. Опционально: сгенерировать тестовые данные (уже сгенерированы, лежат в persons.csv)
 
-    python generate_persons <количество персон>
+    `python generate_persons <количество персон>`
     
 3. Запустить скрипт generate_pdfs.py
 
-    python generate_pdfs.py
+    `python generate_pdfs.py`
     
-    Скрипт попросит указать файл к csv-файлу с данными получателей дипломов 
+    Скрипт попросит указать файл к csv-файлу с данными получателей дипломов
+    
+[Примеры сгенерированных дипломов](https://github.com/mxmaslin/Test-tasks/tree/master/tests_python/pdf/diplomas) 
     
 ![Что должно напечататься](https://github.com/mxmaslin/Test-tasks/blob/master/tests_python/pdf/example.jpg)
