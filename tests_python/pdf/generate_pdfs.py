@@ -31,8 +31,8 @@ pdfmetrics.registerFont(TTFont('Arial', 'Arial.ttf'))
 pdfmetrics.registerFont(TTFont('Arial-Bold', 'Arial Bold.ttf'))
 
 
-def build_diploma(person_data):
-    diploma_fname = 'diplom%s.pdf' % person_data['diploma_id']
+def build_diploma(person_data, diploma_number):
+    diploma_fname = 'diplom%s.pdf' % diploma_number
     path_to_diploma = os.path.join('diplomas', diploma_fname)
 
     c = canvas.Canvas(path_to_diploma, pagesize=landscape(A4), bottomup=0)
@@ -81,12 +81,12 @@ def build_diploma(person_data):
     diploma_info_para.wrapOn(c, 300, 10)
     diploma_info_para.drawOn(c, 50, 410)
 
-    reg_number_full = '%s %s' % (reg_number, person_data['diploma_id'])
+    reg_number_full = '%s %s' % (reg_number, diploma_number)
     reg_number_para = Paragraph(reg_number_full, stylesheet()['default'])
     reg_number_para.wrapOn(c, 300, 10)
     reg_number_para.drawOn(c, 28, 480)
 
-    qrw = QrCodeWidget(person_data['diploma_id'])
+    qrw = QrCodeWidget(diploma_number)
     dr = Drawing(45, 45)
     dr.add(qrw)
     renderPDF.draw(dr, c, 101, 485)
@@ -95,12 +95,19 @@ def build_diploma(person_data):
 
 
 if __name__ == '__main__':
-    fname = raw_input('Введите путь к файлу с исходными данными: ')
-    # fname = 'persons.csv'
+    # fname = raw_input('Введите путь к файлу с исходными данными: ')
+    fname = 'persons.csv'
     if not os.path.exists(fname):
         print('Файл %s не найден' % fname)
         exit()
     with open(fname) as f:
+        last_diploma_numer = len(open(fname).readlines())
+        num_diploma_digits = len(str(last_diploma_numer))
+
         reader = csv.DictReader(f, delimiter=',')
-        for person_data in reader:
-            build_diploma(person_data)
+
+        for i, person_data in enumerate(reader, start=1):
+            num_digits_i = len(str(i))
+            padding = '0' * (num_diploma_digits - num_digits_i)
+            diploma_number = str(i) if i == last_diploma_numer else padding + str(i)
+            build_diploma(person_data, diploma_number)

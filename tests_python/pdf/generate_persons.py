@@ -31,13 +31,6 @@ with open('persons.csv', 'w') as f:
     wr = csv.writer(f, delimiter=',', quoting=csv.QUOTE_ALL)
     wr.writerow(header)
 
-    num_digits = len(str(num_persons))
-    last_diploma_number = num_persons + 1
-
-    for i in range(1, last_diploma_number):
+    for _ in range(num_persons):
         person = fake.name().split()[-3:]
-        num_digits_i = len(str(i))
-        padding = '0' * (num_digits - num_digits_i)
-        diploma = str(i) if i == last_diploma_number else padding + str(i)
-        person.append(diploma)
         wr.writerow([unicode(x).encode('utf-8') for x in person])
