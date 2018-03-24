@@ -12,7 +12,7 @@ except IndexError:
     print('Требуется целочисленный аргумент при запуске скрипта')
     exit()
 
-wrong_num = 'Аргументом должно быть целое число больше нуля'
+wrong_num = 'Аргументом должно быть положительное целое число'
 
 try:
     num_persons = int(num_persons)
@@ -41,7 +41,3 @@ with open('persons.csv', 'w') as f:
         diploma = str(i) if i == last_diploma_number else padding + str(i)
         person.append(diploma)
         wr.writerow([unicode(x).encode('utf-8') for x in person])
-
-
-
-

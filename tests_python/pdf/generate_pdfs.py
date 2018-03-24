@@ -13,17 +13,18 @@ from reportlab.platypus import Paragraph
 
 from reportlab.graphics import renderPDF
 
-from mxdata import (where,
-                    when,
-                    program,
-                    module,
-                    volume,
-                    director,
-                    some_boss,
-                    city,
-                    diploma_info,
-                    reg_number,
-                    stylesheet)
+from diploma_content import (where,
+                             when,
+                             program,
+                             module,
+                             volume,
+                             director,
+                             some_boss,
+                             city,
+                             diploma_info,
+                             reg_number)
+
+from styles import stylesheet
 
 
 pdfmetrics.registerFont(TTFont('Arial', 'Arial.ttf'))
