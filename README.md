@@ -21,5 +21,5 @@
 - [Получение из MongoDB данных и их форматирование](https://github.com/mxmaslin/Test-tasks/tree/master/tests_python/yellowblackwhite-test01_python-9615024cdffa "Извлечение данных из MongoDB и их форматирование")
 - [Определение эмоциональной окраски твитов](https://github.com/mxmaslin/Test-tasks/tree/master/tests_python/tweets_sentiment "Определение эмоциональной окраски твитов")
 - [График изменения в реальном времени лайков, комментариев, репостов](https://github.com/mxmaslin/Test-tasks/tree/master/tests_python/mudakoff "Построение графика изменения в реальном времени лайков, комментариев, репостов")
-- [Генератор pdf с QR-кодами](https://github.com/mxmaslin/Test-tasks/tree/master/tests_python/pdf "Построение графика изменения в реальном времени лайков, комментариев, репостов")
+- [Генератор pdf с QR-кодами](https://github.com/mxmaslin/Test-tasks/tree/master/tests_python/generate_pdf "Построение графика изменения в реальном времени лайков, комментариев, репостов")
 - [TODO](https://gist.github.com/sayplastic/76bcebc3a554ea03e3cf296412b60b77)
