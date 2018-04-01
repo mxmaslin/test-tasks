@@ -12,8 +12,12 @@ class PortfolioCalculator:
 
     def calculate_asset_performance(self, start_date, end_date):
         assets = self._get_assets(start_date, end_date)
-        assets_diff = self._get_assets_diff(assets)
-        print(assets_diff)
+        assets_diff = assets.diff().iloc[1:]
+        np_numer = assets_diff.values
+        np_denom = assets[:-1].values
+        return pd.DataFrame(np_numer / np_denom,
+                               columns=assets_diff.columns,
+                               index=assets_diff.index)
 
     def _get_assets(self, start_date, end_date):
         prices_path = os.path.join('data', self.prices_fname)
@@ -22,8 +26,7 @@ class PortfolioCalculator:
                   .set_index('date')
                   .loc[start_date:end_date])
 
-    def _get_assets_diff(self, assets):
-        return assets.diff().iloc[1:]
+
 
     def calculate_currency_performance(self, start_date, end_date):
         weights = self._get_weights(start_date, end_date)
