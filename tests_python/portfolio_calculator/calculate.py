@@ -28,23 +28,26 @@ class PortfolioCalculator:
 
 
 
-    def calculate_currency_performance(self, start_date, end_date):
-        weights = self._get_weights(start_date, end_date)
+    # def calculate_currency_performance(self, start_date, end_date):
+    #     weights = self._get_weights(start_date, end_date)
+    #     print(weights)
 
-    def _get_weights(self):
+    def _get_weights(self, start_date, end_date):
         weights_path = os.path.join('data', self.weights_fname)
         weights = pd.read_csv(weights_path)
         weights.rename(columns={'Unnamed: 0': 'date'}, inplace=True)
-        weights.set_index('date')
-        weights.sort_index(axis=1, inplace=True)
+        columns = weights.columns.values
+        columns[3], columns[4] = columns[4], columns[3]
+        weights = weights[columns]
+        weights.set_index('date', inplace=True)
+        weights.fillna(method='ffill')
         return weights
 
-# def calculate_asset_performance(start_date, end_date):
-    # print(assets_return)
-    # print(assets.iloc[:-1])
-    # assets_return = assets_return.divide(assets.iloc[:-1])
-    # assets_return = assets_return.dropna()
-    # print(assets.iloc[:-1])
+
+
+
+
+
     # merged = (assets_return
     #     .merge(weights, how='outer', left_index=True, right_index=True)
     #     .dropna(subset=['AT0000A18XM4 SW', 'BE0974268972 BB', 'DE0007164600 GR', 'US0527691069 US', 'US6092071058 US'])
@@ -54,4 +57,4 @@ class PortfolioCalculator:
 
 if __name__ == '__main__':
     pc = PortfolioCalculator()
-    pc.calculate_asset_performance('2014-01-13', '2018-03-05')
+    pc.calculate_currency_performance('2014-01-13', '2018-03-06')
