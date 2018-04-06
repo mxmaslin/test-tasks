@@ -5,6 +5,45 @@ import os
 import pandas as pd
 
 
+def calculate_stuff_return(stuff):
+    stuff_diff = stuff.diff().iloc[1:]
+    np_numer = stuff_diff.values
+    np_denom = stuff[:-1].values
+    return pd.DataFrame(np_numer / np_denom,
+                        columns=stuff_diff.columns,
+                        index=stuff_diff.index)
+
+
+class AssetReturnCalculator:
+    def __init__(self, prices_fname='prices.csv'):
+        self.prices_fname = prices_fname
+
+    def calculate_asset_return(self, start_date, end_date):
+        assets = self._get_assets(start_date, end_date)
+        return calculate_stuff_return(assets)
+
+    def _get_assets(self, start_date, end_date):
+        prices_path = os.path.join('data', self.prices_fname)
+        return (pd.read_csv(prices_path)
+                  .fillna(method='ffill')
+                  .set_index('date')
+                  .loc[start_date:end_date])
+
+
+class CurrencyReturnCalculator:
+    def __init__(self, exchanges_fname='exchanges.csv'):
+        self.exchanges_fname = exchanges_fname
+
+    def calculate_currency_return(self, start_date, end_date):
+        currencies = self._get_currencies(start_date, end_date)
+        return calculate_stuff_return(currencies)
+
+    def _get_currencies(self, start_date, end_date):
+        return 0
+
+
+
+
 class PortfolioCalculator:
     def __init__(self, prices_fname='prices.csv', weights_fname='weights.csv'):
         self.prices_fname = prices_fname
