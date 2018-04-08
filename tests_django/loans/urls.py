@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
-from django.conf.urls import url, include
+from django.urls import include, path, re_path
+
 from rest_framework.routers import DefaultRouter
+
 from . import views
 
 router = DefaultRouter()
@@ -17,14 +19,13 @@ make_submission = views.SubmissionViewSet.as_view({
     'post': 'create'})
 
 
-urlpatterns = (
+urlpatterns = [
 
     # PartnerAPI
-    url(r'^', include(router.urls)),
-    url(r'^partner_api/make_submission/$', make_submission),
+    re_path(r'^', include(router.urls)),
+    path('partner_api/make_submission/', make_submission),
 
     # BankAPI
-    url(r'^bank_api/submissions/$',
-        submissions_list),
-    url(r'^bank_api/submissions/(?P<pk>[0-9]+)/$', submission_detail)
-)
+    path('bank_api/submissions/', submissions_list),
+    re_path(r'bank_api/submissions/(?P<pk>[0-9]+)/', submission_detail)
+]
