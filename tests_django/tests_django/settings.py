@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'dry_rest_permissions',
+    'debug_toolbar',
     'djmoney',
     'testing',
     'loans',
@@ -151,7 +152,6 @@ INTERNAL_IPS = ['127.0.0.1']
 CURRENCIES = ('RUB',)
 
 if DEBUG:
-    INSTALLED_APPS.append('debug_toolbar')
     try:
         from local_settings import *
     except ImportError:
