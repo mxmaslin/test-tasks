@@ -26,7 +26,7 @@ SECRET_KEY = '-^u$&=$y3vt0yrjcu!7l4ai_r20bwo*^+^9b&34*8-fb6ospq9'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definition
@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'dry_rest_permissions',
-    'debug_toolbar',
     'djmoney',
     'testing',
     'loans',
@@ -151,7 +150,9 @@ INTERNAL_IPS = ['127.0.0.1']
 
 CURRENCIES = ('RUB',)
 
-try:
-    from local_settings import *
-except ImportError:
-    pass
+if DEBUG:
+    INSTALLED_APPS.append('debug_toolbar')
+    try:
+        from local_settings import *
+    except ImportError:
+        pass
