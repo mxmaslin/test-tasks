@@ -31,6 +31,12 @@ pdfmetrics.registerFont(TTFont('Arial', 'Arial.ttf'))
 pdfmetrics.registerFont(TTFont('Arial-Bold', 'Arial Bold.ttf'))
 
 
+def build_diploma_number(i, num_diploma_digits, last_diploma_numer):
+    num_digits_i = len(str(i))
+    padding = '0' * (num_diploma_digits - num_digits_i)
+    return str(i) if i == last_diploma_numer else padding + str(i)
+
+
 def build_diploma(person_data, diploma_number):
     diploma_fname = 'diplom%s.pdf' % diploma_number
     path_to_diploma = os.path.join('diplomas', diploma_fname)
@@ -107,7 +113,5 @@ if __name__ == '__main__':
         reader = csv.DictReader(f, delimiter=',')
 
         for i, person_data in enumerate(reader, start=1):
-            num_digits_i = len(str(i))
-            padding = '0' * (num_diploma_digits - num_digits_i)
-            diploma_number = str(i) if i == last_diploma_numer else padding + str(i)
+            diploma_number = build_diploma_number(i, num_diploma_digits, last_diploma_numer)
             build_diploma(person_data, diploma_number)
