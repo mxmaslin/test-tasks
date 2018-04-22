@@ -28,7 +28,7 @@ def set_vk_session():
         vk_session.auth()
     except vk_api.AuthError as error_msg:
         print(error_msg)
-        return
+        exit()
     return vk_session.get_api()
 
 
