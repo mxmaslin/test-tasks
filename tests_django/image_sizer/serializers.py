@@ -7,7 +7,7 @@ class ImageSerializer(serializers.ModelSerializer):
     links = serializers.HyperlinkedRelatedField(
         many=True,
         read_only=True,
-        view_name='size- detail')
+        view_name='size-detail')
 
     class Meta:
         model = Image
