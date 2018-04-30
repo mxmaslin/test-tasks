@@ -4,8 +4,8 @@ from django.db import models
 class Image(models.Model):
     name = models.CharField(max_length=100)
     created = models.DateTimeField(auto_now_add=True)
-    url = models.URLField(null=True)
     file = models.FileField(upload_to='uploads/', null=True)
+    download_url = models.URLField(null=True)
     JPG = 'jpeg'
     GIF = 'gif'
     PNG = 'png'
@@ -14,7 +14,8 @@ class Image(models.Model):
         (GIF, 'gif'),
         (PNG, 'png'),
     )
-    format = models.CharField(max_length=3, choices=FORMAT_CHOICES, default=JPG)
+    format = models.CharField(
+        max_length=3, choices=FORMAT_CHOICES, default=JPG)
     jpeg_quality = models.IntegerField(null=True)
 
     class Meta:
@@ -24,4 +25,6 @@ class Image(models.Model):
 class Size(models.Model):
     width = models.IntegerField()
     height = models.IntegerField()
-    image = models.ForeignKey(Image, on_delete=models.CASCADE)
+    link = models.URLField(null=True)
+    image = models.ForeignKey(
+        Image, related_name='sizes', on_delete=models.CASCADE)
