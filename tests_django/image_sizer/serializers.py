@@ -12,12 +12,13 @@ class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
         fields = ('name',
-                  'created',
                   'file',
                   'download_url',
-                  'format',
                   'jpeg_quality',
                   'links')
+
+    def validate(self, data):
+        pass
 
 
 class ResizeSerializer(serializers.ModelSerializer):

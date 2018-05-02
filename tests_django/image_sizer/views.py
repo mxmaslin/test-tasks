@@ -18,6 +18,16 @@ def image_create(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+
+
+
+
+
+
+
+
+
+
 class ResizeDetail(APIView):
     def get_object(self, download_url):
         try:
