@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Image, Size
+from .models import Image, Resize
 
 
 class ImageSerializer(serializers.ModelSerializer):
@@ -20,10 +20,10 @@ class ImageSerializer(serializers.ModelSerializer):
                   'links')
 
 
-class SizeSerializer(serializers.ModelSerializer):
+class ResizeSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Size
+        model = Resize
         field = ('width',
                  'height',
-                 'link',
+                 'download_url',
                  'image')

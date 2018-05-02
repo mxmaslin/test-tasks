@@ -5,12 +5,13 @@ from django.contrib import admin
 
 
 urlpatterns = [
-    path('loans/', include('loans.urls')),
-    path('menu_tag/', include('menu_tag.urls')),
-    path('testing/', include('testing.urls')),
-    path('transfer_money/', include('transfer_money.urls')),
+    path('admin/', admin.site.urls),
 
-    path('admin/', admin.site.urls)
+    path('loans/', include('loans.urls')),
+    path('menu-tag/', include('menu_tag.urls')),
+    path('testing/', include('testing.urls')),
+    path('transfer-money/', include('transfer_money.urls')),
+    path('image-sizer/', include('image_sizer.urls'))
 ]
 
 if settings.DEBUG:

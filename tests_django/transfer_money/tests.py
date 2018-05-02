@@ -69,7 +69,7 @@ class SendMoneyFormTestCase(TestCase):
             'amount_0': '0.03',
             'amount_1': 'RUB'}
         response = self.client.post(
-            '/transfer_money/', form_data, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+            '/transfer-money/', form_data, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEqual(response.status_code, 200)
         donor = Client.objects.get(pk=3)
         recipient1 = Client.objects.get(pk=1)
@@ -88,7 +88,7 @@ class SendMoneyFormTestCase(TestCase):
             'amount_0': '0.03',
             'amount_1': 'RUB'}
         response = self.client.post(
-            '/transfer_money/', form_data, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+            '/transfer-money/', form_data, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEqual(response.status_code, 200)
         donor = Client.objects.get(pk=3)
         recipient1 = Client.objects.get(pk=1)
@@ -107,7 +107,7 @@ class SendMoneyFormTestCase(TestCase):
             'amount_0': '1.01',
             'amount_1': 'RUB'}
         response = self.client.post(
-            '/transfer_money/', form_data, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+            '/transfer-money/', form_data, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEqual(response.status_code, 200)
         donor = Client.objects.get(pk=3)
         recipient1 = Client.objects.get(pk=1)
@@ -126,7 +126,7 @@ class SendMoneyFormTestCase(TestCase):
             'amount_0': '0.02',
             'amount_1': 'RUB'}
         response = self.client.post(
-            '/transfer_money/', form_data, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+            '/transfer-money/', form_data, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEqual(response.status_code, 200)
         donor = Client.objects.get(pk=3)
         recipient1 = Client.objects.get(pk=1)
