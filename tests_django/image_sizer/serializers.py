@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from rest_framework import serializers
 
 from .models import Image, Resize
@@ -18,7 +19,12 @@ class ImageSerializer(serializers.ModelSerializer):
                   'links')
 
     def validate(self, data):
-        pass
+        """
+        Убедимся, что у нас есть либо file, либо download_url
+        """
+        if not any([data['file'], data['download_url']]):
+            raise serializers.ValidationError('No file nor url for file download')
+        return data
 
 
 class ResizeSerializer(serializers.ModelSerializer):
