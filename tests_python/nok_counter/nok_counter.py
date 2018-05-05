@@ -18,6 +18,7 @@ def lookahead(iterable):
 def count_noks(file):
     nok_times = []
     c = Counter()
+    test_data = []
     with open(file) as f:
         for line, has_more in lookahead(f):
             if len(line) < 2:
@@ -29,25 +30,22 @@ def count_noks(file):
                 nok_times.append(time)
                 if not same(nok_times):
                     print(nok_times[0], c[nok_times[0]])
+                    test_data.append((nok_times[0], c[nok_times[0]]))
                     nok_times = [time]
             if not has_more:
                 print(nok_times[0], c[nok_times[0]])
-    return c
+                test_data.append((nok_times[0], c[nok_times[0]]))
+    return test_data
 
 
 if __name__ == '__main__':
-    assert count_noks('logs/events1.log') == Counter({'2018-04-11 03:13': 1})
-    assert count_noks('logs/events2.log') == Counter({'2018-04-11 03:15': 1})
-    assert count_noks('logs/events3.log') == Counter({'2018-04-11 03:13': 1, '2018-04-11 03:15': 1})
-    assert count_noks('logs/events4.log') == Counter({'2018-04-11 03:13': 2, '2018-04-11 03:15': 1})
-    assert count_noks('logs/events5.log') == Counter(
-        {'2018-04-11 03:13': 1, '2018-04-11 03:14': 1, '2018-04-11 03:16': 1})
-    assert count_noks('logs/events6.log') == Counter(
-        {'2018-04-11 03:13': 2, '2018-04-11 03:14': 1, '2018-04-11 03:16': 1})
-    assert count_noks('logs/events7.log') == Counter(
-        {'2018-04-11 03:13': 1, '2018-04-11 03:14': 2, '2018-04-11 03:16': 1})
-    assert count_noks('logs/events9.log') == Counter({'2018-04-11 03:16': 1})
-    assert count_noks('logs/events10.log') == Counter(
-        {'2018-04-11 03:13': 1, '2018-04-11 03:14': 2, '2018-04-11 03:16': 2})
-    assert count_noks('logs/events11.log') == Counter(
-        {'2018-04-11 03:13': 2, '2018-04-11 03:14': 1, '2018-04-11 03:16': 2})
+    assert count_noks('logs/events1.log') == [('2018-04-11 03:13', 1)]
+    assert count_noks('logs/events2.log') == [('2018-04-11 03:15', 1)]
+    assert count_noks('logs/events3.log') == [('2018-04-11 03:13', 1), ('2018-04-11 03:15', 1)]
+    assert count_noks('logs/events4.log') == [('2018-04-11 03:13', 2), ('2018-04-11 03:15', 1)]
+    assert count_noks('logs/events5.log') == [('2018-04-11 03:13', 1), ('2018-04-11 03:14', 1), ('2018-04-11 03:16', 1)]
+    assert count_noks('logs/events6.log') == [('2018-04-11 03:13', 2), ('2018-04-11 03:14', 1), ('2018-04-11 03:16', 1)]
+    assert count_noks('logs/events7.log') == [('2018-04-11 03:13', 1), ('2018-04-11 03:14', 2), ('2018-04-11 03:16', 1)]
+    assert count_noks('logs/events9.log') == [('2018-04-11 03:16', 1)]
+    assert count_noks('logs/events10.log') == [('2018-04-11 03:13', 1), ('2018-04-11 03:14', 2), ('2018-04-11 03:16', 2)]
+    assert count_noks('logs/events11.log') == [('2018-04-11 03:13', 2), ('2018-04-11 03:14', 1), ('2018-04-11 03:16', 2)]
