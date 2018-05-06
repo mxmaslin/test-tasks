@@ -8,5 +8,5 @@ urlpatterns = [
     re_path(r'^$', views.image_create),
     re_path(
         r'(?P<download_url>(?:[-\w.]|(?:%[\da-fA-F]{2}))+)/',
-        views.ResizeDetail.as_view())
+        views.ResizeDetail.as_view(), name='resize-detail')
 ]

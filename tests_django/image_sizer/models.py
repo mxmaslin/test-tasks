@@ -7,10 +7,16 @@ class Image(models.Model):
     download_url = models.URLField(null=True, unique=True)
     jpeg_quality = models.IntegerField(null=True)
 
+    def __str__(self):
+        return f'{self.name}'
+
 
 class Resize(models.Model):
     width = models.IntegerField(null=True)
     height = models.IntegerField(null=True)
     download_url = models.URLField(null=True, unique=True)
     image = models.ForeignKey(
-        Image, related_name='resizes', on_delete=models.CASCADE)
+        Image, related_name='resizes', on_delete=models.CASCADE, null=True)
+
+    def __str__(self):
+        return f'{self.image} {self.width}x{self.height}'

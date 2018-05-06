@@ -11,21 +11,14 @@ from .serializers import ImageSerializer, ResizeSerializer
 
 @api_view(['POST'])
 def image_create(request):
+    """
+    http POST http://127.0.0.1:8000/image-sizer/ <<< '{"name": "shit", "download_url": "http://shit.com", "resizes": []}'
+    """
     serializer = ImageSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-
-
-
-
-
-
-
-
 
 
 class ResizeDetail(APIView):
