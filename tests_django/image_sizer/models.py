@@ -3,7 +3,7 @@ from django.db import models
 
 class Image(models.Model):
     name = models.CharField(max_length=100)
-    file = models.FileField(upload_to='uploads/', null=True)
+    file = models.ImageField(upload_to='uploads/', null=True)
     download_url = models.URLField(null=True, unique=True)
     jpeg_quality = models.IntegerField(null=True)
 
