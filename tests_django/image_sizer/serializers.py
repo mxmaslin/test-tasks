@@ -7,6 +7,7 @@ from .models import Image, Resize
 
 
 class ImageSerializer(serializers.ModelSerializer):
+
     resizes = serializers.HyperlinkedRelatedField(
         many=True,
         read_only=True,
@@ -18,9 +19,9 @@ class ImageSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         """
-        Убедимся, что у нас есть либо file, либо download_url
+        Убедимся, что у нас есть либо file, либо download
         """
-        if 'file' in data or 'download_url' in data:
+        if 'file' in data or 'download' in data:
             pass
         else:
             raise serializers.ValidationError('No file nor url for file download')
@@ -29,6 +30,15 @@ class ImageSerializer(serializers.ModelSerializer):
 
 class ResizeSerializer(serializers.ModelSerializer):
 
+    resize_file_url = serializers.SerializerMethodField()
+
     class Meta:
         model = Resize
-        fields = '__all__'
+        fields = ('width',
+                  'height',
+                  'image',
+                  'resize_file',
+                  'resize_file_url')
+
+    def get_resize_file_url(self, obj):
+        return obj.resize_file.url
