@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-import urllib.request
-import imghdr
-import os
+from django.urls import resolve
 
 from django.http import Http404
 
@@ -17,10 +15,9 @@ from .serializers import ImageSerializer, ResizeSerializer
 @api_view(['POST'])
 def image_create(request):
     """
-    http POST http://127.0.0.1:8000/image-sizer/ <<< '{"file": "test", "download_url": "http://image.com/image.jpg", "resizes": [{"width": 100, "height": 150, "format": "jpg", "jpg_quality": 80}, {"width": 100, "height": 150}]}'
+    http POST http://127.0.0.1:8000/image-sizer/ <<< '{"file": "test", "download": "http://image.com/image.jpg", "resizes": [{"width": 100, "height": 150, "format": "jpg", "jpg_quality": 80}, {"width": 100, "height": 150}]}'
     """
     serializer = ImageSerializer(data=request.data)
-    posted = {'file': False, 'download_url': False}
     if serializer.is_valid():
         if 'file' in request.data:
             print('got file and maybe url')
@@ -30,31 +27,34 @@ def image_create(request):
             pass
 
 
-            # image_url = "https://upload.wikimedia.org/wikipedia/ru/thumb/e/ed/Preved.jpg/300px-Preved.jpg"
-        #     resource = urllib.urlopen(data['download_url'])
-        #     image = open.
-
-
-
 
         serializer.save()
+
+        image = Image.ob
+        # for i in Image.objects.all():
+        #     #13
+        #     print(i.pk)
+        #     print(i.file)
+        #     print(resolve('http://127.0.0.1:8000/image-sizer/' + i.file.url))
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ResizeDetail(APIView):
-    def get_object(self, download_url):
+    def get_object(self, resize_url):
         try:
-            return Resize.objects.get(download_url=download_url)
+            pk = resolve(resize_url).kwargs['pk']
+            return Resize.objects.get(pk)
         except Resize.DoesNotExist:
             raise Http404
 
-    def get(self, request, download_url, format=None):
-        resize = self.get_object(download_url)
+    def get(self, request, resize_url, format=None):
+        resize = self.get_object(resize_url)
         serializer = ResizeSerializer(resize)
         return Response(serializer.data)
 
-    def delete(self, request, download_url, format=None):
-        resize = self.get_object(download_url)
+    def delete(self, request, resize_url, format=None):
+        resize = self.get_object(resize_url)
         resize.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
