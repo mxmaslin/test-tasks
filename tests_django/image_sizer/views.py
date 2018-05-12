@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from django.urls import resolve
+from django.urls import resolve, reverse
 
 from django.http import Http404
 
@@ -19,42 +19,38 @@ def image_create(request):
     """
     serializer = ImageSerializer(data=request.data)
     if serializer.is_valid():
+        from django.conf import settings
         if 'file' in request.data:
             print('got file and maybe url')
             pass
         else:
             print('no file, got url')
             pass
-
-
-
         serializer.save()
 
-        image = Image.ob
-        # for i in Image.objects.all():
-        #     #13
-        #     print(i.pk)
-        #     print(i.file)
-        #     print(resolve('http://127.0.0.1:8000/image-sizer/' + i.file.url))
+        im = Image.objects.get(pk=13)
+        print('yay', resolve(im.file.url))
+        # print(resolve(image.file.url))
+
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ResizeDetail(APIView):
-    def get_object(self, resize_url):
+    def get_object(self, path):
         try:
-            pk = resolve(resize_url).kwargs['pk']
-            return Resize.objects.get(pk)
+            pk = 'something'
+            return Resize.objects.get(pk=pk)
         except Resize.DoesNotExist:
             raise Http404
 
-    def get(self, request, resize_url, format=None):
-        resize = self.get_object(resize_url)
+    def get(self, request, path, format=None):
+        resize = self.get_object(path)
         serializer = ResizeSerializer(resize)
         return Response(serializer.data)
 
-    def delete(self, request, resize_url, format=None):
-        resize = self.get_object(resize_url)
+    def delete(self, request, path, format=None):
+        resize = self.get_object(path)
         resize.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
