@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-import imghdr
-
 from rest_framework import serializers
 
 from .models import Image, Resize
