@@ -11,7 +11,8 @@ urlpatterns = [
     path('menu-tag/', include('menu_tag.urls')),
     path('testing/', include('testing.urls')),
     path('transfer-money/', include('transfer_money.urls')),
-    path('image-sizer/', include('image_sizer.urls'))
+    path('image-sizer/',
+         include('image_sizer.urls', namespace='image_sizer_app'))
 ]
 
 if settings.DEBUG:

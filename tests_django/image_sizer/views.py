@@ -19,7 +19,6 @@ def image_create(request):
     """
     serializer = ImageSerializer(data=request.data)
     if serializer.is_valid():
-        from django.conf import settings
         if 'file' in request.data:
             print('got file and maybe url')
             pass
@@ -44,9 +43,9 @@ class ResizeDetail(APIView):
 
     def get(self, request, path, format=None):
 
-        im = Image.objects.get(pk=46)
-        # print(im.file.url)
-        print('yay', resolve(im.file.url))
+        # print(reverse('image_sizer_app:resize_detail', args=[path]))
+        
+        print(resolve(path))
 
         # resize = self.get_object(path)
         # serializer = ResizeSerializer(resize)
