@@ -10,7 +10,7 @@ class Image(models.Model):
     download = models.URLField(null=True)
 
     def __str__(self):
-        return f'{self.file}'
+        return f'{self.pk, self.file.url}'
 
 
 class Resize(models.Model):
