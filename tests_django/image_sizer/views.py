@@ -26,12 +26,8 @@ def image_create(request):
         else:
             print('no file, got url')
             pass
+
         serializer.save()
-
-        im = Image.objects.get(pk=13)
-        print('yay', resolve(im.file.url))
-        # print(resolve(image.file.url))
-
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -39,18 +35,31 @@ def image_create(request):
 
 class ResizeDetail(APIView):
     def get_object(self, path):
-        try:
-            pk = 'something'
-            return Resize.objects.get(pk=pk)
-        except Resize.DoesNotExist:
-            raise Http404
+        # try:
+            # pk = 'something'
+        #     return Resize.objects.get(pk=pk)
+        # except Resize.DoesNotExist:
+        #     raise Http404
+        pass
 
     def get(self, request, path, format=None):
-        resize = self.get_object(path)
-        serializer = ResizeSerializer(resize)
-        return Response(serializer.data)
 
-    def delete(self, request, path, format=None):
-        resize = self.get_object(path)
-        resize.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        im = Image.objects.get(pk=46)
+        # print(im.file.url)
+        print('yay', resolve(im.file.url))
+
+        # resize = self.get_object(path)
+        # serializer = ResizeSerializer(resize)
+        # return Response(serializer.data)
+
+        return Response()
+
+    # def get(self, request, path, format=None):
+    #     resize = self.get_object(path)
+    #     serializer = ResizeSerializer(resize)
+    #     return Response(serializer.data)
+    #
+    # def delete(self, request, path, format=None):
+    #     resize = self.get_object(path)
+    #     resize.delete()
+    #     return Response(status=status.HTTP_204_NO_CONTENT)
