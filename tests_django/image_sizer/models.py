@@ -19,6 +19,7 @@ class Resize(models.Model):
     image = models.ForeignKey(
         Image, related_name='resizes', on_delete=models.CASCADE, null=True)
     resize_file = models.ImageField(upload_to='resizes/%Y/%m/%d', null=True)
+    slug = models.SlugField(max_length=50, unique=True)
 
     def __str__(self):
         return f'{self.resize_file}'
