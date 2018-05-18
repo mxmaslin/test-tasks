@@ -18,3 +18,5 @@ You need a django-app, which allows you to add a menu (one or more) to the datab
 (where "main_menu" is the name of a menu)
 
 You should use only Django and Python's standard library for this task, with no additional 3rd-party libraries.
+
+**Solution**: the logic is in the [`templatetags/draw_menu.py`](https://github.com/mxmaslin/Test-tasks/blob/master/tests_django/menu_tag/templatetags/draw_menu.py)
