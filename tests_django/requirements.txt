@@ -11,6 +11,7 @@ dry-rest-permissions==0.1.10
 httpie==0.9.9
 idna==2.6
 lxml==4.2.1
+Pillow==5.1.0
 psycopg2==2.7.4
 psycopg2-binary==2.7.4
 py-moneyed==0.7.0
