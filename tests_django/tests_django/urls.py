@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.conf import settings
+from django.conf.urls.static import static
 from django.urls import include, path
 from django.contrib import admin
 
@@ -11,8 +12,9 @@ urlpatterns = [
     path('menu-tag/', include('menu_tag.urls')),
     path('testing/', include('testing.urls')),
     path('transfer-money/', include('transfer_money.urls')),
-    path('image-sizer/', include('image_sizer.urls'))
-]
+    path('image-sizer/',
+         include('image_sizer.urls', namespace='image_sizer_app'))
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
     import debug_toolbar

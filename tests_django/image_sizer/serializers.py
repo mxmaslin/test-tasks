@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
-import imghdr
-
 from rest_framework import serializers
 
 from .models import Image, Resize
 
 
 class ImageSerializer(serializers.ModelSerializer):
+
     resizes = serializers.HyperlinkedRelatedField(
         many=True,
         read_only=True,
@@ -14,48 +13,30 @@ class ImageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Image
-        fields = ('name',
-                  'file',
-                  'download_url',
-                  'jpeg_quality',
-                  'resizes')
+        fields = '__all__'
 
     def validate(self, data):
         """
-        Убедимся, что у нас есть либо file, либо download_url
+        Убедимся, что у нас есть либо file, либо download
         """
-        file = True
-        download_url = True
-        try:
-            data['file']
-        except KeyError:
-            file = False
-        try:
-            data['download_url']
-        except KeyError:
-            download_url = False
-        if not any([file, download_url]):
-            raise serializers.ValidationError('No file nor url for file download')
-        return data
-
-    def validate_file(self, data):
-        """
-        Убедимся, что file является изображением поддерживаемого типа
-        """
-        try:
-            data['file']
-        except KeyError:
+        if 'file' in data or 'download' in data:
             pass
         else:
-            if imghdr.what not in ('png', 'gif', 'jpg'):
-                raise serializers.ValidationError('Unsupported file format')
+            raise serializers.ValidationError('No file nor url for file download')
         return data
 
 
 class ResizeSerializer(serializers.ModelSerializer):
+
+    resize_file_url = serializers.SerializerMethodField()
+
     class Meta:
         model = Resize
         fields = ('width',
                   'height',
-                  'download_url',
-                  'image')
+                  'image',
+                  'resize_file',
+                  'resize_file_url')
+
+    def get_resize_file_url(self, obj):
+        return obj.resize_file.url
