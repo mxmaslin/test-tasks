@@ -27,12 +27,12 @@
 
     `python generate_persons <количество персон>`
     
-3. Запустить скрипт generate_pdfs.py
+3. Запустить скрипт [generate_pdfs.py](https://github.com/mxmaslin/Test-tasks/blob/master/tests_python/generate_pdf/generate_pdfs.py)
 
     `python generate_pdfs.py`
     
     Скрипт попросит указать файл к csv-файлу с данными получателей дипломов
     
-[Примеры сгенерированных дипломов](https://github.com/mxmaslin/Test-tasks/tree/master/tests_python/pdf/diplomas) 
+[Примеры сгенерированных дипломов](https://github.com/mxmaslin/Test-tasks/tree/master/tests_python/generate_pdf/diplomas) 
     
-![Что должно напечататься](https://github.com/mxmaslin/Test-tasks/blob/master/tests_python/pdf/example.jpg)
+![Что должно напечататься](https://github.com/mxmaslin/Test-tasks/blob/master/tests_python/generate_pdf/diplomas/diplom1.pdf)

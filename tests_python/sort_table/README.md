@@ -9,5 +9,5 @@
 
 Надеюсь, я правильно понял задание.
 
-[**Решение**](https://github.com/mxmaslin/Test-tasks/tree/master/tests_python/sort_table "REST-приложение для необычной сортировки строк")
+[**Решение**](https://github.com/mxmaslin/Test-tasks/blob/master/tests_python/sort_table/sort_table.py "REST-приложение для необычной сортировки строк")
 
