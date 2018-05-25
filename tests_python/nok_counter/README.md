@@ -4,7 +4,11 @@
 
     [2018-04-11 03:14:04] OK
 
-    [2018-04-11 03:14:04] NOK
+    [2018-04-11 03:14:05] NOK
+   
+    [2018-04-11 03:14:06] NOK
+    
+    [2018-04-11 03:14:08] NOK
 
     [2018-04-11 03:14:09] OK
 
@@ -16,4 +20,4 @@
 - файл читается построчно
 - число NOK за каждую минуту принтится сразу (в минуту `n` было `m` NOK-событий), не дожидаясь, когда чтение файла будет завершено
 
-**Решение** содержится в файле [nok_counter.py](https://github.com/mxmaslin/Test-tasks/blob/master/tests_python/nok_counter/nok_counter.py)
+[**Решение**](https://github.com/mxmaslin/Test-tasks/blob/master/tests_python/nok_counter/nok_counter.py "Realtime cчётчик событий определённого типа за интервал времени")

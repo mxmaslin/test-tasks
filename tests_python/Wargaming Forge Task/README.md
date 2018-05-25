@@ -30,4 +30,4 @@
 Вместо каждого {test_name}, подставь названия тестов (название папок, в которых лежат тесты). Каждый выходной файл {test_name}_pairs.txt должен иметь формат
 "<team_id> <team_id>". Если команд нечетное количество, то без пары должна остаться только одна команда.
 
-## [Решение](https://github.com/mxmaslin/Test-tasks/blob/master/tests_python/Wargaming%20Forge%20Task/Username_task_1_src.py "Решение алгоритмического задания конкурса Wargaming Forge")
+## [**Решение**](https://github.com/mxmaslin/Test-tasks/blob/master/tests_python/Wargaming%20Forge%20Task/Username_task_1_src.py "Решение алгоритмического задания конкурса Wargaming Forge")
