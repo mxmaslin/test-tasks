@@ -30,8 +30,8 @@ def test2(client):
 def test3(client):
     """
     Complex test
-    input: [[""]]
-    result: [[""]]
+    input: [[" 1 ", "abc", " zz zz", "9 ", "a1", "a "], [""]]
+    result: [["9 ", " 1 ", " zz zz", "a1", "a ", "abc"], [""]]
     """
     req = client.post('/sort-table',
                       json={"table": [

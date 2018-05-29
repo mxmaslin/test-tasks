@@ -1,7 +1,2 @@
-Faker==0.8.12
-ipaddress==1.0.19
-Pillow==5.0.0
-python-dateutil==2.7.0
+Pillow==5.1.0
 reportlab==3.4.0
-six==1.11.0
-text-unidecode==1.2
