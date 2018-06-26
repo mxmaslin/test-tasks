@@ -12,8 +12,8 @@ urlpatterns = [
     path('menu-tag/', include('menu_tag.urls')),
     path('testing/', include('testing.urls')),
     path('transfer-money/', include('transfer_money.urls')),
-    path('image-sizer/',
-         include('image_sizer.urls', namespace='image_sizer_app')),
+    # path('image-sizer/',
+    #      include('image_sizer.urls', namespace='image_sizer_app')),
     path('playschool/', include('playschool.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

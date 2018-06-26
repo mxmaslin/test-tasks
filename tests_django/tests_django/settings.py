@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'loans',
     'menu_tag',
     'transfer_money',
-    'image_sizer',
+    #'image_sizer',
     'playschool'
 ]
 
