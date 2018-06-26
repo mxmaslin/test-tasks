@@ -5,9 +5,9 @@ from dry_rest_permissions.generics import authenticated_users
 
 
 class Application(models.Model):
-    '''
+    """
         Предложение банка
-    '''
+    """
 
     APPLICATION_CUSTOMER = 0
     APPLICATION_MORTGAGE = 1
