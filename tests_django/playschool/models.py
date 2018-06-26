@@ -3,7 +3,7 @@ from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 
-class Child(models.Model):
+class Scholar(models.Model):
     CHOICE_BOY = 'M'
     CHOICE_GIRL = 'F'
 
