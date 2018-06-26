@@ -30,7 +30,7 @@ class Child(models.Model):
         return f'{self.name}, {self.birth_date}, {self.school_class}'
 
 
-class Log(models.Model):
+class Record(models.Model):
     CHOICE_MOTHER = 'M'
     CHOICE_FATHER = 'F'
 
