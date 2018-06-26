@@ -23,6 +23,9 @@ class Child(models.Model):
         validators=[MinValueValidator(1), MaxValueValidator(11)])
     is_in_school = models.BooleanField()
 
+    class Meta:
+        ordering = ('school_class', 'name')
+
     def __str__(self):
         return f'{self.name}, {self.birth_date}, {self.school_class}'
 
@@ -43,6 +46,9 @@ class Log(models.Model):
         default=CHOICE_MOTHER)
     time_arrived = models.DateTimeField()
     time_departed = models.DateTimeField()
+
+    class Meta:
+        ordering = ('-date',)
 
     def __str__(self):
         return f'{self.date}, {self.child}'
