@@ -7,12 +7,12 @@ from . import views
 urlpatterns = [
 
     # Создать ребёнка
-    re_path(r'^children/$', views.child_create),
+    re_path(r'^children/$', views.ScholarCreateAPIView.as_view()),
 
     # Создать отметку в журнал
-    re_path(r'^records/$', views.record_list),
+    re_path(r'^records/$', views.RecordCreateAPIView),
     # Изменить отметку в журнале
-    path('records/<int:pk>/', views.record_detail),
+    path('records/<int:pk>/', views.RecordUpdateAPIView),
     # Список тех, кто сейчас учится
-    path('records/studying/', views.record_studying)
+    path('records/studying/', views.studying_scholars)
 ]
