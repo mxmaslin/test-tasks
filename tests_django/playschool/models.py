@@ -3,6 +3,11 @@ from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 
+class StudyingScholarManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(is_studying=True)
+
+
 class Scholar(models.Model):
     CHOICE_BOY = 'M'
     CHOICE_GIRL = 'F'
@@ -21,7 +26,9 @@ class Scholar(models.Model):
     school_class = models.PositiveIntegerField(
         default=1,
         validators=[MinValueValidator(1), MaxValueValidator(11)])
-    is_in_school = models.BooleanField()
+    is_studying = models.BooleanField()
+
+    studying = StudyingScholarManager()
 
     class Meta:
         ordering = ('school_class', 'name')
