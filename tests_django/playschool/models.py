@@ -28,6 +28,7 @@ class Scholar(models.Model):
         validators=[MinValueValidator(1), MaxValueValidator(11)])
     is_studying = models.BooleanField()
 
+    objects = models.Manager()
     studying = StudyingScholarManager()
 
     class Meta:
@@ -45,7 +46,7 @@ class Record(models.Model):
         (CHOICE_MOTHER, 'Mother'),
         (CHOICE_FATHER, 'Father'))
 
-    child = models.ForeignKey(Child, on_delete=models.CASCADE)
+    scholar = models.ForeignKey(Scholar, on_delete=models.CASCADE)
     date = models.DateField(auto_now_add=True)
     has_come_with = models.CharField(
         max_length=1,
@@ -58,4 +59,4 @@ class Record(models.Model):
         ordering = ('-date',)
 
     def __str__(self):
-        return f'{self.date}, {self.child}'
+        return f'{self.date}, {self.scholar}'
