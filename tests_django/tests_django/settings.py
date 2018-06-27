@@ -91,7 +91,7 @@ WSGI_APPLICATION = 'tests_django.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'mxdb',
+        'NAME': '',
         'USER': '',
         'PASSWORD': '',
         'HOST': '',
@@ -159,6 +159,6 @@ CURRENCIES = ('RUB',)
 
 if DEBUG:
     try:
-        from local_settings import *
+        from .local_settings import *
     except ImportError:
         pass
