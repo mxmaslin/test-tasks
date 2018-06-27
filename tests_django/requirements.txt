@@ -18,6 +18,7 @@ py-moneyed==0.7.0
 Pygments==2.2.0
 pytz==2018.4
 requests==2.18.4
+six==1.11.0
 sqlparse==0.2.4
 Unidecode==1.0.22
 urllib3==1.22
