@@ -13,6 +13,7 @@
 - [Реализация групп, полномочий](https://github.com/mxmaslin/Test-tasks/tree/master/tests_django/loans "Реализация групп и полномочий в Django")
 - [Кастомный тег, реализующий древовидное меню](https://github.com/mxmaslin/Test-tasks/tree/master/tests_django/menu_tag "Кастомный тег для древовидного меню")
 - [Форма с отправкой без перезагрузки страницы](https://github.com/mxmaslin/Test-tasks/tree/master/tests_django/transfer_money "Форма с отправкой без перезагрузки страницы")
+- [Простой API](https://github.com/mxmaslin/Test-tasks/tree/master/tests_django/playschool "Простой API")
 - [TODO](https://docs.google.com/document/d/1r5g-Mb0rp7_a20bpXCS-UJamDxXTPUyhmgymWwKaCPA/edit)
 
 ## Python
