@@ -5,7 +5,7 @@ from django.db import models
 
 class Image(models.Model):
     file = models.ImageField(
-        upload_to='images/%Y/%m/%d',
+        upload_to='image_sizer/images/%Y/%m/%d',
         null=True)
     download = models.URLField(null=True)
 

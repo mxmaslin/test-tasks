@@ -16,7 +16,7 @@ class Scholar(models.Model):
         (CHOICE_BOY, 'Boy'),
         (CHOICE_GIRL, 'Girl'))
 
-    photo = models.ImageField(upload_to='images/%Y/%m/%d')
+    photo = models.ImageField(upload_to='playschool/images/%Y/%m/%d')
     name = models.CharField(max_length=50)
     sex = models.CharField(
         max_length=1,
