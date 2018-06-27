@@ -3,9 +3,9 @@ from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 
-class StudyingScholarManager(models.Manager):
+class StudyingRecordManager(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().filter(is_studying=True)
+        return super().get_queryset().filter(scholar__is_studying=True)
 
 
 class Scholar(models.Model):
@@ -16,7 +16,7 @@ class Scholar(models.Model):
         (CHOICE_BOY, 'Boy'),
         (CHOICE_GIRL, 'Girl'))
 
-    photo = models.ImageField(upload_to='playschool/images/%Y/%m/%d')
+    photo = models.ImageField(upload_to='playschool/images/%Y/%m/%d', blank=True, null=True)
     name = models.CharField(max_length=50)
     sex = models.CharField(
         max_length=1,
@@ -27,9 +27,6 @@ class Scholar(models.Model):
         default=1,
         validators=[MinValueValidator(1), MaxValueValidator(11)])
     is_studying = models.BooleanField()
-
-    objects = models.Manager()
-    studying = StudyingScholarManager()
 
     class Meta:
         ordering = ('school_class', 'name')
@@ -48,12 +45,15 @@ class Record(models.Model):
 
     scholar = models.ForeignKey(Scholar, on_delete=models.CASCADE)
     date = models.DateField(auto_now_add=True)
-    has_come_with = models.CharField(
+    has_came_with = models.CharField(
         max_length=1,
         choices=PARENT_CHOICES,
         default=CHOICE_MOTHER)
     time_arrived = models.DateTimeField()
     time_departed = models.DateTimeField()
+
+    objects = models.Manager()
+    studying = StudyingRecordManager()
 
     class Meta:
         ordering = ('-date',)
