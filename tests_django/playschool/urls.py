@@ -14,5 +14,5 @@ urlpatterns = [
     # Изменить отметку в журнале
     path('records/<int:pk>/', views.RecordUpdateAPIView.as_view()),
     # Список тех, кто сейчас учится
-    path('records/studying/', views.studying_scholars)
+    path('records/studying/', views.studying_scholars_records)
 ]

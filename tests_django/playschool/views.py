@@ -21,7 +21,7 @@ class RecordUpdateAPIView(UpdateAPIView):
 
 
 @api_view(['GET'])
-def studying_scholars(request):
-    are_studying = Scholar.studying.all()
-    serializer = ScholarSerializer(are_studying, many=True)
+def studying_scholars_records(request):
+    are_studying = Record.studying.all()
+    serializer = RecordSerializer(are_studying, many=True)
     return Response(serializer.data)
