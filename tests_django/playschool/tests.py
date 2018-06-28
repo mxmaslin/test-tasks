@@ -1,13 +1,9 @@
-from django.test import Client, TestCase
+from rest_framework.test import APIClient, APITestCase
 
-from rest_framework.test import APIClient
-
-from .models import Record, Scholar
-
-from .test_image import img
+from .models import Record
 
 
-class ScholarAPITestCase(TestCase):
+class ScholarAPITestCase(APITestCase):
     fixtures = ['playschool']
 
     def setUp(self):
@@ -28,7 +24,7 @@ class ScholarAPITestCase(TestCase):
         self.assertEqual(request.status_code, 201)
 
 
-class RecordAPITestCase(TestCase):
+class RecordAPITestCase(APITestCase):
     fixtures = ['playschool']
 
     def setUp(self):
@@ -68,6 +64,7 @@ class RecordAPITestCase(TestCase):
         has_studying = Record.studying.filter(pk=4).exists()
         self.assertEqual(has_studying, True)
 
-    def test_get_studying_pk_exists(self):
+    def test_get_studying_pk_not_exists(self):
+        # record pk 5 is not studying
         has_studying = Record.studying.filter(pk=5).exists()
         self.assertEqual(has_studying, False)
