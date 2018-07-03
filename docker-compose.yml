@@ -1,0 +1,24 @@
+version: '3.6'
+
+postgres:
+  restart: always
+  image: postgres:10.4-alpine
+  expose:
+    - "5432"
+  volumes:
+    - ./data:/var/lib/postgresql/data/
+  env_file: env ???
+
+web:
+  restart: always    
+  build: .
+  volumes:
+    - ./tests_django:/tests_django
+  ports:
+    - "8000:8000"
+  depends_on:
+    - postgres
+  links:
+    - postgres:postgres
+  command: python /tests_django/manage.py migrate --noinput
+  command: python /tests_django/manage.py runserver 0.0.0.0:8000
