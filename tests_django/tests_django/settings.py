@@ -12,10 +12,22 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
-import psycopg2
+from envparse import env
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
+ENV_FILE_PATH = os.path.join(BASE_DIR, 'tests_django/.env')
+env.read_envfile(ENV_FILE_PATH)
+
+try:
+    from .local_settings import PARAMS as config
+except ImportError as e:
+    print('local_settings.py not found')
+    config = dict()
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
@@ -24,7 +36,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '-^u$&=$y3vt0yrjcu!7l4ai_r20bwo*^+^9b&34*8-fb6ospq9'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env.bool('DEBUG', default=config.get('DEBUG', False))
 
 ALLOWED_HOSTS = ['127.0.0.1']
 
@@ -44,6 +56,7 @@ INSTALLED_APPS = [
     'dry_rest_permissions',
     'debug_toolbar',
     'djmoney',
+
     'testing',
     'loans',
     'menu_tag',
@@ -90,12 +103,12 @@ WSGI_APPLICATION = 'tests_django.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': '',
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',
-        'PORT': '5432',
+        'ENGINE': config.get('DB_ENGINE'),
+        'NAME': env('POSTGRES_DB', default=config.get('DB_NAME')),
+        'USER': env('POSTGRES_USER', default=config.get('DB_USER')),
+        'PASSWORD': env('POSTGRES_PASSWORD', default=config.get('DB_PASSWORD')),
+        'HOST': config.get('DB_HOST', 'db'),
+        'PORT': config.get('DB_PORT', 5432)
     }
 }
 
@@ -158,7 +171,4 @@ INTERNAL_IPS = ['127.0.0.1']
 CURRENCIES = ('RUB',)
 
 if DEBUG:
-    try:
-        from .local_settings import *
-    except ImportError:
-        pass
+    AUTH_PASSWORD_VALIDATORS = config.get('AUTH_PASSWORD_VALIDATORS', [])
