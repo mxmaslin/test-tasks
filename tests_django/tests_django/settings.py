@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+import sys
+
+import dj_database_url
+
 from envparse import env
 
 
@@ -22,12 +26,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ENV_FILE_PATH = os.path.join(BASE_DIR, 'tests_django/.env')
 env.read_envfile(ENV_FILE_PATH)
 
-try:
-    from .local_settings import PARAMS as config
-except ImportError as e:
-    print('local_settings.py not found')
-    config = dict()
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
@@ -36,7 +34,7 @@ except ImportError as e:
 SECRET_KEY = '-^u$&=$y3vt0yrjcu!7l4ai_r20bwo*^+^9b&34*8-fb6ospq9'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool('DEBUG', default=config.get('DEBUG', False))
+DEBUG = env.bool('DEBUG', default=True)
 
 ALLOWED_HOSTS = ['127.0.0.1']
 
@@ -102,15 +100,11 @@ WSGI_APPLICATION = 'tests_django.wsgi.application'
 # DB settings are in local_settings.py
 
 DATABASES = {
-    'default': {
-        'ENGINE': config.get('DB_ENGINE'),
-        'NAME': env('POSTGRES_DB', default=config.get('DB_NAME')),
-        'USER': env('POSTGRES_USER', default=config.get('DB_USER')),
-        'PASSWORD': env('POSTGRES_PASSWORD', default=config.get('DB_PASSWORD')),
-        'HOST': config.get('DB_HOST', 'db'),
-        'PORT': config.get('DB_PORT', 5432)
-    }
+    'default': dj_database_url.config(default=env('DATABASE_URL'))
 }
+
+if 'test' in sys.argv:
+    DATABASES['default'] = {'ENGINE': 'django.db.backends.sqlite3'}
 
 
 # Password validation
@@ -171,4 +165,4 @@ INTERNAL_IPS = ['127.0.0.1']
 CURRENCIES = ('RUB',)
 
 if DEBUG:
-    AUTH_PASSWORD_VALIDATORS = config.get('AUTH_PASSWORD_VALIDATORS', [])
+    AUTH_PASSWORD_VALIDATORS = env('AUTH_PASSWORD_VALIDATORS', default=[])
