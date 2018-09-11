@@ -31,9 +31,11 @@ class RecordAPITestCase(APITestCase):
         self.client = APIClient()
 
     def test_create(self):
+        # needs to pass an image
         request = self.client.post(
             '/playschool/records/',
             {
+                "photo": "",
                 "scholar": 7,
                 "date": "2018-06-27",
                 "has_come_with": "M",

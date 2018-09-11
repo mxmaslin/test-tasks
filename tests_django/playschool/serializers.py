@@ -11,11 +11,6 @@ from .models import Scholar, Record
 
 
 class ScholarSerializer(serializers.ModelSerializer):
-    photo = serializers.ImageField(
-        required=False,
-        max_length=None,
-        allow_empty_file=True,
-        use_url=True)
 
     class Meta:
         model = Scholar
