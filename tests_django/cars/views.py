@@ -13,7 +13,7 @@ class ComponentViewSet(viewsets.ModelViewSet):
     queryset = Component.objects.all()
     serializer_class = ComponentSerializer
 
-    
+
 class TripViewSet(viewsets.ModelViewSet):
-    queryset = TripSerializer.objects.all()
+    queryset = Trip.objects.all()
     serializer_class = TripSerializer

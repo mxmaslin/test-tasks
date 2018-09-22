@@ -14,7 +14,8 @@ urlpatterns = [
     path('transfer-money/', include('transfer_money.urls')),
     # path('image-sizer/',
     #      include('image_sizer.urls', namespace='image_sizer_app')),
-    path('playschool/', include('playschool.urls'))
+    path('playschool/', include('playschool.urls')),
+    path('cars/', include('cars.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
