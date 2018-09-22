@@ -25,4 +25,5 @@
 - [Генератор pdf с QR-кодами](https://github.com/mxmaslin/Test-tasks/tree/master/tests_python/generate_pdf "Генератор pdf с QR-кодами")
 - [Realtime cчётчик событий определённого типа за интервал времени](https://github.com/mxmaslin/Test-tasks/tree/master/tests_python/nok_counter "Realtime cчётчик событий определённого типа за интервал времени")
 - [REST-приложение для необычной сортировки строк](https://github.com/mxmaslin/Test-tasks/tree/master/tests_python/sort_table "REST-приложение для необычной сортировки строк")
+- [ReactJS-friendly сериалайзер](https://github.com/mxmaslin/Test-tasks/tree/master/tests_django/cars "ReactJS-friendly сериалайзер")
 - [TODO](https://gist.github.com/sayplastic/76bcebc3a554ea03e3cf296412b60b77)

@@ -12,7 +12,7 @@ class ScholarAPITestCase(APITestCase):
         self.client = APIClient()
 
     def test_create(self):
-        path_to_photo = os.path.join(os.getcwd(), 'playschool/images/2018/9/22/cat.png')
+        path_to_photo = os.path.join(os.getcwd(), 'media/playschool/images/2018/09/22/cat.png')
         file = open(path_to_photo, 'rb')
         request = self.client.post(
             '/playschool/scholars/',
