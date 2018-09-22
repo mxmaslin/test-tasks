@@ -60,7 +60,8 @@ INSTALLED_APPS = [
     'menu_tag',
     'transfer_money',
     #'image_sizer',
-    'playschool'
+    'playschool',
+    'cars'
 ]
 
 MIDDLEWARE = [
