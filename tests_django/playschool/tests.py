@@ -1,3 +1,6 @@
+import os
+import json
+
 from rest_framework.test import APIClient, APITestCase
 
 from .models import Record
@@ -10,17 +13,19 @@ class ScholarAPITestCase(APITestCase):
         self.client = APIClient()
 
     def test_create(self):
+        path_to_photo = os.path.join(os.getcwd(), 'playschool/images/2018/9/22/cat.png')
+        file = open(path_to_photo, 'rb')
         request = self.client.post(
             '/playschool/scholars/',
             {
-                # 'photo': img,
+                'photo': file,
                 'name': 'Vasiliy',
                 'sex': 'M',
                 'birth_date': '2018-1-31',
                 'school_class': 1,
                 'is_studying': True
             },
-            format='json')
+            format='multipart')
         self.assertEqual(request.status_code, 201)
 
 
@@ -31,11 +36,9 @@ class RecordAPITestCase(APITestCase):
         self.client = APIClient()
 
     def test_create(self):
-        # needs to pass an image
         request = self.client.post(
             '/playschool/records/',
             {
-                "photo": "",
                 "scholar": 7,
                 "date": "2018-06-27",
                 "has_come_with": "M",
