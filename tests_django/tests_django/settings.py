@@ -61,7 +61,8 @@ INSTALLED_APPS = [
     'transfer_money',
     #'image_sizer',
     'playschool',
-    'cars'
+    'cars',
+    'cats'
 ]
 
 MIDDLEWARE = [
