@@ -1,5 +1,4 @@
 import os
-import json
 
 from rest_framework.test import APIClient, APITestCase
 
