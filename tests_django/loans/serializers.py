@@ -3,23 +3,23 @@
 from rest_framework import serializers
 
 from .models import (
-    Application,
+    Offer,
     Questionnaire,
     Submission)
 
 
-class ApplicationSerializer(serializers.ModelSerializer):
+class OfferSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Application
+        model = Offer
         fields = (
             'pk',
             'created',
             'modified',
             'rotation_started',
             'rotation_ended',
-            'application_name',
-            'application_type',
+            'offer_name',
+            'offer_type',
             'score_min',
             'score_max',
             'bank',
@@ -44,7 +44,7 @@ class QuestionnaireSerializer(serializers.ModelSerializer):
 
 class SubmissionSerializer(serializers.ModelSerializer):
 
-    application = ApplicationSerializer(read_only=True)
+    offer = OfferSerializer(read_only=True)
     questionnaire = QuestionnaireSerializer(read_only=True)
 
     class Meta:
@@ -53,7 +53,7 @@ class SubmissionSerializer(serializers.ModelSerializer):
             'pk',
             'created',
             'submitted',
-            'application',
+            'offer',
             'questionnaire',
             'status',
         )
@@ -67,7 +67,7 @@ class SubmissionSerializerPost(serializers.ModelSerializer):
             'pk',
             'created',
             'submitted',
-            'application',
+            'offer',
             'questionnaire',
             'status',
         )

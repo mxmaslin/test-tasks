@@ -1,17 +1,17 @@
 from django.contrib import admin
 
 from .models import (
-    Application,
+    Offer,
     Questionnaire,
     Submission)
 
 
-@admin.register(Application)
-class ApplicationAdmin(admin.ModelAdmin):
+@admin.register(Offer)
+class OfferAdmin(admin.ModelAdmin):
 
     list_display = (
-        'application_name',
-        'application_type',
+        'offer_name',
+        'offer_type',
         'score_min',
         'score_max',
         'created',
@@ -20,11 +20,11 @@ class ApplicationAdmin(admin.ModelAdmin):
         'rotation_ended'
         )
 
-    search_fields = ('application_name',)
+    search_fields = ('offer_name',)
 
     list_filter = (
         'created',
-        'application_type',
+        'offer_type',
         'score_min',
         'score_max')
 
@@ -57,7 +57,7 @@ class QuestionnaireAdmin(admin.ModelAdmin):
 class SubmissionAdmin(admin.ModelAdmin):
 
     list_display = (
-        'application',
+        'offer',
         'questionnaire',
         'status',
         'created',
@@ -65,11 +65,11 @@ class SubmissionAdmin(admin.ModelAdmin):
         )
 
     search_fields = (
-        'application',
+        'offer',
         'questionnaire')
 
     list_filter = (
-        'application',
+        'offer',
         'questionnaire',
         'status',
         'created')

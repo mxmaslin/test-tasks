@@ -4,21 +4,15 @@ from django.contrib.auth.models import User
 from dry_rest_permissions.generics import authenticated_users
 
 
-class Application(models.Model):
+class Offer(models.Model):
     """
         Предложение банка
     """
-
-    APPLICATION_CUSTOMER = 0
-    APPLICATION_MORTGAGE = 1
-    APPLICATION_CAR = 2
-    APPLICATION_BUSINESS = 3
-
-    APPLICATION_CHOICES = (
-        (APPLICATION_CUSTOMER, 'Customer'),
-        (APPLICATION_MORTGAGE, 'Mortgage'),
-        (APPLICATION_CAR, 'Car'),
-        (APPLICATION_BUSINESS, 'Business'))
+    OFFER_CHOICES = (
+        (0, 'Customer'),
+        (1, 'Mortgage'),
+        (2, 'Car'),
+        (3, 'Business'))
 
     created = models.DateTimeField(
         auto_now_add=True,
@@ -34,12 +28,12 @@ class Application(models.Model):
         blank=True,
         null=True,
         verbose_name='Дата окончания ротации')
-    application_name = models.CharField(
+    offer_name = models.CharField(
         max_length=255,
         verbose_name='Название предложения')
-    application_type = models.PositiveSmallIntegerField(
-        choices=APPLICATION_CHOICES,
-        default=APPLICATION_CUSTOMER,
+    offer_type = models.PositiveSmallIntegerField(
+        choices=OFFER_CHOICES,
+        default=0,
         verbose_name='Тип предложения')
     score_min = models.PositiveSmallIntegerField(
         blank=True,
@@ -57,7 +51,7 @@ class Application(models.Model):
         verbose_name_plural = 'Предложения по кредитам'
 
     def __str__(self):
-        return '{}'.format(self.application_name, self.modified)
+        return '{}'.format(self.offer_name, self.modified)
 
 
 class Questionnaire(models.Model):
@@ -129,18 +123,13 @@ class Questionnaire(models.Model):
 
 
 class Submission(models.Model):
-    '''
+    """
         Заявка на кредит
-    '''
-
-    STATUS_NEW = 0
-    STATUS_SENT = 1
-    STATUS_RECEIVED = 2
-
+    """
     STATUS_CHOICES = (
-        (STATUS_NEW, 'New'),
-        (STATUS_SENT, 'Sent'),
-        (STATUS_RECEIVED, 'Received'))
+        (0, 'New'),
+        (1, 'Sent'),
+        (2, 'Received'))
 
     created = models.DateTimeField(
         auto_now_add=True,
@@ -149,8 +138,8 @@ class Submission(models.Model):
         blank=True,
         null=True,
         verbose_name='Дата отправки')
-    application = models.ForeignKey(
-        Application,
+    offer = models.ForeignKey(
+        Offer,
         on_delete=models.CASCADE,
         verbose_name='Предложение')
     questionnaire = models.ForeignKey(
@@ -159,7 +148,7 @@ class Submission(models.Model):
         verbose_name='Анкета')
     status = models.PositiveSmallIntegerField(
         choices=STATUS_CHOICES,
-        default=STATUS_NEW,
+        default=0,
         verbose_name='Статус заявки')
 
     class Meta:
@@ -168,7 +157,7 @@ class Submission(models.Model):
         verbose_name_plural = 'Заявки на кредиты'
 
     def __str__(self):
-        return '{}'.format(self.application)
+        return '{}'.format(self.offer)
 
     @staticmethod
     @authenticated_users

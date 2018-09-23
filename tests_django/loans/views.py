@@ -6,12 +6,12 @@ from rest_framework.response import Response
 from dry_rest_permissions.generics import DRYPermissions
 
 from .models import (
-    Application,
+    Offer,
     Questionnaire,
     Submission)
 
 from .serializers import (
-    ApplicationSerializer,
+    OfferSerializer,
     QuestionnaireSerializer,
     SubmissionSerializer,
     SubmissionSerializerPost)
@@ -39,7 +39,7 @@ class SubmissionViewSet(viewsets.ModelViewSet):
     queryset = Submission.objects.all()
     serializer_class = SubmissionSerializer
     filter_fields = ('status',)
-    search_fields = ('application__application_name', 'questionnaire__name')
+    search_fields = ('offer__offer_name', 'questionnaire__name')
     ordering_fields = ('created', 'submitted')
 
     def create(self, request, *args, **kwargs):

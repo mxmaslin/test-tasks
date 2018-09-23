@@ -201,7 +201,7 @@ class PartnerAPITestCase(TestCase):
             password='qwer1234')
         response = self.client.post(
             '/loans/partner_api/make_submission/', {
-                "application": 1,
+                "offer": 1,
                 "questionnaire": 1,
                 "status": 1,
                 "created": "2017-11-10T18:23:16.913526Z",
@@ -215,7 +215,7 @@ class PartnerAPITestCase(TestCase):
             password='qwer1234')
         response = self.client.post(
             '/loans/partner_api/make_submission/', {
-                "application": 1,
+                "offer": 1,
                 "questionnaire": 1,
                 "status": 1,
                 "created": "2017-11-10T18:23:16.913526Z",
@@ -229,7 +229,7 @@ class PartnerAPITestCase(TestCase):
             password='qwer1234')
         response = self.client.post(
             '/loans/partner_api/make_submission/', {
-                "application": 1,
+                "offer": 1,
                 "questionnaire": 1,
                 "status": 1,
                 "created": "2017-11-10T18:23:16.913526Z",
@@ -243,7 +243,7 @@ class PartnerAPITestCase(TestCase):
             password='qwer1234')
         response = self.client.post(
             '/loans/partner_api/make_submission/', {
-                "application": 1,
+                "offer": 1,
                 "questionnaire": 1,
                 "status": 1,
                 "created": "2017-11-10T18:23:16.913526Z",
@@ -328,7 +328,7 @@ class BankAPITestCase(TestCase):
             password='qwer1234')
         response = self.client.put(
             '/loans/bank_api/submissions/1/',
-            '{"application": 1, "questionnaire": 1, "status": 2}',
+            '{"offer": 1, "questionnaire": 1, "status": 2}',
             'application/json',
             )
         self.client.logout()
@@ -340,7 +340,7 @@ class BankAPITestCase(TestCase):
             password='qwer1234')
         response = self.client.put(
             '/loans/bank_api/submissions/1/',
-            '{"application": 1, "questionnaire": 1, "status": 2}',
+            '{"offer": 1, "questionnaire": 1, "status": 2}',
             'application/json',
             )
         self.client.logout()
@@ -352,7 +352,7 @@ class BankAPITestCase(TestCase):
             password='qwer1234')
         response = self.client.put(
             '/loans/bank_api/submissions/1/',
-            '{"application": 1, "questionnaire": 1, "status": 2}',
+            '{"offer": 1, "questionnaire": 1, "status": 2}',
             'application/json',
             )
         self.client.logout()
@@ -364,7 +364,7 @@ class BankAPITestCase(TestCase):
             password='qwer1234')
         response = self.client.put(
             '/loans/bank_api/submissions/1/',
-            '{"application": 1, "questionnaire": 1, "status": 2}',
+            '{"offer": 1, "questionnaire": 1, "status": 2}',
             'application/json',
             )
         self.client.logout()

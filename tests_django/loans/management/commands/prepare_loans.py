@@ -5,7 +5,7 @@ from django.contrib.auth.models import (
 from django.contrib.contenttypes.models import ContentType
 from django.core.management.base import BaseCommand
 from loans.models import (
-    Application,
+    Offer,
     Questionnaire,
     Submission)
 
@@ -17,19 +17,19 @@ class Command(BaseCommand):
         partners = Group.objects.get_or_create(name='Партнёры')[0]
         banks = Group.objects.get_or_create(name='Кредитные организации')[0]
 
-        ct_application = ContentType.objects.get_for_model(Application)
-        perm_view_application = Permission.objects.get(
-            codename='view_application',
-            content_type=ct_application)
-        perm_add_application = Permission.objects.get(
-            codename='add_application',
-            content_type=ct_application)
-        perm_change_application = Permission.objects.get(
-            codename='change_application',
-            content_type=ct_application)
-        perm_delete_application = Permission.objects.get(
-            codename='delete_application',
-            content_type=ct_application)
+        ct_offer = ContentType.objects.get_for_model(Offer)
+        perm_view_offer = Permission.objects.get(
+            codename='view_offer',
+            content_type=ct_offer)
+        perm_add_offer = Permission.objects.get(
+            codename='add_offer',
+            content_type=ct_offer)
+        perm_change_offer = Permission.objects.get(
+            codename='change_offer',
+            content_type=ct_offer)
+        perm_delete_offer = Permission.objects.get(
+            codename='delete_offer',
+            content_type=ct_offer)
 
         ct_questionnaire = ContentType.objects.get_for_model(Questionnaire)
         perm_view_questionnaire = Permission.objects.get(
@@ -105,8 +105,8 @@ class Command(BaseCommand):
             bank = User.objects.get(username='bank')
         banks.user_set.add(bank)
 
-        a = Application.objects.create(
-            application_name='I need some money',
+        a = Offer.objects.create(
+            offer_name='I need some money',
             score_min=1,
             score_max=2,
             bank=bank)
@@ -116,5 +116,5 @@ class Command(BaseCommand):
             passport='abc123',
             score=2)
         Submission.objects.create(
-            application=a,
+            offer=a,
             questionnaire=q)

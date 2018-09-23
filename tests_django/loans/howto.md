@@ -62,7 +62,7 @@ pip install -r requirements.txt
 
 ## Отправка заявки в кредитную организацию
 
-    http --auth {superuser, partner, bank}:qwer1234 POST http://127.0.0.1:8000/loans/partner_api/make_submission/ <<< '{"application": 1, "questionnaire": 1, "status": 1, "created": "2017-11-10T18:23:16.913526Z", "submitted": "2017-11-10T18:23:16.913526Z"}'
+    http --auth {superuser, partner, bank}:qwer1234 POST http://127.0.0.1:8000/loans/partner_api/make_submission/ <<< '{"offer": 1, "questionnaire": 1, "status": 1, "created": "2017-11-10T18:23:16.913526Z", "submitted": "2017-11-10T18:23:16.913526Z"}'
 
 # BankAPI
 
@@ -74,9 +74,9 @@ pip install -r requirements.txt
     
     http --auth bank:qwer1234 GET http://127.0.0.1:8000/loans/bank_api/submissions/?status={0,1,2}/
 
-## Поиск среди заявок по одному из критериев (application, questionnaire):
+## Поиск среди заявок по одному из критериев (offer, questionnaire):
     
-    http --auth bank:qwer1234 GET http://127.0.0.1:8000/loans/bank_api/submissions/?search={application data,questionnaire data}/
+    http --auth bank:qwer1234 GET http://127.0.0.1:8000/loans/bank_api/submissions/?search={offer data,questionnaire data}/
 
 ## Получение отсортированного списка анкет по одному из критериев (created, submitted):
 
@@ -90,7 +90,7 @@ pip install -r requirements.txt
 
 ## Изменение заявки
 
-    http --auth superuser:qwer1234 PUT http://127.0.0.1:8000/loans/bank_api/submissions/{id}/ <<< '{"application": 1, "questionnaire": 1, "status": 1}'
+    http --auth superuser:qwer1234 PUT http://127.0.0.1:8000/loans/bank_api/submissions/{id}/ <<< '{"offer": 1, "questionnaire": 1, "status": 1}'
 
 ## Удаление заявки
 
