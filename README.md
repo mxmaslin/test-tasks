@@ -14,6 +14,7 @@
 - [Кастомный тег, реализующий древовидное меню](https://github.com/mxmaslin/Test-tasks/tree/master/tests_django/menu_tag "Кастомный тег для древовидного меню")
 - [Форма с отправкой без перезагрузки страницы](https://github.com/mxmaslin/Test-tasks/tree/master/tests_django/transfer_money "Форма с отправкой без перезагрузки страницы")
 - [Простой API](https://github.com/mxmaslin/Test-tasks/tree/master/tests_django/playschool "Простой API")
+- [ReactJS-friendly сериалайзер](https://github.com/mxmaslin/Test-tasks/tree/master/tests_django/cars "ReactJS-friendly сериалайзер")
 - [TODO](https://docs.google.com/document/d/1r5g-Mb0rp7_a20bpXCS-UJamDxXTPUyhmgymWwKaCPA/edit)
 
 ## Python
@@ -25,5 +26,5 @@
 - [Генератор pdf с QR-кодами](https://github.com/mxmaslin/Test-tasks/tree/master/tests_python/generate_pdf "Генератор pdf с QR-кодами")
 - [Realtime cчётчик событий определённого типа за интервал времени](https://github.com/mxmaslin/Test-tasks/tree/master/tests_python/nok_counter "Realtime cчётчик событий определённого типа за интервал времени")
 - [REST-приложение для необычной сортировки строк](https://github.com/mxmaslin/Test-tasks/tree/master/tests_python/sort_table "REST-приложение для необычной сортировки строк")
-- [ReactJS-friendly сериалайзер](https://github.com/mxmaslin/Test-tasks/tree/master/tests_django/cars "ReactJS-friendly сериалайзер")
+- [Сумма значений для каждого ключа из словарей, поставляемых генераторами](https://github.com/mxmaslin/Test-tasks/tree/master/tests_python/gen_sum "Сумма значений для каждого ключа из словарей, возвращаемых генераторами")
 - [TODO](https://gist.github.com/sayplastic/76bcebc3a554ea03e3cf296412b60b77)
