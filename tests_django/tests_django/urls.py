@@ -21,6 +21,7 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
+    path('cats/', include('apps.cats.urls')),
     path('cars/', include('apps.cars.urls')),
     # path('image-sizer/', include('apps.image_sizer.urls')),
     path('loans/', include('apps.loans.urls')),

@@ -55,12 +55,13 @@ INSTALLED_APPS = [
     'djmoney',
     'oauth2_provider',
     # 'apps.testing',
+    'apps.cars',
+    'apps.cats',
+    # 'apps.image_sizer',
     'apps.loans',
     'apps.menu_tag',
-    'apps.transfer_money',
-    # 'apps.image_sizer',
     'apps.playschool',
-    'apps.cars',
+    'apps.transfer_money',
 ]
 
 MIDDLEWARE = [
