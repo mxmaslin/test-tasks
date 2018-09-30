@@ -49,20 +49,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'oauth2_provider',
     'rest_framework',
     'django_filters',
     'dry_rest_permissions',
     'debug_toolbar',
     'djmoney',
-    'testing',
-    'loans',
-    'menu_tag',
-    'transfer_money',
-    #'image_sizer',
-    'playschool',
-    'cars',
-    'cats'
+    # 'apps.testing',
+    'apps.loans',
+    'apps.menu_tag',
+    'apps.transfer_money',
+    # 'apps.image_sizer',
+    'apps.playschool',
+    'apps.cars',
 ]
 
 MIDDLEWARE = [
