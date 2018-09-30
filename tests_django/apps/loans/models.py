@@ -55,9 +55,9 @@ class Offer(models.Model):
 
 
 class Questionnaire(models.Model):
-    '''
+    """
         Анкета клиента
-    '''
+    """
 
     created = models.DateTimeField(
         auto_now_add=True,
