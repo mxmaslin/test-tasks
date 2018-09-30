@@ -23,12 +23,10 @@ urlpatterns = [
     path('cars/', include('apps.cars.urls')),
     # path('image-sizer/', include('apps.image_sizer.urls')),
     path('loans/', include('apps.loans.urls')),
-    path('menu_tag/', include('apps.menu_tag.urls')),
+    path('menu-tag/', include('apps.menu_tag.urls')),
     path('playschool/', include('apps.playschool.urls')),
     # path('testing/', include('apps.testing.urls')),
     path('transfer-money/', include('apps.transfer_money.urls')),
-
-
 ]
 
 if settings.DEBUG:
