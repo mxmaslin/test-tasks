@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'dry_rest_permissions',
     'debug_toolbar',
     'djmoney',
+    'oauth2_provider',
     # 'apps.testing',
     'apps.loans',
     'apps.menu_tag',
