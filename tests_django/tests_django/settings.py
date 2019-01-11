@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'apps.menu_tag',
     'apps.playschool',
     'apps.transfer_money',
+    'apps.gen_keys',
 ]
 
 MIDDLEWARE = [
