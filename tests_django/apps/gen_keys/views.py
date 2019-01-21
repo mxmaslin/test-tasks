@@ -21,7 +21,7 @@ def provide_key(request):
     provide_key.is_provided = True
     provide_key.save()
     serializer = KeySerializer(provide_key)
-    return Response(serializer.data)
+    return Response(serializer.data, status.HTTP_200_OK)
 
 
 class KeyList(APIView):
@@ -51,7 +51,7 @@ class KeyDetail(APIView):
     def get(self, request, pk, format=None):
         key = self.get_object(pk)
         serializer = KeySerializer(key)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self, request, pk, format=None):
         key = self.get_object(pk)
@@ -67,5 +67,5 @@ class KeyDetail(APIView):
         serializer = KeyExpireSerializer(key, data={})
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
