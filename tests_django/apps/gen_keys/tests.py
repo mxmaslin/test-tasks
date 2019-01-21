@@ -19,7 +19,7 @@ class AccountTests(APITestCase):
         url = reverse('gen_keys:keys_list')
         response = self.client.get(url, format='json')
         non_provided_amount = Key.objects.filter(is_provided=False).count()
-        non_provided_amount_expected = len(response.data)
+        non_provided_amount_expected = response.data['not_provided']
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(non_provided_amount_expected, non_provided_amount)
 
