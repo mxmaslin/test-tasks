@@ -6,3 +6,8 @@ class Key(models.Model):
     is_provided = models.BooleanField(default=False)
     is_expired = models.BooleanField(default=False)
 
+    def __str__(self):
+        return 'Value: {}, is_provided: {}, is_expired: {}'.format(
+            self.value, self.is_provided, self.is_expired
+        )
+
