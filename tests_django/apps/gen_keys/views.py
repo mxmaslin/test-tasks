@@ -30,14 +30,17 @@ class KeyList(APIView):
         return Response({'not_provided': not_provided_count})
 
     def post(self, request, format=None):
-        value = generate_value()
-        serializer = KeyCreateSerializer(data={'value': value})
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors,
-                        status=status.HTTP_400_BAD_REQUEST
-                        )
+        max_attempts = 4
+        while True:
+            value = generate_value()
+            serializer = KeyCreateSerializer(data={'value': value})
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                max_attempts -= 1
+                if max_attempts == 0:
+                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class KeyDetail(APIView):
