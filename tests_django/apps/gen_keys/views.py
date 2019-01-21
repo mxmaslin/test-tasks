@@ -26,9 +26,8 @@ def provide_key(request):
 
 class KeyList(APIView):
     def get(self, request, format=None):
-        not_provided = Key.objects.filter(is_provided=False)
-        serializer = KeySerializer(not_provided, many=True)
-        return Response(serializer.data)
+        not_provided_count = Key.objects.filter(is_provided=False).count()
+        return Response({'not_provided': not_provided_count})
 
     def post(self, request, format=None):
         value = generate_value()
