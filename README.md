@@ -27,4 +27,5 @@
 - [Realtime cчётчик событий определённого типа за интервал времени](https://github.com/mxmaslin/Test-tasks/tree/master/tests_python/nok_counter "Realtime cчётчик событий определённого типа за интервал времени")
 - [REST-приложение для необычной сортировки строк](https://github.com/mxmaslin/Test-tasks/tree/master/tests_python/sort_table "REST-приложение для необычной сортировки строк")
 - [Сумма значений для каждого ключа из словарей, поставляемых генераторами](https://github.com/mxmaslin/Test-tasks/tree/master/tests_python/gen_sum "Сумма значений для каждого ключа из словарей, возвращаемых генераторами")
+- [Максимальный массив единиц]( "Максимальный массив единиц")
 - [TODO](https://gist.github.com/sayplastic/76bcebc3a554ea03e3cf296412b60b77)
