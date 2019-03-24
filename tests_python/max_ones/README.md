@@ -22,3 +22,5 @@ if __name__ == '__main__':
     assert max_ones([1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 1]) == 5
     assert max_ones([0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0]) == 2
 ```
+
+[**Решение**](https://github.com/mxmaslin/Test-tasks/blob/master/tests_python/max_ones/max_ones.py 'Решение задачи о максимальном массиве единиц')
