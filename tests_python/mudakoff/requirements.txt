@@ -10,7 +10,7 @@ numpy==1.14.3
 packaging==17.1
 pyparsing==2.2.0
 python-dateutil==2.7.3
-PyYAML==3.12
+PyYAML==5.1
 requests==2.18.4
 six==1.11.0
 tornado==5.0.2
