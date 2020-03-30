@@ -6,6 +6,8 @@ Fingerprint2.get(function (components) {
     let values = components.map(function (component) { return component.value });
     let murmur = Fingerprint2.x64hash128(values.join(''), 31);
 
+    console.log(murmur);
+
     let url = 'http://localhost:5000/fingerprint/' + murmur;
     let message = 'Привет, ';
     axios.get(url)
