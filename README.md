@@ -10,15 +10,17 @@
 
 ## Django
 
-- [Реализация групп, полномочий](https://github.com/mxmaslin/Test-tasks/tree/master/tests_django/apps/loans "Реализация групп и полномочий в Django")
-- [Кастомный тег, реализующий древовидное меню](https://github.com/mxmaslin/Test-tasks/tree/master/tests_django/apps/menu_tag "Кастомный тег для древовидного меню")
-- [Форма с отправкой без перезагрузки страницы](https://github.com/mxmaslin/Test-tasks/tree/master/tests_django/apps/transfer_money "Форма с отправкой без перезагрузки страницы")
-- [Простой API](https://github.com/mxmaslin/Test-tasks/tree/master/tests_django/apps/playschool "Простой API")
-- [ReactJS-friendly сериалайзер](https://github.com/mxmaslin/Test-tasks/tree/master/tests_django/apps/cars "ReactJS-friendly сериалайзер")
+- [Реализация групп, полномочий](https://github.com/mxmaslin/Test-tasks/tree/master/django_test_tasks/old_django_test_tasks/apps/loans "Реализация групп и полномочий в Django")
+- [Кастомный тег, реализующий древовидное меню](https://github.com/mxmaslin/Test-tasks/tree/master/django_test_tasks/old_django_test_tasks/apps/menu_tag "Кастомный тег для древовидного меню")
+- [Форма с отправкой без перезагрузки страницы](https://github.com/mxmaslin/Test-tasks/tree/master/django_test_tasks/old_django_test_tasks/apps/transfer_money "Форма с отправкой без перезагрузки страницы")
+- [Простой API](https://github.com/mxmaslin/Test-tasks/tree/master/django_test_tasks/old_django_test_tasks/apps/playschool "Простой API")
+- [ReactJS-friendly сериалайзер](https://github.com/mxmaslin/Test-tasks/tree/master/django_test_tasks/old_django_test_tasks/apps/cars "ReactJS-friendly сериалайзер")
 - [TODO](https://docs.google.com/document/d/1r5g-Mb0rp7_a20bpXCS-UJamDxXTPUyhmgymWwKaCPA/edit)
 
 ## Python
 
+- [Загрузка/проверка/скачивание файла](https://github.com/mxmaslin/Test-tasks/tree/master/tests_python/uploader "Загрузка/проверка/скачивание файла")
+- [Работа с fingerprintjs2](https://github.com/mxmaslin/Test-tasks/tree/master/tests_python/fingerprint "Валидация паспорта")
 - [Валидация паспорта](https://github.com/mxmaslin/Test-tasks/tree/master/tests_python/passport_validator "Валидация паспорта")
 - [Получение из MongoDB данных и их форматирование](https://github.com/mxmaslin/Test-tasks/tree/master/tests_python/yellowblackwhite-test01_python-9615024cdffa "Извлечение данных из MongoDB и их форматирование")
 - [Определение эмоциональной окраски твитов](https://github.com/mxmaslin/Test-tasks/tree/master/tests_python/tweets_sentiment "Определение эмоциональной окраски твитов")
