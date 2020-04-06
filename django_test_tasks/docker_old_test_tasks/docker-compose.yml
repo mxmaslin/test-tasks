@@ -9,14 +9,14 @@ services:
     volumes:
       - ./data/postgres:/var/lib/postgresql/data/
     env_file:
-      - ./tests_django/tests_django/.env
+      - ../old_django_test_tasks/tests_django/.env
   web:
     restart: always
     build: .
-    command: python /tests_django/manage.py migrate --noinput
-    command: python /tests_django/manage.py runserver 0.0.0.0:8000
+    command: python ../old_django_test_tasks/manage.py migrate --noinput
+    command: python ../old_django_test_tasks/manage.py runserver 0.0.0.0:8000
     volumes:
-      - ./tests_django:/tests_django
+      - ../old_django_test_tasks:/old_django_test_tasks
     ports:
       - "8000:8000"
     depends_on:
@@ -24,4 +24,4 @@ services:
     links:
       - db:db
     env_file:
-      - ./tests_django/tests_django/.env
+      - ../old_django_test_tasks/tests_django/.env

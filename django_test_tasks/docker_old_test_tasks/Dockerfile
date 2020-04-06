@@ -6,10 +6,10 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 # Set work directory
-WORKDIR /tests_django
+WORKDIR /old_django_test_tasks
 
 # Copy project
-COPY ./tests_django /tests_django/
+COPY ../old_django_test_tasks /old_django_test_tasks/
 
 # Install dependencies
 RUN pip install --upgrade pip
