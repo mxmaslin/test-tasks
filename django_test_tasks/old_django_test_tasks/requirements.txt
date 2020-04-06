@@ -17,7 +17,7 @@ psycopg2==2.7.5
 psycopg2-binary==2.7.5
 py-moneyed==0.7.0
 pytz==2018.5
-requests==2.19.1
+requests==2.20.0
 six==1.11.0
 sqlparse==0.2.4
 Unidecode==1.0.22
