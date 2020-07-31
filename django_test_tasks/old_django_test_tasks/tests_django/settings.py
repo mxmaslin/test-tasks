@@ -51,6 +51,8 @@ INSTALLED_APPS = [
     'apps.playschool',
     'apps.transfer_money',
     'apps.gen_keys',
+    'ckeditor',
+    'ckeditor_uploader',
     'apps.blog'
 ]
 
@@ -135,9 +137,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
-
 MEDIA_URL = '/media/'
 
 
@@ -157,3 +159,11 @@ CURRENCIES = ('RUB',)
 
 if DEBUG:
     AUTH_PASSWORD_VALIDATORS = []
+
+CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor/"
+CKEDITOR_UPLOAD_PATH = "uploads/"
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'Basic',
+    }
+}

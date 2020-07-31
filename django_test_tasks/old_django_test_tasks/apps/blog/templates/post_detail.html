@@ -6,7 +6,8 @@
 
       <h2>{{ post.title }}</h2>
       <p>{{ post.created_on}} </p>
-      <p>{{post.content|slice:":200" }}</p>
+      <img src="{{ post.image.url }}">
+      <p>{{ post.content|safe }}</p>
 
     </div>
 </div>
