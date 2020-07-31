@@ -30,6 +30,7 @@ urlpatterns = [
     # path('testing/', include('apps.testing.urls')),
     path('transfer-money/', include('apps.transfer_money.urls')),
     path('generate-keys/', include('apps.gen_keys.urls')),
+    path('blog/', include('apps.blog.urls'))
 ]
 
 if settings.DEBUG:

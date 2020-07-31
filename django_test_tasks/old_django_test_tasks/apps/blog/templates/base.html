@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Блог Kodland</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+    </head>
+
+    <body>
+        <header>
+            <a href="{% url 'blog:home' %}">kodland блог</a> <a href="{% url 'blog:add_post' %}">+ Добавить статью</a>
+        </header>
+        {% block content %}
+        {% endblock content %}
+    </body>
+</html>
