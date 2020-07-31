@@ -113,3 +113,4 @@ venv.bak/
 Icon*
 .env
 data/postgres
+node_modules/
