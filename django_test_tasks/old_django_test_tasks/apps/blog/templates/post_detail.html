@@ -1,15 +1,16 @@
 {% extends "base.html" %}
+{% load static %}
 {% block content %}
-
+<link rel="stylesheet" href="{% static 'blog/css/main.css' %}">
 <div class="container">
     <div class="row">
-
-      <h2>{{ post.title }}</h2>
-      <p>{{ post.created_on}} </p>
-      <img src="{{ post.image.url }}">
-      <p>{{ post.content|safe }}</p>
-
+        {% include 'includes/header.html' %}
     </div>
+
+    <h2 class="article-header">{{ post.title }}</h2>
+    <img src="{{ post.image.url }}">
+    <div>{{ post.content|safe }}</div>
+
 </div>
 
 {% endblock %}

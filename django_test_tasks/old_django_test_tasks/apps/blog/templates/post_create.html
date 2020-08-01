@@ -1,10 +1,17 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block content %}
-<form action='' method='post' enctype='multipart/form-data'>
-  {% csrf_token %}
-  {{ form.media }}
-  {{ form.as_p }}
-  <button type='submit'>SUBMIT</button>
-</form>
+<link rel="stylesheet" href="{% static 'blog/css/main.css' %}">
+<div class="container">
+    <div class="row">
+        {% include 'includes/header.html' %}
+    </div>
+    <div class="row">
+      <form action='' method='post' enctype='multipart/form-data'>
+      {% csrf_token %}
+      {{ form.media }}
+      {{ form.as_p }}
+      <button type='submit'>SUBMIT</button>
+      </form>
+    </div>
 {% endblock %}

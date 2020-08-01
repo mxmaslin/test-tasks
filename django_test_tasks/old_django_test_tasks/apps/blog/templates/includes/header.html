@@ -1,3 +1,6 @@
-<header>
-    <a href="{% url 'blog:home' %}">kodland блог</a> <a href="{% url 'blog:add_post' %}">+ Добавить статью</a>
+{% load static %}
+<header class="main-header">
+    <a href="{% url 'blog:home' %}"><img src="{% static 'blog/assets/Logo_Kodland.png' %}"></a>
+    <a href="{% url 'blog:home' %}" class="main-header-blog">Блог</a>
+    <a href="{% url 'blog:add_post' %}" class="main-header-add-article">+ Добавить статью</a>
 </header>
