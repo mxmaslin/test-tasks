@@ -164,6 +164,15 @@ CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor/"
 CKEDITOR_UPLOAD_PATH = "uploads/"
 CKEDITOR_CONFIGS = {
     'default': {
-        'toolbar': 'Basic',
+        'toolbar': 'Custom',
+        'toolbar_Custom': [
+            ['Bold', 'Underline'],
+            ['FontSize'],
+            ['JustifyLeft', 'JustifyCenter', 'JustifyRight'],
+            ['Outdent', 'Indent'],
+            ['Image'],
+            ['Source'],
+            ['NumberedList', 'BulletedList']
+        ]
     }
 }
