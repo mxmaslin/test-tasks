@@ -1,7 +1,11 @@
 {% extends "base.html" %}
+{% load static %}
 {% block content %}
-
+<link rel="stylesheet" href="{% static 'blog/css/main.css' %}">
 <div class="container">
+
+    {% include 'includes/header.html' %}
+
     <div class="row">
         <div>
             {% for post in post_list %}
@@ -9,7 +13,7 @@
                   <div class="card-body">
                       <h2>{{ post.title }}</h2>
                       <p>{{ post.created_on}} </p>
-                      <p>{{post.content|slice:":200" }}</p>
+                      <p>{{post.content|safe|slice:":200" }}</p>
                       <a href="{% url 'blog:post_detail' post.slug  %}" class="btn btn-primary">Читать</a>
                   </div>
               </div>
