@@ -24,8 +24,6 @@ class Post(models.Model):
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
-        print("yay " * 1000)
-        print(reverse('blog:post_detail', args=[self.slug]))
         return reverse('blog:post_detail', args=[self.slug])
 
 

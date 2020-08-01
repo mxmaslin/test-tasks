@@ -116,3 +116,71 @@
     color: #315AF2;
     margin: 0px 20px;
 }
+.article-create-header {
+    font-family: Museo Cyrl;
+    font-size: 45px;
+    line-height: 52px;
+    letter-spacing: -0.416667px;
+    color: #315AF2;
+}
+#id_title {
+    background: #FFFFFF;
+    border: 2px solid #CDCDCD;
+    border-radius: 3px;
+    width: 882px;
+}
+#cke_id_content {
+    width: 882px !important;
+    height: 478px;
+    background: #FFFFFF;
+    border: 2px solid #CDCDCD;
+    border-radius: 3px;
+}
+.publish-button {
+    width: 159px;
+    height: 50px;
+    background: #E9399C;
+    border-radius: 3px;
+    font-family: Museo Cyrl;
+    font-size: 18px;
+    line-height: 22px;
+    color: #FFFFFF;
+}
+.cke-input {
+    float: left;
+}
+#id_image {
+    display: none;
+}
+.image-upload-container {
+    float: left;
+    margin-left: 5px;
+    width: 298px;
+    height: 135px;
+    background: #FFFFFF;
+    border: 2px solid #CDCDCD;
+    box-sizing: border-box;
+    border-radius: 3px;
+}
+.image-upload-message {
+    font-family: Circe Rounded;
+    font-size: 24px;
+    line-height: 31px;
+    text-align: center;
+    color: #315AF2;
+}
+.image-upload-button {
+    width: 155px;
+    height: 50px;
+    line-height: 50px;
+    background: #315AF2;
+    border-radius: 3px;
+    text-align: center;
+    font-family: Museo Cyrl;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    color: #FFFFFF;
+    width: 50%;
+    margin: 0 auto;
+}
