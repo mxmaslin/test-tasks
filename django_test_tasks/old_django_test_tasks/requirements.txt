@@ -25,3 +25,5 @@ Unidecode
 urllib3
 django-ckeditor
 awesome-slugify
+gunicorn
+django-heroku

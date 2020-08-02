@@ -3,6 +3,7 @@ import os
 import sys
 
 import dj_database_url
+import django_heroku
 
 from envparse import env
 
@@ -176,3 +177,5 @@ CKEDITOR_CONFIGS = {
         ]
     }
 }
+
+django_heroku.settings(locals())
