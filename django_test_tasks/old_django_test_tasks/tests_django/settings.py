@@ -20,7 +20,8 @@ env.read_envfile(ENV_FILE_PATH)
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env.str('SECRET_KEY')
+# SECRET_KEY = env.str('SECRET_KEY')
+SECRET_KEY = '-^u$&=$y3vt0yrjcu!7l4ai_r20bwo*^+^9b&34*8-fb6ospq9'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DEBUG', default=True)
@@ -94,7 +95,10 @@ WSGI_APPLICATION = 'tests_django.wsgi.application'
 # DB settings are in local_settings.py
 
 DATABASES = {
-    'default': dj_database_url.config(default=env('DATABASE_URL'))
+    # 'default': dj_database_url.config(default=env('DATABASE_URL'))
+    'default': dj_database_url.config(
+        default='postgres://bulrathi:4358592@localhost:5432/employer_tests'
+    )
 }
 
 if 'test' in sys.argv:
