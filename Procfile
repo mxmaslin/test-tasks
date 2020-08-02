@@ -1,1 +1,1 @@
-web: gunicorn myproject.wsgi
+web: gunicorn django_test_tasks:old_django_test_tasks:tests_django.wsgi
