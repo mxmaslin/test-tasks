@@ -21,9 +21,8 @@ pytz
 requests
 six
 sqlparse
-Unidecode
+Unidecode<0.05
 urllib3
 django-ckeditor
 awesome-slugify
-gunicorn
-django-heroku
+

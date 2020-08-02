@@ -7,5 +7,7 @@
     </div>
     <img class="heading-article-img" src="{{ post_list.0.image.url }}">
   </div>
-  <a href="{% url 'blog:post_detail' post_list.0.slug  %}" class="heading-article-read-button">Читать</a>
+  {% if post_list %}
+    <a href="{% url 'blog:post_detail' post_list.0.slug  %}" class="heading-article-read-button">Читать</a>
+  {% endif %}
 </div>
