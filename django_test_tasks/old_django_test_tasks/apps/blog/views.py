@@ -6,7 +6,7 @@ from .forms import PostCreateForm
 
 
 class PostList(ListView):
-    queryset = Post.objects.all().order_by('-created_on')
+    queryset = Post.objects.all().order_by('-created_on')[:10]
     template_name = 'index.html'
 
 
