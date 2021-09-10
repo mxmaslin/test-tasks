@@ -1,3 +1,4 @@
+import ast
 import json
 
 from itertools import zip_longest
@@ -62,7 +63,6 @@ def compose_fulfillments_diff_message(fulfillments_diff):
 def compose_issues_diff_message(issues_diff):
     message = None
     if issues_diff:
-        import ast
         try:
             issue = ast.literal_eval(issues_diff[0][2][0][1]["message"])['service_id'][0]
         except SyntaxError:
