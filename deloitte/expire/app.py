@@ -46,6 +46,7 @@ def index():
                     e.preventDefault();
                     $.post('/', {
                         user: $('#user').val()
+                        
                     })
                 });                
                 socket.emit('expiration check');

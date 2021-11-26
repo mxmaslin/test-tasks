@@ -10,6 +10,6 @@ Features: sending messages to specific user via websockets.
 
 Implement asynchronous email sending with progress display.
 
-Start celery: `celery -A app.c worker -PE eventlet -c 1000`
+Start celery: `celery -A app.c worker -P eventlet -c 1000`
 
 [Solution](display_progress/app.py)
