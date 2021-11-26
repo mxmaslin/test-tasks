@@ -1,6 +1,7 @@
 import eventlet
 
 import redis
+
 from datetime import timedelta
 from flask import Flask, session, request
 from flask_socketio import SocketIO, emit
@@ -40,7 +41,7 @@ def index():
     return """        
         <form method="post">
             <input type="text" name="username" id="username">
-            <input type="submit" value="login" onsubmit="submitHandler">
+            <input type="submit" value="login">
         </form>
 
         <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js'></script>
