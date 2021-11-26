@@ -15,32 +15,25 @@ socketio = SocketIO(app)
 r = redis.Redis.from_url('redis://localhost:6379')
 
 
-@socketio.on('register')
-def on_register():
-    username, _ = session['auth']
-    session['auth'][1] = request.sid
-
-
 @socketio.on('expiration check')
 def on_expiration_check():
-    username = session.get('auth')
-    username, sid = username
-    if not username:
+    user = session.get('user')
+    if not user:
         return
-    if not r.get(username):
-        emit('expired', f'{username} session expired', to=sid)
+    if not r.get(user):
+        emit('expired', f'{user} session expired')
 
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        username = request.form.get('username')
-        session['auth'] = [username, None]
-        r.setex(username, timedelta(seconds=5), value=username)
+        user = request.form.get('user')
+        session['user'] = user
+        r.setex(user, timedelta(seconds=5), value=user)
 
     return """        
         <form method="post">
-            <input type="text" name="username" id="username">
+            <input type="text" name="user" id="user">
             <input type="submit" value="login">
         </form>
 
@@ -52,16 +45,14 @@ def index():
                 $('form').submit(function(e){
                     e.preventDefault();
                     $.post('/', {
-                        username: $('#username').val()
-                    }).complete(function(){
-                        socket.emit('register')
+                        user: $('#user').val()
                     })
                 });                
                 socket.emit('expiration check');
                 socket.on('expired', function(msg){
                     console.log(msg)
                 })
-            });
+            })
 
         </script>
     """
