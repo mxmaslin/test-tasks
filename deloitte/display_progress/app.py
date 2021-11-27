@@ -82,14 +82,11 @@ def index():
                 var current, total;
                 [current, total] = info;
                 current = (current + 1) * (100 / total);                
-                console.log(current);
-                
                 $(function(){
                     $('#progressbar').progressbar({
                         value: current
                     })
                 })
-
             })
         </script>
         <div id="progressbar"></div>

@@ -18,9 +18,7 @@ r = redis.Redis.from_url('redis://localhost:6379')
 @socketio.on('expiration check')
 def on_expiration_check():
     user = session.get('user')
-    if not user:
-        return
-    if not r.get(user):
+    if user and not r.get(user):
         emit('expired', f'{user} session expired')
 
 
