@@ -1,0 +1,7 @@
+celery==5.2.1
+eventlet==0.33.0
+Flask==2.0.2
+Flask-Mail==0.9.1
+Flask-SocketIO==4.3.1
+python-engineio==3.13.2
+python-socketio==4.6.0

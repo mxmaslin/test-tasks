@@ -40,8 +40,8 @@ c.conf.update(app.config)
 def send_email(address):
     msg = Message('subject',
                   sender=app.config['MAIL_DEFAULT_SENDER'],
-                  recipients=[address])
-    msg.body = 'body'
+                  recipients=[address],
+                  body='body')
     with app.app_context():
         mail.send(msg)
 
