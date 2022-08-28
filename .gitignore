@@ -114,3 +114,6 @@ Icon*
 .env
 data/postgres
 node_modules/
+*.csv
+*.db
+
