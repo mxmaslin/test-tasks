@@ -7,7 +7,7 @@ from progress.bar import Bar
 from sqlalchemy.orm import Session, sessionmaker
 
 from engine import engine
-from flask_models import Agency, City, Crime, State
+from models import Agency, City, Crime, State
 
 
 Session = sessionmaker(bind=engine)

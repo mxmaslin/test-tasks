@@ -4,7 +4,7 @@ from flask import request, jsonify
 from sqlalchemy import and_
 
 from app import app, db
-from flask_models import Crime
+from models import Crime
 
 ROWS_PER_PAGE = 20
 

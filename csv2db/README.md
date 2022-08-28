@@ -11,4 +11,4 @@
 3. Налейте боольшую кружку вашего любимого горячего напитка.
 4. `export FLASK_APP=api.py`
 5. `python api.py`
-6. curl http://127.0.0.1:5000/crimes?page=1&date_from=2008-11-05&date_to=2022-11-05
+6. Откройте в браузере URL http://127.0.0.1:5000/crimes?page=1&date_from=2008-11-05&date_to=2022-11-05
