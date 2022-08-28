@@ -7,7 +7,7 @@ from progress.bar import Bar
 from sqlalchemy.orm import Session, sessionmaker
 
 from engine import engine
-from models import Agency, City, Crime, State
+from flask_models import Agency, City, Crime, State
 
 
 Session = sessionmaker(bind=engine)
@@ -16,7 +16,7 @@ Session.configure(bind=engine)
 filename = 'police-department-calls-for-service.csv'
 
 logging.basicConfig(
-    filename='log.txt', level=logging.DEBUG,
+    filename='log.txt', level=logging.INFO,
     format='%(asctime)s %(message)s', filemode='w'
 )
 
@@ -38,7 +38,7 @@ def get_records_amount():
 def fill_db():
     with open(filename, 'r') as f:
         upload_started = datetime.now()
-        logging.debug(f'Upload started at {upload_started}')
+        logging.info(f'Upload started at {upload_started}')
         reader = csv.reader(f, delimiter=',')
         next(reader)
         total_records = get_records_amount()
@@ -81,9 +81,9 @@ def fill_db():
                 bar.next()
         
             session.commit()
-            logging.debug(f'Upload finished at {datetime.now()}')
-            logging.debug(f'{total_records} added to db')
-            logging.debug(f'Time elapsed: {(datetime.now() - upload_started).total_seconds()} seconds')
+            logging.info(f'Upload finished at {datetime.now()}')
+            logging.info(f'{total_records} added to db')
+            logging.info(f'Time elapsed: {(datetime.now() - upload_started).total_seconds()} seconds')
             bar.finish()
 
 
