@@ -11,6 +11,15 @@ from app import db
 mapper_registry = registry()
 
 
+def get_or_create(session, model, **kwargs):
+    instance = session.query(model).filter_by(**kwargs).first()
+    if instance:
+        return instance
+    instance = model(**kwargs)
+    session.add(instance)
+    return instance
+
+
 class DictMixin:
     def as_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}

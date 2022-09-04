@@ -3,3 +3,4 @@ Flask==2.2.2
 Flask-SQLAlchemy==2.5.1
 progress==1.6
 SQLAlchemy==1.4.40
+progress==1.6
