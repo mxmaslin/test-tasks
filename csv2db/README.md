@@ -2,7 +2,7 @@
 
 Приведено здесь: https://gist.github.com/tm-minty/c39f9ab2de1c70ca9d4d559505678234
 
-Данные в csv: police-department-calls-for-service.csv
+Данные в csv: [police-department-calls-for-service.csv](https://gist.github.com/tm-minty/c39f9ab2de1c70ca9d4d559505678234/raw/8ecaee79b2c2cce88d60815aadeebb5ac209603a/police-department-calls-for-service.csv.zip)
 
 **Проверка**
 
