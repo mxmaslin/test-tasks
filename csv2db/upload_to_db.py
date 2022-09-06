@@ -1,6 +1,5 @@
 import csv
 import logging
-import os
 import requests
 import shutil
 
