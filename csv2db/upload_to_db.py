@@ -16,6 +16,8 @@ from models import Agency, City, Crime, State, get_or_create
 
 Session = sessionmaker(bind=engine)
 Session.configure(bind=engine)
+from app import db
+db.metadata.create_all(engine)
 
 data_url = 'https://gist.github.com/tm-minty/c39f9ab2de1c70ca9d4d559505678234/raw/8ecaee79b2c2cce88d60815aadeebb5ac209603a/police-department-calls-for-service.csv.zip'
 
