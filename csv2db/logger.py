@@ -1,26 +1,34 @@
+from distutils.log import Log
 import logging
+from logging import FileHandler, Formatter, Logger, StreamHandler
 
 
-def setup_file_logger(
-    name: str, formatter: logging.Formatter, file_path: str, level: int = logging.INFO
-) -> logging.Logger:
-    handler = logging.FileHandler(file_path)
-    handler.setFormatter(formatter)
+from typing import Optional, Union
+
+
+class Logger:
+    def __init__(
+        self, name: str, handler: Union[FileHandler, StreamHandler],
+        formatter: Formatter, level: int = logging.INFO,
+        file_path: Optional[str] = None
+    ):
+        self.handler = handler(file_path)
+        self.handler.setFormatter(formatter)
+
+        self.logger = logging.getLogger(name)
+        self.logger.setLevel(level)
+        self.logger.addHandler(self.handler)
     
-    logger = logging.getLogger(name)
-    logger.setLevel(level)
-    logger.addHandler(handler)
-    return logger
+    def logger(self) -> Logger:
+        return self.logger
 
 
-def setup_console_logger(
-    name: str, formatter: logging.Formatter, level: int = logging.INFO
-) -> logging.Logger:
-    handler = logging.StreamHandler()
-    handler.setFormatter(formatter)
-    handler.terminator = '\r'
-    
-    logger = logging.getLogger(name)
-    logger.setLevel(level)
-    logger.addHandler(handler)
-    return logger
+class ConsoleLogger(Logger):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.handler.terminator = '\r'
+
+
+class FileLogger(Logger):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)

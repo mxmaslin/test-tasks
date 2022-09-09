@@ -1,15 +1,15 @@
 import csv
-import logging
 import requests
 import shutil
 
 from datetime import datetime
+from logging import FileHandler, Formatter, StreamHandler
 
 from progress.bar import Bar
 from sqlalchemy.orm import Session, sessionmaker
 
 from engine import engine
-from logger import setup_console_logger, setup_file_logger
+from logger import ConsoleLogger, FileLogger
 from models import Agency, City, Crime, State, get_or_create
 
 
@@ -21,14 +21,16 @@ db.metadata.create_all(engine)
 data_url = 'https://gist.github.com/tm-minty/c39f9ab2de1c70ca9d4d559505678234/raw/8ecaee79b2c2cce88d60815aadeebb5ac209603a/police-department-calls-for-service.csv.zip'
 
 
-file_logger = setup_file_logger(
+file_logger = FileLogger(
     'file_logger',
-    logging.Formatter('%(asctime)s %(levelname)s %(message)s'),
-    'upload.log'
+    FileHandler,
+    Formatter('%(asctime)s %(levelname)s %(message)s'),
+    file_path='upload.log'
 )
-console_logger = setup_console_logger(
+console_logger = ConsoleLogger(
     'console_logger',
-    logging.Formatter('%(message)s')
+    StreamHandler,
+    Formatter('%(message)s')
 )
 
 
@@ -47,7 +49,7 @@ class Downloader:
         for chunk in self.url_response.iter_content(chunk_size=1024):
             if chunk:
                 chunks_count += 1
-                self.logger.info(f'Chunks: {chunks_count}')
+                self.logger.logger.info(f'Chunks: {chunks_count}')
         return chunks_count
 
     def download(self):
@@ -75,7 +77,7 @@ def fill_db(data_url):
     
     with open(csv_file_name, 'r') as f:
         filling_db_started = datetime.now()
-        file_logger.info(f'CSV to DB started at {filling_db_started}')
+        file_logger.logger.info(f'CSV to DB started at {filling_db_started}')
         reader = csv.reader(f, delimiter=',')
         next(reader)
         total_records = csv_records_count(csv_file_name)
