@@ -121,9 +121,9 @@ def fill_db(data_url):
                 bar.next()
         
             session.commit()
-            file_logger.info(f'DB filling up finished at {datetime.now()}')
-            file_logger.info(f'{total_records} added to db')
-            file_logger.info(
+            file_logger.logger.info(f'DB filling up finished at {datetime.now()}')
+            file_logger.logger.info(f'{total_records} added to db')
+            file_logger.logger.info(
                 f'Time elapsed: {(datetime.now() - filling_db_started).total_seconds()} seconds'
             )
             bar.finish()
