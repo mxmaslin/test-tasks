@@ -1,0 +1,31 @@
+# MONGO DB
+
+mongodata:
+  image: busybox
+  volumes:
+    - "/data/db"
+mongo:
+  image: mongo
+  restart: always
+  command: mongod --storageEngine=wiredTiger --journal --smallfiles
+  environment:
+    TZ: 'Europe/Moscow'
+  volumes_from:
+    - mongodata
+  ports:
+    - "27017:27017"
+
+# APP
+
+app:
+  build: ./
+  command: python3 /task.py
+  environment:
+    LC_CTYPE: 'ru_RU.UTF-8'
+    PYTHONUNBUFFERED: 0
+    PYTHONOPTIMIZE: 2
+    DEBUG: 'True'
+  volumes:
+    - "./task.py:/task.py"
+  links:
+    - mongo
