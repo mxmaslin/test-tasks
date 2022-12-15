@@ -1,2 +1,0 @@
-python-dateutil==2.7.3
-six==1.11.0
