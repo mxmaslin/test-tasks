@@ -30,4 +30,5 @@
 - [REST-приложение для необычной сортировки строк](https://github.com/mxmaslin/Test-tasks/tree/master/tests_python/sort_table "REST-приложение для необычной сортировки строк")
 - [Сумма значений для каждого ключа из словарей, поставляемых генераторами](https://github.com/mxmaslin/Test-tasks/tree/master/tests_python/gen_sum "Сумма значений для каждого ключа из словарей, возвращаемых генераторами")
 - [Максимальный массив единиц](https://github.com/mxmaslin/Test-tasks/tree/master/tests_python/max_ones "Максимальный массив единиц")
+- [Генератор текста из списков](https://github.com/mxmaslin/test-tasks/tree/master/tests_python/story-maker-py-for-mxmaslin "Генератор текста из списков")
 - [TODO](https://gist.github.com/sayplastic/76bcebc3a554ea03e3cf296412b60b77)
