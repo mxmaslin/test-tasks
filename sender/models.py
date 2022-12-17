@@ -1,3 +1,5 @@
+import copy
+
 from peewee import *
 
 
@@ -15,29 +17,20 @@ class Mailing(BaseModel):
 
     class Meta:
         indexes = (
-            (('start',), True),
-            (('end',), True),
-            (('start', 'end'), True),
+            (('start',), False),
+            (('end',), False),
+            (('start', 'end'), False),
         )
 
 
 class Recipient(BaseModel):
     phone_number = CharField(max_length=11)
-    op_code = CharField(max_length=3)
-    tz = CharField(max_length=9)
+    op_code = CharField(max_length=10)
+    tz = CharField(max_length=255)
 
     class Meta:
         indexes = (
             (('phone_number',), True),
-        )
-
-class MailingRecipient(BaseModel):
-    mailing = ForeignKeyField(Mailing)
-    recipient = ForeignKeyField(Recipient)
-
-    class Meta:
-        indexes = (
-            (('mailing', 'recipient'), True),
         )
 
 
@@ -46,17 +39,7 @@ class Tag(BaseModel):
 
     class Meta:
         indexes = (
-            (('value',), True),
-        )
-
-
-class TagRecipient(BaseModel):
-    tag = ForeignKeyField(Tag)
-    recipient = ForeignKeyField(Recipient)
-
-    class Meta:
-        indexes = (
-            (('tag', 'recipient'), True),
+            (('value',), False),
         )
 
 
@@ -72,9 +55,28 @@ class Message(BaseModel):
 
     class Meta:
         indexes = (
-            (('sent_at',), True),
-            (('recipient',), True),
-            (('sent_at', 'status'), True),
+            (('sent_at',), False),
+            (('recipient',), False),
+            (('sent_at', 'status'), False),
+        )
+
+
+class MailingRecipient(BaseModel):
+    mailing = ForeignKeyField(Mailing)
+    recipient = ForeignKeyField(Recipient)
+
+    class Meta:
+        indexes = (
+            (('mailing', 'recipient'), True),
+        )
+
+class TagRecipient(BaseModel):
+    tag = ForeignKeyField(Tag)
+    recipient = ForeignKeyField(Recipient)
+
+    class Meta:
+        indexes = (
+            (('tag', 'recipient'), True),
         )
 
 

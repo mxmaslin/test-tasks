@@ -1,11 +1,17 @@
 from flask import request, jsonify
 
 from app import app
+from models import (
+    Mailing, Recipient, MailingRecipient, Tag, TagRecipient, Message,
+    MessageMailing
+)
 
 
 @app.route('/')
 def hello():
-    user_agent = request.headers.get('User-Agent')
+    query = Mailing.select()
+    for r in query:
+        print(r.end)
     return 'Helloa!'
 
 
