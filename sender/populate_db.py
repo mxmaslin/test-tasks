@@ -66,21 +66,45 @@ def main():
         message.save()
         message_ids.append(message.id)
 
-    recipient_ids2 = copy.copy(recipient_ids)
-    for _ in range(num_recipients):
-        mailing_position = random.randint(0, len(mailing_ids)-1)
-        mailing = mailing_ids[mailing_position]
+    mailing_ids2 = copy.copy(mailing_ids)
+    for _ in range(num_mailings):
+        mailing_position = random.randint(0, len(mailing_ids2)-1)
+        mailing_id = mailing_ids2[mailing_position]
+        mailing_ids2.remove(mailing_id)
+        
+        recipient_ids2 = copy.copy(recipient_ids)
+        for _ in range(num_recipients):
+            recipient_position = random.randint(0, len(recipient_ids2)-1)
+            recipient_id = recipient_ids2[recipient_position]
+            recipient_ids2.remove(recipient_id)
+            MailingRecipient.insert(mailing=mailing_id, recipient=recipient_id).execute()
 
-        recipient_position = random.randint(0, len(recipient_ids2)-1)
-        recipient = recipient_ids2[recipient_position]
-        recipient_ids2.remove(recipient)
 
-        MailingRecipient.insert(mailing=mailing, recipient=recipient).execute()
+    tag_ids2 = copy.copy(tag_ids)
+    for _ in range(num_tags):
+        tag_position = random.randint(0, len(tag_ids2)-1)
+        tag_id = tag_ids2[tag_position]
+        tag_ids2.remove(tag_id)
+        
+        recipient_ids3 = copy.copy(recipient_ids)
+        for _ in range(num_recipients):
+            recipient_position = random.randint(0, len(recipient_ids3)-1)
+            recipient_id = recipient_ids3[recipient_position]
+            recipient_ids3.remove(recipient_id)
+            TagRecipient.insert(tag=tag_id, recipient=recipient_id).execute()            
 
-
-    # TagRecipient
-    # MessageMailing
-
+    message_ids2 = copy.copy(message_ids)
+    for _ in range(num_messages):
+        message_position = random.randint(0, len(message_ids2)-1)
+        message_id = message_ids2[message_position]
+        message_ids2.remove(message_id)
+        
+        mailing_ids3 = copy.copy(mailing_ids)
+        for _ in range(num_mailings):
+            mailing_position = random.randint(0, len(mailing_ids3)-1)
+            mailing_id = mailing_ids3[mailing_position]
+            mailing_ids3.remove(mailing_id)
+            MessageMailing.insert(message=message_id, mailing=mailing_id).execute()
 
 
 if __name__ == '__main__':
