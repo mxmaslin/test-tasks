@@ -53,7 +53,7 @@ def add_recipient(body: RequestRecipientModel):
             error_message=None,
             success_message=f'Recipient {recipient.id} created'
         )
-        return jsonify(json.loads(data.jsoin())), 200
+        return jsonify(json.loads(data.json())), 200
 
 
 
@@ -103,6 +103,36 @@ def update_recipient(recipient_id: int, body: RequestRecipientModel):
             error=False,
             error_message=None,
             success_message=f'Recipient {recipient_id} updated'
+        )
+        return jsonify(json.loads(data.json())), 200
+
+
+
+@app.route(f'/{PREFIX}/recipients/<int:recipient_id>', methods=['DELETE'])
+@validate()
+def delete_recipient(recipient_id: int):
+    with db.atomic() as tx:
+        try:
+            recipient = Recipient.get(Recipient.id==recipient_id)
+            recipient.delete_instance(recursive=True)
+
+            print('yay', r)
+    
+        except Exception as e:
+            tx.rollback()
+            logger.error(str(e))
+            data = ResponseRecipientModel(
+                error=True,
+                error_message=str(e),
+                success_message=None
+            )
+            return jsonify(json.loads(data.json())), 400
+
+        tx.commit()
+        data = ResponseRecipientModel(
+            error=False,
+            error_message=None,
+            success_message=f'Recipient {recipient_id} deleted'
         )
         return jsonify(json.loads(data.json())), 200
 
