@@ -24,7 +24,7 @@ class Mailing(BaseModel):
 
 
 class Recipient(BaseModel):
-    phone_number = CharField(max_length=11)
+    phone_number = CharField(max_length=30)
     op_code = CharField(max_length=10)
     tz = CharField(max_length=255)
 

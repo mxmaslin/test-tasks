@@ -1,22 +1,22 @@
 from flask import Flask, request, jsonify
+from flask_pydantic import validate
 from flask_restful import Api, Resource
 
 from app import app
-from settings import settings
 from models import (
     Mailing, Recipient, MailingRecipient, Tag, TagRecipient, Message,
     MessageMailing
 )
+from settings import settings
+from validators import RequestRecipientModel
 
 
 PREFIX = f'api/v{settings.API_VERSION}'
 
 
 @app.route(f'/{PREFIX}/recipient', methods=['POST'])
-def add_recipient():
-    query = Mailing.select()
-    for r in query:
-        print(r.end)
+@validate()
+def add_recipient(body: RequestRecipientModel):
     return 'Helloa!'
 
 
