@@ -25,8 +25,8 @@ class Mailing(BaseModel):
 
 class Recipient(BaseModel):
     phone_number = CharField(max_length=30)
-    op_code = CharField(max_length=30)
-    tz = CharField(max_length=255)
+    op_code = CharField(max_length=30, null=True)
+    tz = CharField(max_length=255, null=True)
 
     class Meta:
         indexes = (
@@ -69,6 +69,7 @@ class MailingRecipient(BaseModel):
         indexes = (
             (('mailing', 'recipient'), True),
         )
+
 
 class TagRecipient(BaseModel):
     tag = ForeignKeyField(Tag)

@@ -10,3 +10,7 @@ formatter = logging.Formatter(
 )
 fh.setFormatter(formatter)
 logger.addHandler(fh)
+
+ch = logging.StreamHandler()
+ch.setFormatter(formatter)
+logger.addHandler(ch)

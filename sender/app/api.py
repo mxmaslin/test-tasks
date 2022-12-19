@@ -10,7 +10,7 @@ from models import (
     MessageMailing
 )
 from settings import settings
-from validators import RequestRecipientModel, ResponseRecipientModel
+from validators import RequestRecipientModel, ResponseModel, RequestMailingModel
 
 
 PREFIX = f'api/v{settings.API_VERSION}'
@@ -24,8 +24,9 @@ def add_recipient(body: RequestRecipientModel):
             phone_number = body.phone_number
             op_code = body.op_code
             tz = body.tz
-            recipient = Recipient(phone_number=phone_number, op_code=op_code, tz=tz)
-            recipient.save()
+            recipient_id = Recipient.insert(
+                phone_number=phone_number, op_code=op_code, tz=tz
+            ).execute()
     
             tags = body.tags
             db_tags = [Tag(value=tag) for tag in tags]
@@ -33,25 +34,25 @@ def add_recipient(body: RequestRecipientModel):
 
             db_tags_ids = [tag.id for tag in db_tags]
             tag_recipients = [
-                TagRecipient(tag=tag_id, recipient=recipient.id)
+                TagRecipient(tag=tag_id, recipient=recipient_id)
                 for tag_id in db_tags_ids
             ]
             TagRecipient.bulk_create(tag_recipients)
-        except Exception as e:
+        except Exception:
             tx.rollback()
             logger.error(str(e))
-            data = ResponseRecipientModel(
+            data = ResponseModel(
                 error=True,
-                error_message=str(e),
+                error_message='Create recipient failure',
                 success_message=None
             )
             return jsonify(json.loads(data.json())), 400
 
         tx.commit()
-        data = ResponseRecipientModel(
+        data = ResponseModel(
             error=False,
             error_message=None,
-            success_message=f'Recipient {recipient.id} created'
+            success_message=f'Recipient {recipient_id} created'
         )
         return jsonify(json.loads(data.json())), 200
 
@@ -65,10 +66,9 @@ def update_recipient(recipient_id: int, body: RequestRecipientModel):
             phone_number = body.phone_number
             op_code = body.op_code
             tz = body.tz
-            query = Recipient.update(
+            Recipient.update(
                 phone_number=phone_number, op_code=op_code, tz=tz
-            ).where(Recipient.id==recipient_id)
-            query.execute()
+            ).where(Recipient.id==recipient_id).execute()
     
             tags = body.tags
             tag_recipients = TagRecipient.select().join(Tag).where(
@@ -91,15 +91,15 @@ def update_recipient(recipient_id: int, body: RequestRecipientModel):
         except Exception as e:
             tx.rollback()
             logger.error(str(e))
-            data = ResponseRecipientModel(
+            data = ResponseModel(
                 error=True,
-                error_message=str(e),
+                error_message='Update recipient failure',
                 success_message=None
             )
             return jsonify(json.loads(data.json())), 400
 
         tx.commit()
-        data = ResponseRecipientModel(
+        data = ResponseModel(
             error=False,
             error_message=None,
             success_message=f'Recipient {recipient_id} updated'
@@ -115,21 +115,18 @@ def delete_recipient(recipient_id: int):
         try:
             recipient = Recipient.get(Recipient.id==recipient_id)
             recipient.delete_instance(recursive=True)
-
-            print('yay', r)
-    
         except Exception as e:
             tx.rollback()
             logger.error(str(e))
-            data = ResponseRecipientModel(
+            data = ResponseModel(
                 error=True,
-                error_message=str(e),
+                error_message='Delete recipient failure',
                 success_message=None
             )
             return jsonify(json.loads(data.json())), 400
 
         tx.commit()
-        data = ResponseRecipientModel(
+        data = ResponseModel(
             error=False,
             error_message=None,
             success_message=f'Recipient {recipient_id} deleted'
@@ -137,5 +134,57 @@ def delete_recipient(recipient_id: int):
         return jsonify(json.loads(data.json())), 200
 
 
+@app.route(f'/{PREFIX}/mailing', methods=['POST'])
+@validate()
+def add_mailing(body: RequestMailingModel):
+    with db.atomic() as tx:
+        try:
+            start = body.start
+            end = body.end
+            mailing_id = Mailing.insert(start=start, end=end).execute()
+
+            messages = [m.dict() for m in body.messages]
+            messages = sorted(
+                messages, key=lambda x: x['recipient_phone_number']
+            )
+            recipient_phone_numbers = {
+                m['recipient_phone_number'] for m in messages
+            }
+            recipients = Recipient.select().where(
+                Recipient.phone_number.in_(recipient_phone_numbers)
+            ).order_by(Recipient.phone_number).execute()
+
+            # recipient = Recipient(phone_number=phone_number, op_code=op_code, tz=tz)
+            # recipient.save()
+    
+            # tags = body.tags
+            # db_tags = [Tag(value=tag) for tag in tags]
+            # Tag.bulk_create(db_tags)
+
+            # db_tags_ids = [tag.id for tag in db_tags]
+            # tag_recipients = [
+            #     TagRecipient(tag=tag_id, recipient=recipient.id)
+            #     for tag_id in db_tags_ids
+            # ]
+            # TagRecipient.bulk_create(tag_recipients)
+        except Exception as e:
+            tx.rollback()
+            logger.error(str(e))
+            data = ResponseModel(
+                error=True,
+                error_message='Create mailing failure',
+                success_message=None
+            )
+            return jsonify(json.loads(data.json())), 400
+
+        tx.commit()
+        data = ResponseModel(
+            error=False,
+            error_message=None,
+            success_message=f'Mailing {mailing_id} created'
+        )
+        return jsonify(json.loads(data.json())), 200
+
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000, debug=True)
