@@ -12,3 +12,9 @@ class RequestRecipientModel(BaseModel):
     op_code: OpCodeType
     tz: TzType
     tags: Optional[List[str]]
+
+
+class ResponseRecipientModel(BaseModel):
+    error: bool
+    error_message: Optional[str] = None
+    success_message: Optional[str] = None

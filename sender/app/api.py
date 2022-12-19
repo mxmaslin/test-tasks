@@ -1,4 +1,6 @@
-from flask import Flask, request, jsonify
+import json
+
+from flask import jsonify
 from flask_pydantic import validate
 
 from app import app
@@ -8,7 +10,7 @@ from models import (
     MessageMailing
 )
 from settings import settings
-from validators import RequestRecipientModel
+from validators import RequestRecipientModel, ResponseRecipientModel
 
 
 PREFIX = f'api/v{settings.API_VERSION}'
@@ -38,17 +40,26 @@ def add_recipient(body: RequestRecipientModel):
         except Exception as e:
             tx.rollback()
             logger.error(str(e))
-            return str(e), 400
+            data = ResponseRecipientModel(
+                error=True,
+                error_message=str(e),
+                success_message=None
+            )
+            return jsonify(json.loads(data.json())), 400
 
         tx.commit()
-        return 'Success', 200
+        data = ResponseRecipientModel(
+            error=False,
+            error_message=None,
+            success_message=f'Recipient {recipient.id} created'
+        )
+        return jsonify(json.loads(data.jsoin())), 200
 
 
 
 @app.route(f'/{PREFIX}/recipients/<int:recipient_id>', methods=['PUT'])
 @validate()
 def update_recipient(recipient_id: int, body: RequestRecipientModel):
-
     with db.atomic() as tx:
         try:
             phone_number = body.phone_number
@@ -80,10 +91,20 @@ def update_recipient(recipient_id: int, body: RequestRecipientModel):
         except Exception as e:
             tx.rollback()
             logger.error(str(e))
-            return str(e), 400
+            data = ResponseRecipientModel(
+                error=True,
+                error_message=str(e),
+                success_message=None
+            )
+            return jsonify(json.loads(data.json())), 400
 
         tx.commit()
-        return 'Success', 200
+        data = ResponseRecipientModel(
+            error=False,
+            error_message=None,
+            success_message=f'Recipient {recipient_id} updated'
+        )
+        return jsonify(json.loads(data.json())), 200
 
 
 if __name__ == '__main__':
