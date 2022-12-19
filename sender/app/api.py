@@ -1,14 +1,19 @@
-from flask import request, jsonify
+from flask import Flask, request, jsonify
+from flask_restful import Api, Resource
 
 from app import app
+from settings import settings
 from models import (
     Mailing, Recipient, MailingRecipient, Tag, TagRecipient, Message,
     MessageMailing
 )
 
 
-@app.route('/')
-def hello():
+PREFIX = f'api/v{settings.API_VERSION}'
+
+
+@app.route(f'/{PREFIX}/recipient', methods=['POST'])
+def add_recipient():
     query = Mailing.select()
     for r in query:
         print(r.end)
