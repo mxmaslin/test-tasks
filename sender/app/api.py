@@ -217,7 +217,7 @@ def add_mailing(body: RequestMailingModel):
 
 @app.route(f'/{PREFIX}/mailing', methods=['GET'])
 @validate()
-def get_mailing_stats():
+def get_mailings_stat():
     mailings = Mailing.select(
         Mailing.id,
         Mailing.start,
@@ -226,7 +226,7 @@ def get_mailing_stats():
     ).join(MessageMailing).join(Message).group_by(
         Mailing.id, Message.status
     ).execute()
-    mailings = [
+    mailings_data = [
         {
             'start': x.start.strftime('%Y-%m-%d, %H:%M:%S'),
             'end': x.end.strftime('%Y-%m-%d, %H:%M:%S'),
@@ -237,8 +237,36 @@ def get_mailing_stats():
     data = ResponseModel(
         error=False,
         error_message=None,
-        success_message=f'Mailing stats success',
-        data=mailings
+        success_message=f'Mailings stat success',
+        data=mailings_data
+    )
+    return jsonify(json.loads(data.json())), 200
+
+
+@app.route(f'/{PREFIX}/mailings/<int:mailing_id>', methods=['GET'])
+@validate()
+def get_mailing_stat(mailing_id: int):
+    mailing = Mailing.select(
+        Mailing.id,
+        Mailing.start,
+        Mailing.end,
+        fn.COUNT(Message.id).alias('messages_count')
+    ).join(MessageMailing).join(Message).group_by(
+        Mailing.id, Message.status
+    ).where(Mailing.id==mailing_id).execute()
+    mailing_data = [
+        {
+            'start': x.start.strftime('%Y-%m-%d, %H:%M:%S'),
+            'end': x.end.strftime('%Y-%m-%d, %H:%M:%S'),
+            'messages_count': x.messages_count
+        }
+        for x in mailing
+    ]
+    data = ResponseModel(
+        error=False,
+        error_message=None,
+        success_message=f'Mailing stat success',
+        data=mailing_data
     )
     return jsonify(json.loads(data.json())), 200
 
