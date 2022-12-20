@@ -38,6 +38,7 @@ def add_recipient(body: RequestRecipientModel):
                 for tag_id in db_tags_ids
             ]
             TagRecipient.bulk_create(tag_recipients)
+
         except Exception:
             tx.rollback()
             logger.error(str(e))
@@ -88,6 +89,7 @@ def update_recipient(recipient_id: int, body: RequestRecipientModel):
                 for tag_id in tags_to_create_ids
             ]
             TagRecipient.bulk_create(tag_recipients)
+
         except Exception as e:
             tx.rollback()
             logger.error(str(e))
@@ -115,6 +117,7 @@ def delete_recipient(recipient_id: int):
         try:
             recipient = Recipient.get(Recipient.id==recipient_id)
             recipient.delete_instance(recursive=True)
+
         except Exception as e:
             tx.rollback()
             logger.error(str(e))
@@ -175,8 +178,22 @@ def add_mailing(body: RequestMailingModel):
             ]
             Message.bulk_create(messages_to_create)
 
+            recipient_ids = [
+                v['recipient_id']
+                for _, v in messages.items() if v.get('recipient_id')
+            ]
+            mailing_recipient = [
+                MailingRecipient(mailing=mailing_id, recipient=recipient_id)
+                for recipient_id in recipient_ids
+            ]
+            MailingRecipient.bulk_create(mailing_recipient)
 
-
+            message_ids = [x.id for x in messages_to_create]
+            message_mailing = [
+                MessageMailing(mailing=mailing_id, message=message_id)
+                for message_id in message_ids
+            ]
+            MessageMailing.bulk_create(message_mailing)
 
         except Exception as e:
             tx.rollback()
