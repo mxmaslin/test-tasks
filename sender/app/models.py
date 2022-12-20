@@ -48,7 +48,7 @@ class Message(BaseModel):
         (0, 'Scheduled'),
         (1, 'Sent'),
     )
-    sent_at = DateTimeField()
+    sent_at = DateTimeField(null=True)
     status = IntegerField(choices=STATUS_CHOICES, default=0)
     value = TextField()
     recipient = ForeignKeyField(Recipient)
@@ -71,16 +71,6 @@ class MailingRecipient(BaseModel):
         )
 
 
-class TagRecipient(BaseModel):
-    tag = ForeignKeyField(Tag)
-    recipient = ForeignKeyField(Recipient)
-
-    class Meta:
-        indexes = (
-            (('tag', 'recipient'), True),
-        )
-
-
 class MessageMailing(BaseModel):
     message = ForeignKeyField(Message)
     mailing = ForeignKeyField(Mailing)
@@ -88,4 +78,14 @@ class MessageMailing(BaseModel):
     class Meta:
         indexes = (
             (('message', 'mailing'), True),
+        )
+
+
+class TagRecipient(BaseModel):
+    tag = ForeignKeyField(Tag)
+    recipient = ForeignKeyField(Recipient)
+
+    class Meta:
+        indexes = (
+            (('tag', 'recipient'), True),
         )

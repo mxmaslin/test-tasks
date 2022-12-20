@@ -143,30 +143,41 @@ def add_mailing(body: RequestMailingModel):
             end = body.end
             mailing_id = Mailing.insert(start=start, end=end).execute()
 
-            messages = [m.dict() for m in body.messages]
-            messages = sorted(
-                messages, key=lambda x: x['recipient_phone_number']
-            )
+            # мы не хотим
+            # 1. создавать Messages для Recipients, которых нет в бд
+            # 2. создавать Messages по одному
+            # для этого нам надо сформировать список Recipients из запроса,
+            # отобрав те из них, которые есть в бд
+            # проблема в том, что в запросе к нам прилетают не id реципиентов,
+            # а их телефонные номера (я так захотел).
+            # Вот как я решил эту проблему:
+            messages = [x.dict() for x in body.messages]
             recipient_phone_numbers = {
-                m['recipient_phone_number'] for m in messages
+                x['recipient_phone_number'] for x in messages
             }
             recipients = Recipient.select().where(
                 Recipient.phone_number.in_(recipient_phone_numbers)
             ).order_by(Recipient.phone_number).execute()
+            recipients = {x.phone_number: x.id for x in recipients}
+            messages = {x['recipient_phone_number']: x for x in messages}
+            messages_to_create = []
+            for k, v in recipients.items():
+                message = messages[k]
+                message['recipient_id'] = v
+                messages_to_create.append(message)
+            messages_to_create = [
+                Message(
+                    status=0,
+                    value=x['value'],
+                    recipient_id=x['recipient_id']
+                )
+                for x in messages_to_create
+            ]
+            Message.bulk_create(messages_to_create)
 
-            # recipient = Recipient(phone_number=phone_number, op_code=op_code, tz=tz)
-            # recipient.save()
-    
-            # tags = body.tags
-            # db_tags = [Tag(value=tag) for tag in tags]
-            # Tag.bulk_create(db_tags)
 
-            # db_tags_ids = [tag.id for tag in db_tags]
-            # tag_recipients = [
-            #     TagRecipient(tag=tag_id, recipient=recipient.id)
-            #     for tag_id in db_tags_ids
-            # ]
-            # TagRecipient.bulk_create(tag_recipients)
+
+
         except Exception as e:
             tx.rollback()
             logger.error(str(e))
