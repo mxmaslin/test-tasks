@@ -1,5 +1,3 @@
-import copy
-
 from peewee import *
 
 
@@ -21,6 +19,9 @@ class Mailing(BaseModel):
             (('end',), False),
             (('start', 'end'), False),
         )
+
+    def __repr__(self):
+        return f'Mailing(id={self.id},start={self.start},end={self.end})'
 
 
 class Recipient(BaseModel):

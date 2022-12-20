@@ -2,6 +2,7 @@ import json
 
 from flask import jsonify
 from flask_pydantic import validate
+from peewee import fn
 
 from app import app
 from logger import logger
@@ -39,7 +40,7 @@ def add_recipient(body: RequestRecipientModel):
             ]
             TagRecipient.bulk_create(tag_recipients)
 
-        except Exception:
+        except Exception as e:
             tx.rollback()
             logger.error(str(e))
             data = ResponseModel(
@@ -212,6 +213,34 @@ def add_mailing(body: RequestMailingModel):
             success_message=f'Mailing {mailing_id} created'
         )
         return jsonify(json.loads(data.json())), 200
+
+
+@app.route(f'/{PREFIX}/mailing', methods=['GET'])
+@validate()
+def get_mailing_stats():
+    mailings = Mailing.select(
+        Mailing.id,
+        Mailing.start,
+        Mailing.end,
+        fn.COUNT(Message.id).alias('messages_count')
+    ).join(MessageMailing).join(Message).group_by(
+        Mailing.id, Message.status
+    ).execute()
+    mailings = [
+        {
+            'start': x.start.strftime('%Y-%m-%d, %H:%M:%S'),
+            'end': x.end.strftime('%Y-%m-%d, %H:%M:%S'),
+            'messages_count': x.messages_count
+        }
+        for x in mailings
+    ]
+    data = ResponseModel(
+        error=False,
+        error_message=None,
+        success_message=f'Mailing stats success',
+        data=mailings
+    )
+    return jsonify(json.loads(data.json())), 200
 
 
 if __name__ == '__main__':
