@@ -135,6 +135,8 @@ def delete_recipient(recipient_id: int):
         )
         return jsonify(json.loads(data.json())), 404
 
+    recipient.delete_instance(recursive=True)
+
     data = ResponseModel(
         error=False,
         error_message=None,
@@ -370,6 +372,31 @@ def update_mailing(mailing_id: int, body: RequestMailingModel):
             success_message=f'Mailing {mailing_id} updated'
         )
         return jsonify(json.loads(data.json())), 200
+
+
+@app.route(f'/{PREFIX}/mailings/<int:mailing_id>', methods=['DELETE'])
+@validate()
+def delete_mailing(mailing_id: int):
+
+    mailing = Mailing.get_or_none(Mailing.id==mailing_id)
+    if mailing is None:
+        data = ResponseModel(
+            error=True,
+            error_message=f'Mailing {mailing_id} not found',
+            success_message=None,
+            data=[]
+        )
+        return jsonify(json.loads(data.json())), 404
+
+    mailing.delete_instance(recursive=True)
+
+    data = ResponseModel(
+        error=False,
+        error_message=None,
+        success_message=f'Mailing {mailing_id} deleted',
+        data=[]
+    )
+    return jsonify(json.loads(data.json())), 200
 
 
 if __name__ == '__main__':
