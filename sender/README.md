@@ -1,0 +1,1 @@
+Документация реализована при помощи [flask-pydantic-spec](https://github.com/turner-townsend/flask-pydantic-spec) и доступна по адресу `/apidoc/swagger`.

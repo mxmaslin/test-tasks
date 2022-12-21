@@ -1,7 +1,7 @@
 import json
 
-from flask import jsonify
-from flask_pydantic import validate
+from flask import jsonify, request
+from flask_pydantic_spec import FlaskPydanticSpec, Response, Request
 from peewee import fn
 
 from app import app
@@ -11,26 +11,37 @@ from models import (
     MessageMailing
 )
 from settings import settings
-from validators import RequestRecipientModel, ResponseModel, RequestMailingModel
+from validators import (
+    RequestRecipientModel, RequestMailingModel, ResponseSuccessModel,
+    ResponseFailureModel
+)
 
 
 PREFIX = f'api/v{settings.API_VERSION}'
 
+api = FlaskPydanticSpec('flask')
+
 
 @app.route(f'/{PREFIX}/recipient', methods=['POST'])
-@validate()
-def add_recipient(body: RequestRecipientModel):
+@api.validate(
+    body=Request(RequestRecipientModel),
+    resp=Response(HTTP_200=ResponseSuccessModel, HTTP_400=ResponseFailureModel),
+    tags=['recipient']
+)
+def add_recipient():
+
+    body = request.get_json()
+    phone_number = body['phone_number']
+    op_code = body['op_code']
+    tz = body['tz']
 
     with db.atomic() as tx:
         try:
-            phone_number = body.phone_number
-            op_code = body.op_code
-            tz = body.tz
             recipient_id = Recipient.insert(
                 phone_number=phone_number, op_code=op_code, tz=tz
             ).execute()
     
-            tags = body.tags
+            tags = body['tags']
             db_tags = [Tag(value=tag) for tag in tags]
             Tag.bulk_create(db_tags)
 
@@ -44,7 +55,7 @@ def add_recipient(body: RequestRecipientModel):
         except Exception as e:
             tx.rollback()
             logger.error(str(e))
-            data = ResponseModel(
+            data = ResponseFailureModel(
                 error=True,
                 error_message='Create recipient failure',
                 success_message=None
@@ -52,7 +63,7 @@ def add_recipient(body: RequestRecipientModel):
             return jsonify(json.loads(data.json())), 400
 
         tx.commit()
-        data = ResponseModel(
+        data = ResponseSuccessModel(
             error=False,
             error_message=None,
             success_message=f'Recipient {recipient_id} created'
@@ -60,15 +71,28 @@ def add_recipient(body: RequestRecipientModel):
         return jsonify(json.loads(data.json())), 200
 
 
-@app.route(f'/{PREFIX}/recipients/<int:recipient_id>', methods=['PUT'])
-@validate()
-def update_recipient(recipient_id: int, body: RequestRecipientModel):
+@app.route(f'/{PREFIX}/recipient/<int:recipient_id>', methods=['PUT'])
+@api.validate(
+    body=Request(RequestRecipientModel),
+    resp=Response(
+        HTTP_200=ResponseSuccessModel,
+        HTTP_400=ResponseFailureModel,
+        HTTP_404=ResponseFailureModel
+    ),
+    tags=['recipient']
+)
+def update_recipient(recipient_id: int):
+
+    body = request.get_json()
+    phone_number = body['phone_number']
+    op_code = body['op_code']
+    tz = body['tz']
 
     with db.atomic() as tx:
         try:
             recipient = Recipient.get_or_none(Recipient.id==recipient_id)
             if recipient is None:
-                data = ResponseModel(
+                data = ResponseFailureModel(
                     error=True,
                     error_message=f'Recipient {recipient_id} not found',
                     success_message=None,
@@ -76,14 +100,11 @@ def update_recipient(recipient_id: int, body: RequestRecipientModel):
                 )
                 return jsonify(json.loads(data.json())), 404
 
-            phone_number = body.phone_number
-            op_code = body.op_code
-            tz = body.tz
             Recipient.update(
                 phone_number=phone_number, op_code=op_code, tz=tz
             ).where(Recipient.id==recipient_id).execute()
     
-            tags = body.tags
+            tags = body['tags']
             tag_recipients = TagRecipient.select().join(Tag).where(
                 TagRecipient.recipient==recipient_id,
                 Tag.value.in_(tags)
@@ -105,7 +126,7 @@ def update_recipient(recipient_id: int, body: RequestRecipientModel):
         except Exception as e:
             tx.rollback()
             logger.error(str(e))
-            data = ResponseModel(
+            data = ResponseFailureModel(
                 error=True,
                 error_message='Update recipient failure',
                 success_message=None
@@ -113,7 +134,7 @@ def update_recipient(recipient_id: int, body: RequestRecipientModel):
             return jsonify(json.loads(data.json())), 400
 
         tx.commit()
-        data = ResponseModel(
+        data = ResponseSuccessModel(
             error=False,
             error_message=None,
             success_message=f'Recipient {recipient_id} updated'
@@ -121,13 +142,19 @@ def update_recipient(recipient_id: int, body: RequestRecipientModel):
         return jsonify(json.loads(data.json())), 200
 
 
-@app.route(f'/{PREFIX}/recipients/<int:recipient_id>', methods=['DELETE'])
-@validate()
+@app.route(f'/{PREFIX}/recipient/<int:recipient_id>', methods=['DELETE'])
+@api.validate(
+    resp=Response(
+        HTTP_200=ResponseSuccessModel,
+        HTTP_404=ResponseFailureModel
+    ),
+    tags=['recipient']
+)
 def delete_recipient(recipient_id: int):
 
     recipient = Recipient.get_or_none(Recipient.id==recipient_id)
     if recipient is None:
-        data = ResponseModel(
+        data = ResponseFailureModel(
             error=True,
             error_message=f'Recipient {recipient_id} not found',
             success_message=None,
@@ -137,7 +164,7 @@ def delete_recipient(recipient_id: int):
 
     recipient.delete_instance(recursive=True)
 
-    data = ResponseModel(
+    data = ResponseSuccessModel(
         error=False,
         error_message=None,
         success_message=f'Recipient {recipient_id} deleted',
@@ -147,13 +174,20 @@ def delete_recipient(recipient_id: int):
 
 
 @app.route(f'/{PREFIX}/mailing', methods=['POST'])
-@validate()
-def add_mailing(body: RequestMailingModel):
+@api.validate(
+    body=Request(RequestMailingModel),
+    resp=Response(HTTP_200=ResponseSuccessModel, HTTP_400=ResponseFailureModel),
+    tags=['mailing']
+)
+def add_mailing():
+
+    body = request.get_json()
+    start = body['start']
+    end = body['end']
+    messages = body['messages']
 
     with db.atomic() as tx:
         try:
-            start = body.start
-            end = body.end
             mailing_id = Mailing.insert(start=start, end=end).execute()
 
             # мы не хотим
@@ -164,7 +198,6 @@ def add_mailing(body: RequestMailingModel):
             # проблема в том, что в запросе к нам прилетают не id реципиентов,
             # а их телефонные номера (я так захотел).
             # Вот как я решил эту проблему:
-            messages = [x.dict() for x in body.messages]
             recipient_phone_numbers = {
                 x['recipient_phone_number'] for x in messages
             }
@@ -208,7 +241,7 @@ def add_mailing(body: RequestMailingModel):
         except Exception as e:
             tx.rollback()
             logger.error(str(e))
-            data = ResponseModel(
+            data = ResponseFailureModel(
                 error=True,
                 error_message='Create mailing failure',
                 success_message=None
@@ -216,7 +249,7 @@ def add_mailing(body: RequestMailingModel):
             return jsonify(json.loads(data.json())), 400
 
         tx.commit()
-        data = ResponseModel(
+        data = ResponseSuccessModel(
             error=False,
             error_message=None,
             success_message=f'Mailing {mailing_id} created'
@@ -225,7 +258,10 @@ def add_mailing(body: RequestMailingModel):
 
 
 @app.route(f'/{PREFIX}/mailing', methods=['GET'])
-@validate()
+@api.validate(
+    resp=Response(HTTP_200=ResponseSuccessModel),
+    tags=['mailing']
+)
 def get_mailings_stat():
 
     mailings = Mailing.select(
@@ -244,7 +280,7 @@ def get_mailings_stat():
         }
         for x in mailings
     ]
-    data = ResponseModel(
+    data = ResponseSuccessModel(
         error=False,
         error_message=None,
         success_message=f'Mailings stat success',
@@ -253,8 +289,15 @@ def get_mailings_stat():
     return jsonify(json.loads(data.json())), 200
 
 
-@app.route(f'/{PREFIX}/mailings/<int:mailing_id>', methods=['GET'])
-@validate()
+@app.route(f'/{PREFIX}/mailing/<int:mailing_id>', methods=['GET'])
+@api.validate(
+    resp=Response(
+        HTTP_200=ResponseSuccessModel,
+        HTTP_400=ResponseFailureModel,
+        HTTP_404=ResponseFailureModel
+    ),
+    tags=['mailing']
+)
 def get_mailing_stat(mailing_id: int):
 
     mailing = Mailing.select(
@@ -274,7 +317,7 @@ def get_mailing_stat(mailing_id: int):
         for x in mailing
     ]
     if not mailing_data:
-        data = ResponseModel(
+        data = ResponseFailureModel(
             error=True,
             error_message=f'Mailing {mailing_id} not found',
             success_message=None,
@@ -282,7 +325,7 @@ def get_mailing_stat(mailing_id: int):
         )
         return jsonify(json.loads(data.json())), 404
 
-    data = ResponseModel(
+    data = ResponseSuccessModel(
         error=False,
         error_message=None,
         success_message=f'Mailing {mailing_id} stat success',
@@ -292,14 +335,27 @@ def get_mailing_stat(mailing_id: int):
 
 
 @app.route(f'/{PREFIX}/mailing/<int:mailing_id>', methods=['PUT'])
-@validate()
-def update_mailing(mailing_id: int, body: RequestMailingModel):
+@api.validate(
+    body=Request(RequestMailingModel),
+    resp=Response(
+        HTTP_200=ResponseSuccessModel,
+        HTTP_400=ResponseFailureModel,
+        HTTP_404=ResponseFailureModel
+    ),
+    tags=['mailing']
+)
+def update_mailing(mailing_id: int):
+
+    body = request.get_json()
+    start = body['start']
+    end = body['end']
+    messages = body['messages']
 
     with db.atomic() as tx:
         try:
             mailing = Mailing.get_or_none(Mailing.id==mailing_id)
             if mailing is None:
-                data = ResponseModel(
+                data = ResponseFailureModel(
                     error=True,
                     error_message=f'Mailing {mailing_id} not found',
                     success_message=None,
@@ -307,14 +363,11 @@ def update_mailing(mailing_id: int, body: RequestMailingModel):
                 )
                 return jsonify(json.loads(data.json())), 404
 
-            start = body.start
-            end = body.end
             mailing.update(start=start, end=end).execute()
 
             MailingRecipient.delete().where(MailingRecipient.mailing==mailing_id).execute()
             MessageMailing.delete().where(MessageMailing.mailing==mailing_id).execute()
 
-            messages = [x.dict() for x in body.messages]
             recipient_phone_numbers = {
                 x['recipient_phone_number'] for x in messages
             }
@@ -358,7 +411,7 @@ def update_mailing(mailing_id: int, body: RequestMailingModel):
         except Exception as e:
             tx.rollback()
             logger.error(str(e))
-            data = ResponseModel(
+            data = ResponseFailureModel(
                 error=True,
                 error_message='Update mailing failure',
                 success_message=None
@@ -366,7 +419,7 @@ def update_mailing(mailing_id: int, body: RequestMailingModel):
             return jsonify(json.loads(data.json())), 400
 
         tx.commit()
-        data = ResponseModel(
+        data = ResponseSuccessModel(
             error=False,
             error_message=None,
             success_message=f'Mailing {mailing_id} updated'
@@ -374,13 +427,16 @@ def update_mailing(mailing_id: int, body: RequestMailingModel):
         return jsonify(json.loads(data.json())), 200
 
 
-@app.route(f'/{PREFIX}/mailings/<int:mailing_id>', methods=['DELETE'])
-@validate()
+@app.route(f'/{PREFIX}/mailing/<int:mailing_id>', methods=['DELETE'])
+@api.validate(
+    resp=Response(HTTP_200=ResponseSuccessModel, HTTP_404=ResponseFailureModel),
+    tags=['mailing']
+)
 def delete_mailing(mailing_id: int):
 
     mailing = Mailing.get_or_none(Mailing.id==mailing_id)
     if mailing is None:
-        data = ResponseModel(
+        data = ResponseFailureModel(
             error=True,
             error_message=f'Mailing {mailing_id} not found',
             success_message=None,
@@ -390,7 +446,7 @@ def delete_mailing(mailing_id: int):
 
     mailing.delete_instance(recursive=True)
 
-    data = ResponseModel(
+    data = ResponseSuccessModel(
         error=False,
         error_message=None,
         success_message=f'Mailing {mailing_id} deleted',
@@ -400,4 +456,5 @@ def delete_mailing(mailing_id: int):
 
 
 if __name__ == '__main__':
+    api.register(app)
     app.run(host='0.0.0.0', port=5000, debug=True)
