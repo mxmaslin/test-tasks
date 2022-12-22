@@ -9,7 +9,6 @@ def evaluate_prediction(predicted_t1, predicted_t2, actual_t1, actual_t2):
 
 	predicted_t1_win = predicted_t1 > predicted_t2
 	actual_t1_win = actual_t1 > actual_t2
-	print(predicted_t1_win, actual_t1_win)
 	if predicted_t1_win == actual_t1_win:
 		return 5
 
