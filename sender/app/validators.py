@@ -87,3 +87,9 @@ class ResponseFailureModel(ResponseModel):
                 'success_message': None
             }
         }
+
+
+class SenderDataModel(BaseModel):
+    id: int
+    phone: PhoneNumberType
+    text: str

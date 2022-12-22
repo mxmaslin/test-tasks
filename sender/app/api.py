@@ -1,6 +1,8 @@
 import json
+import pytz
 import requests
 
+from datetime import datetime
 from flask import jsonify, request
 from flask_pydantic_spec import FlaskPydanticSpec, Response, Request
 from peewee import fn
@@ -14,7 +16,7 @@ from models import (
 from settings import settings
 from validators import (
     RequestRecipientModel, RequestMailingModel, ResponseSuccessModel,
-    ResponseFailureModel
+    ResponseFailureModel, SenderDataModel
 )
 
 
@@ -23,7 +25,19 @@ PREFIX = f'api/v{settings.API_VERSION}'
 api = FlaskPydanticSpec('flask')
 
 
-def send_message(id_, data):
+def get_messages_to_send(messages):
+    messages_to_send = []
+    for i, message in enumerate(messages):
+        message_to_send = {
+            'id': i,
+            'phone': message['recipient_phone_number'],
+            'text': message['value']
+        }
+        messages_to_send.append(message_to_send)
+    return messages_to_send
+
+
+def send_message(id_: int, data: SenderDataModel):
     url = f'{settings.SENDER_URL}/{id_}'
     auth_token = settings.SENDER_TOKEN
     headers = {'Authorization': 'Bearer ' + auth_token, 'Content-Type': 'application/json'}
@@ -213,13 +227,16 @@ def add_mailing():
             recipients = Recipient.select().where(
                 Recipient.phone_number.in_(recipient_phone_numbers)
             ).order_by(Recipient.phone_number).execute()
+
             recipients = {x.phone_number: x.id for x in recipients}
-            messages = {x['recipient_phone_number']: x for x in messages}
+            messages_annotated = {x['recipient_phone_number']: x for x in messages}
             messages_to_create = []
             for k, v in recipients.items():
-                message = messages[k]
+                message = messages_annotated[k]
                 message['recipient_id'] = v
                 messages_to_create.append(message)
+
+
             messages_to_create = [
                 Message(
                     status=0,
@@ -228,11 +245,12 @@ def add_mailing():
                 )
                 for x in messages_to_create
             ]
-            Message.bulk_create(messages_to_create)
+
+            # Message.bulk_create(messages_to_create)
 
             recipient_ids = [
                 v['recipient_id']
-                for _, v in messages.items() if v.get('recipient_id')
+                for _, v in messages_annotated.items() if v.get('recipient_id')
             ]
             mailing_recipient = [
                 MailingRecipient(mailing=mailing_id, recipient=recipient_id)
@@ -246,6 +264,26 @@ def add_mailing():
                 for message_id in message_ids
             ]
             MessageMailing.bulk_create(message_mailing)
+
+
+
+
+            now = datetime.now(pytz.utc)
+            start = datetime.strptime(start, '%Y-%m-%dT%H:%M:%S.%f%z')
+            end = datetime.strptime(end, '%Y-%m-%dT%H:%M:%S.%f%z')
+            if start <=now <= end:
+                messages_to_send = get_messages_to_send(messages)
+                for message_to_send, message_to_create in zip(
+                    messages_to_send, messages_to_create
+                ):
+                    pass
+
+
+
+
+
+
+            # send_message()
 
         except Exception as e:
             tx.rollback()
@@ -272,11 +310,6 @@ def add_mailing():
     tags=['mailing']
 )
 def get_mailings_stat():
-    data = {
-        'id': 1,
-        'phone': '+375291375098',
-        'text': 'Привет ребята'
-    }
 
     mailings = Mailing.select(
         Mailing.id,
