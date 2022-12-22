@@ -1,4 +1,5 @@
 import json
+import requests
 
 from flask import jsonify, request
 from flask_pydantic_spec import FlaskPydanticSpec, Response, Request
@@ -20,6 +21,14 @@ from validators import (
 PREFIX = f'api/v{settings.API_VERSION}'
 
 api = FlaskPydanticSpec('flask')
+
+
+def send_message(id_, data):
+    url = f'{settings.SENDER_URL}/{id_}'
+    auth_token = settings.SENDER_TOKEN
+    headers = {'Authorization': 'Bearer ' + auth_token, 'Content-Type': 'application/json'}
+    response = requests.post(url, json=data, headers=headers)
+    return response
 
 
 @app.route(f'/{PREFIX}/recipient', methods=['POST'])
@@ -263,6 +272,11 @@ def add_mailing():
     tags=['mailing']
 )
 def get_mailings_stat():
+    data = {
+        'id': 1,
+        'phone': '+375291375098',
+        'text': 'Привет ребята'
+    }
 
     mailings = Mailing.select(
         Mailing.id,
