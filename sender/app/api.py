@@ -265,9 +265,6 @@ def add_mailing():
             ]
             MessageMailing.bulk_create(message_mailing)
 
-
-
-
             now = datetime.now(pytz.utc)
             start = datetime.strptime(start, '%Y-%m-%dT%H:%M:%S.%f%z')
             end = datetime.strptime(end, '%Y-%m-%dT%H:%M:%S.%f%z')

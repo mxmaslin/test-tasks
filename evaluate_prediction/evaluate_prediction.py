@@ -18,3 +18,4 @@ def evaluate_prediction(predicted_t1, predicted_t2, actual_t1, actual_t2):
 assert evaluate_prediction(2, 4, 2, 4) == 10
 assert evaluate_prediction(5, 4, 2, 1) == 5
 assert evaluate_prediction(3, 8, 9, 1) == 0
+assert evaluate_prediction(3, 0, 2, 3) == 0
