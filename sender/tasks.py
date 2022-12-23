@@ -8,7 +8,7 @@ from models import Message
 from settings import settings
 
 
-@celery.task()
+@celery.task
 def send_messages(messages_to_send: list):
     auth_token = settings.SENDER_TOKEN
     headers = {'Authorization': 'Bearer ' + auth_token, 'Content-Type': 'application/json'}
@@ -24,6 +24,8 @@ def send_messages(messages_to_send: list):
         if response.status_code == 200:
             message_to_update_id = message_to_send['message_id']
             messages_to_update_ids.append(message_to_update_id)
+        else:
+            logger.warning(f'Failed to send message {message_to_send["message_id"]}')
     messages_to_update = Message.select().where(Message.id.in_(messages_to_update_ids))
     for message in messages_to_update:
         message.status = 1
