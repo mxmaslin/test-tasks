@@ -6,7 +6,7 @@ from datetime import timedelta
 
 from faker import Faker
 
-from app.models import (
+from models import (
     Mailing, Recipient, Tag, Message, MailingRecipient, TagRecipient,
     MessageMailing
 )

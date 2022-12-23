@@ -1,26 +1,14 @@
-import json
-import pytz
 import requests
 
 from datetime import datetime
-from flask import jsonify, request
-from flask_pydantic_spec import FlaskPydanticSpec, Response, Request
-from peewee import fn
 
-from app import app, celery
+from app import celery
 from logger import logger
-from models import (
-    db, Mailing, Recipient, MailingRecipient, Tag, TagRecipient, Message,
-    MessageMailing
-)
+from models import Message
 from settings import settings
-from validators import (
-    RequestRecipientModel, RequestMailingModel, ResponseSuccessModel,
-    ResponseFailureModel, SenderDataModel
-)
 
 
-# @celery.task()
+@celery.task()
 def send_messages(messages_to_send: list):
     auth_token = settings.SENDER_TOKEN
     headers = {'Authorization': 'Bearer ' + auth_token, 'Content-Type': 'application/json'}
