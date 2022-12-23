@@ -1,6 +1,6 @@
-# evaluate_prediction(2, 4, 2, 4) # 10, awesome prediction
-# evaluate_prediction(5, 4, 2, 1) # 5, fair prediction
-# evaluate_prediction(3, 8, 9, 1) # 0, poor prediction
+# evaluate_prediction(2, 4, 2, 4)  # 10, awesome prediction
+# evaluate_prediction(5, 4, 2, 1)  # 5, fair prediction
+# evaluate_prediction(3, 8, 9, 1)  # 0, poor prediction
 
 
 def evaluate_prediction(predicted_t1, predicted_t2, actual_t1, actual_t2):

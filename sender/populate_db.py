@@ -1,4 +1,5 @@
 import copy
+import pytz
 import random
 
 from datetime import timedelta
@@ -9,16 +10,11 @@ from app.models import (
     Mailing, Recipient, Tag, Message, MailingRecipient, TagRecipient,
     MessageMailing
 )
+from purge_db import purge_db
 
 
 def main():
-    TagRecipient.delete().execute()
-    MessageMailing.delete().execute()
-    MailingRecipient.delete().execute()
-    Mailing.delete().execute()
-    Tag.delete().execute()
-    Message.delete().execute()
-    Recipient.delete().execute()
+    purge_db()
 
     num_mailings = num_messages = 10
     num_recipients = num_tags = 100
@@ -28,6 +24,7 @@ def main():
     mailing_ids = []
     for _ in range(num_mailings):
         start = fake.date_time()
+        start = pytz.utc.localize(start)
         end = start + timedelta(days=1)
         mailing = Mailing(start=start, end=end)
         mailing.save()
@@ -53,6 +50,7 @@ def main():
     num_sentences = 5
     for _ in range(num_messages):
         sent_at = fake.date_time()
+        sent_at = pytz.utc.localize(sent_at)
         value = fake.paragraph(nb_sentences=num_sentences, variable_nb_sentences=True)
 
         statuses = '0000000011'

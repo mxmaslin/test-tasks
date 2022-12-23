@@ -1,7 +1,9 @@
-from peewee import *
+from playhouse.postgres_ext import *
+
+from settings import settings
 
 
-db = PostgresqlDatabase('sender')
+db = PostgresqlExtDatabase(settings.DB_NAME)
 
 
 class BaseModel(Model):
@@ -10,8 +12,8 @@ class BaseModel(Model):
 
 
 class Mailing(BaseModel):
-    start = DateTimeField()
-    end = DateTimeField()
+    start = DateTimeTZField()
+    end = DateTimeTZField()
 
     class Meta:
         indexes = (
@@ -49,7 +51,7 @@ class Message(BaseModel):
         (0, 'Scheduled'),
         (1, 'Sent'),
     )
-    sent_at = DateTimeField(null=True)
+    sent_at = DateTimeTZField(null=True)
     status = IntegerField(choices=STATUS_CHOICES, default=0)
     value = TextField()
     recipient = ForeignKeyField(Recipient)

@@ -4,7 +4,7 @@ from app.models import (
 )
 
 
-def main():
+def purge_db():
     TagRecipient.delete().execute()
     MessageMailing.delete().execute()
     MailingRecipient.delete().execute()
@@ -15,4 +15,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    purge_db()
