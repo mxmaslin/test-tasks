@@ -238,7 +238,6 @@ def add_mailing():
                 message = messages_annotated[k]
                 message['recipient_id'] = v
                 messages_enriched.append(message)
-            
             messages_to_create = [
                 Message(
                     status=0,
@@ -410,27 +409,27 @@ def update_mailing(mailing_id: int):
             }
             recipients = Recipient.select().where(
                 Recipient.phone_number.in_(recipient_phone_numbers)
-            ).order_by(Recipient.phone_number).execute()
+            ).execute()
             recipients = {x.phone_number: x.id for x in recipients}
-            messages = {x['recipient_phone_number']: x for x in messages}
-            messages_to_create = []
+            messages_annotated = {x['recipient_phone_number']: x for x in messages}
+            messages_enriched = []
             for k, v in recipients.items():
-                message = messages[k]
+                message = messages_annotated[k]
                 message['recipient_id'] = v
-                messages_to_create.append(message)
+                messages_enriched.append(message)
             messages_to_create = [
                 Message(
                     status=0,
                     value=x['value'],
                     recipient_id=x['recipient_id']
                 )
-                for x in messages_to_create
+                for x in messages_enriched
             ]
             Message.bulk_create(messages_to_create)
 
             recipient_ids = [
                 v['recipient_id']
-                for _, v in messages.items() if v.get('recipient_id')
+                for _, v in messages_annotated.items() if v.get('recipient_id')
             ]
             mailing_recipient = [
                 MailingRecipient(mailing=mailing_id, recipient=recipient_id)
@@ -449,8 +448,10 @@ def update_mailing(mailing_id: int):
             start = datetime.strptime(start, '%Y-%m-%dT%H:%M:%S.%f%z')
             end = datetime.strptime(end, '%Y-%m-%dT%H:%M:%S.%f%z')
             if start <=now <= end:
-                messages_to_send = get_messages_to_send(messages)
-                send_messages.delay(messages_to_create, messages_to_send)            
+                messages_to_send = get_messages_to_send(
+                    messages_enriched, messages_to_create
+                )
+                send_messages.delay(messages_to_send)            
 
         except Exception as e:
             tx.rollback()
