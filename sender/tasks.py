@@ -2,10 +2,22 @@ import requests
 
 from datetime import datetime
 
+from celery.schedules import crontab
+
 from app import celery
 from logger import logger
 from models import Message
 from settings import settings
+
+
+@celery.on_after_configure.connect
+def setup_periodic_tasks(sender, **kwargs):
+    # sender.add_periodic_task(10.0, periodic_send_messages.s(), name='start every 10 seconds')
+
+    sender.add_periodic_task(
+        crontab(hour=1, minute=1),
+        periodic_send_messages.s(),
+    )
 
 
 @celery.task
@@ -31,3 +43,8 @@ def send_messages(messages_to_send: list):
         message.status = 1
         message.sent_at = datetime.now()
     Message.bulk_update(messages_to_update, fields=[Message.status, Message.sent_at])
+
+
+@celery.task
+def periodic_send_messages():
+    pass
