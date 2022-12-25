@@ -10,7 +10,7 @@ from models import (
     Mailing, Recipient, Tag, Message, MailingRecipient, TagRecipient,
     MessageMailing
 )
-from utils.purge_db import purge_db
+from purge_db import purge_db
 
 
 def main():

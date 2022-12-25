@@ -10,7 +10,7 @@ celery = Celery(
     __name__,
     # broker='amqp://guest@localhost//',
     broker=settings.BROKER_URL,
-    backend=settings.RESULT_BACKEND,
+    # backend=settings.RESULT_BACKEND,
     include=['tasks']
 )
 celery.conf.timezone = 'UTC'

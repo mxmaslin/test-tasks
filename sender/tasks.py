@@ -2,25 +2,25 @@ import requests
 
 from datetime import datetime
 
-from celery.schedules import crontab
+from celery.utils.log import get_task_logger
 
 from app import celery
-from logger import logger
-from models import Message
+from models import Mailing, MailingRecipient, Message, MessageMailing, Recipient
 from settings import settings
+
+
+logger = get_task_logger(__name__)
+
+HOUR = 3600
 
 
 @celery.on_after_configure.connect
 def setup_periodic_tasks(sender, **kwargs):
-    # sender.add_periodic_task(10.0, periodic_send_messages.s(), name='start every 10 seconds')
-
     sender.add_periodic_task(
-        crontab(hour=1, minute=1),
-        periodic_send_messages.s(),
+        HOUR, periodic_send_messages.s(), name=f'start every {HOUR} seconds'
     )
 
 
-@celery.task
 def send_messages(messages_to_send: list):
     auth_token = settings.SENDER_TOKEN
     headers = {'Authorization': 'Bearer ' + auth_token, 'Content-Type': 'application/json'}
@@ -46,5 +46,24 @@ def send_messages(messages_to_send: list):
 
 
 @celery.task
+def send_messages_delayed(messages_to_send: list):
+    send_messages(messages_to_send)
+
+
+@celery.task
 def periodic_send_messages():
-    pass
+    now = datetime.now()
+    entries = Mailing.select(Message.id, Message.value, Recipient.phone_number) \
+        .join(MailingRecipient) \
+        .join(Recipient).switch(Mailing) \
+        .join(MessageMailing) \
+        .join(Message) \
+        .where(
+            now >= Mailing.start, now <= Mailing.end,
+            Message.status == 0 
+        ).objects()
+    messages_to_send = [
+        {'message_id': x.id, 'phone': x.phone_number, 'text': x.value}
+        for x in entries
+    ]
+    send_messages(messages_to_send)
