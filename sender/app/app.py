@@ -8,9 +8,8 @@ app = Flask(__name__)
 app.config.from_object(settings)
 celery = Celery(
     __name__,
-    # broker='amqp://guest@localhost//',
-    broker=settings.BROKER_URL,
-    # backend=settings.RESULT_BACKEND,
+    broker=settings.CELERY_BROKER_URL,
+    backend=settings.CELERY_RESULT_BACKEND,
     include=['tasks']
 )
 celery.conf.timezone = 'UTC'

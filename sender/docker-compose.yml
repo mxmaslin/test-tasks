@@ -1,0 +1,43 @@
+version: '3.7'
+
+services:
+  web:
+    build: ./app
+    volumes:
+      - ./app/:/usr/src/app/
+    ports:
+      - 5000:5000
+    environment:
+      SOME_ENV_VAR: 1
+    depends_on:
+      - celery
+      - postgres
+  redis:
+    image: redis:alpine
+    ports:
+      - '6379:6379'
+    restart: always
+    command: redis-server
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    hostname: redis
+
+  celery:
+    build: ./app
+    command: celery -A app.celery worker --loglevel=info -B
+    volumes:
+      - ./app/:/usr/src/app/
+    depends_on:
+      - redis
+
+  postgres:
+    image: "postgres"
+    ports:
+      - 5432:5432
+    env_file:
+      - ./app/.env
+    volumes:
+      - database-data:/var/lib/postgresql/data/
+
+volumes:
+    database-data:
