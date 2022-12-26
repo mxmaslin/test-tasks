@@ -3,7 +3,13 @@ from playhouse.postgres_ext import *
 from settings import settings
 
 
-db = PostgresqlExtDatabase(settings.DB_NAME)
+db = PostgresqlExtDatabase(
+    settings.POSTGRES_DB,
+    host='postgres',
+    port=settings.POSTGRES_PORT,
+    user=settings.POSTGRES_USER,
+    password=settings.POSTGRES_PASSWORD
+)
 
 
 class BaseModel(Model):
