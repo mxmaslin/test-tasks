@@ -12,6 +12,7 @@ services:
     depends_on:
       - celery
       - postgres
+  
   redis:
     image: redis:alpine
     ports:
@@ -31,13 +32,17 @@ services:
       - redis
 
   postgres:
-    image: "postgres"
+    image: postgres
+    restart: always
+    container_name: postgres
     ports:
       - 5432:5432
     env_file:
       - ./app/.env
     volumes:
-      - database-data:/var/lib/postgresql/data/
+      - ./app/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - db_data:/var/lib/postgresql/data
 
 volumes:
-    database-data:
+    db_data:
+  

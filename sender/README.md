@@ -1,10 +1,4 @@
-Для запуска проекта 
-
-1. Установите зависимости. 
-2. Установите redis.
-3. Запустите redis.
-4. Запустите celery вместе с beat.
-5. Запустите проект: `python api.py`
+Для запуска проекта выполните команду `docker-compose up`
 
 Документация реализована при помощи [flask-pydantic-spec](https://github.com/turner-townsend/flask-pydantic-spec) и доступна по адресу `/apidoc/swagger`.
 
