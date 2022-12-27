@@ -113,14 +113,30 @@ def fill_db(data_url):
                 )
                 crimes.append(crime)
             
-                if i % 10000 == 0:
-                    session.bulk_save_objects(crimes)
-                    session.commit()
-                    crimes = []
+                with Session() as batch:
+                    if i % 10000 == 0:
+                        while True:
+                            try:
+                                batch.bulk_save_objects(crimes)
+                                batch.commit()
+                                crimes = []
+                            except:
+                                batch.rollback()
+                            else:
+                                break
                 
+                with Session() as final_batch:
+                    while True:
+                        try:
+                            batch.bulk_save_objects(crimes)
+                            batch.commit()
+                        except:
+                            final_batch.rollback()
+                        else:
+                            break
+
                 bar.next()
         
-            session.commit()
             file_logger.logger.info(f'DB filling up finished at {datetime.now()}')
             file_logger.logger.info(f'{total_records} added to db')
             file_logger.logger.info(
