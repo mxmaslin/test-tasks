@@ -20,6 +20,7 @@ def setup_periodic_tasks(sender, **kwargs):
         HOUR, periodic_send_messages.s(), name=f'start every {HOUR} seconds'
     )
 
+
 def get_periodic_messages_to_send() -> list:
     now = datetime.now()
     entries = Mailing.select(Message.id, Message.value, Recipient.phone_number) \
