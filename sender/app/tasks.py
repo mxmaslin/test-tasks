@@ -63,11 +63,11 @@ def send_messages(messages_to_send: list):
 
 
 @celery.task
-def send_messages_delayed(messages_to_send: list):
+def send_messages_delayed(messages_to_send: list) -> None:
     send_messages(messages_to_send)
 
 
 @celery.task
-def periodic_send_messages():
+def periodic_send_messages() -> None:
     messages_to_send = get_periodic_messages_to_send()
     send_messages(messages_to_send)
