@@ -20,6 +20,23 @@ def setup_periodic_tasks(sender, **kwargs):
         HOUR, periodic_send_messages.s(), name=f'start every {HOUR} seconds'
     )
 
+def get_periodic_messages_to_send() -> list:
+    now = datetime.now()
+    entries = Mailing.select(Message.id, Message.value, Recipient.phone_number) \
+        .join(MailingRecipient) \
+        .join(Recipient).switch(Mailing) \
+        .join(MessageMailing) \
+        .join(Message) \
+        .where(
+            now >= Mailing.start, now <= Mailing.end,
+            Message.status == 0 
+        ).objects()
+    messages_to_send = [
+        {'message_id': x.id, 'phone': x.phone_number, 'text': x.value}
+        for x in entries
+    ]
+    return messages_to_send
+
 
 def send_messages(messages_to_send: list):
     auth_token = settings.SENDER_TOKEN
@@ -52,18 +69,5 @@ def send_messages_delayed(messages_to_send: list):
 
 @celery.task
 def periodic_send_messages():
-    now = datetime.now()
-    entries = Mailing.select(Message.id, Message.value, Recipient.phone_number) \
-        .join(MailingRecipient) \
-        .join(Recipient).switch(Mailing) \
-        .join(MessageMailing) \
-        .join(Message) \
-        .where(
-            now >= Mailing.start, now <= Mailing.end,
-            Message.status == 0 
-        ).objects()
-    messages_to_send = [
-        {'message_id': x.id, 'phone': x.phone_number, 'text': x.value}
-        for x in entries
-    ]
+    messages_to_send = get_periodic_messages_to_send()
     send_messages(messages_to_send)
