@@ -7,7 +7,7 @@ services:
       - ./app/:/usr/src/app/
     ports:
       - 5000:5000
-    command: sh -C "gunicorn --bind 0.0.0.0:5000 api:app"
+    command: gunicorn --bind 0.0.0.0:5000 api:app
     depends_on:
       - celery
       - postgres

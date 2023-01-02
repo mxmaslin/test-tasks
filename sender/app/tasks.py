@@ -5,7 +5,7 @@ from datetime import datetime
 from celery.utils.log import get_task_logger
 
 from app import celery
-from models import Mailing, MailingRecipient, Message, MessageMailing, Recipient
+from models import db, Mailing, MailingRecipient, Message, MessageMailing, Recipient
 from settings import settings
 
 
@@ -56,11 +56,21 @@ def send_messages(messages_to_send: list):
             messages_to_update_ids.append(message_to_update_id)
         else:
             logger.warning(f'Failed to send message {message_to_send["message_id"]}')
-    messages_to_update = Message.select().where(Message.id.in_(messages_to_update_ids))
+    messages_to_update = Message.select().where(
+        Message.id.in_(messages_to_update_ids)
+    )
     for message in messages_to_update:
         message.status = 1
         message.sent_at = datetime.now()
-    Message.bulk_update(messages_to_update, fields=[Message.status, Message.sent_at])
+    if messages_to_update.count() > 0:
+        with db.atomic() as tx:
+            try:
+                Message.bulk_update(messages_to_update, fields=[Message.status, Message.sent_at])
+            except:
+                tx.rollback()
+            else:
+                tx.commit()
+
 
 
 @celery.task

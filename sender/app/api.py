@@ -14,7 +14,7 @@ from models import (
     MessageMailing
 )
 from settings import settings
-from tasks import send_messages
+from tasks import send_messages_delayed
 from validators import (
     RequestRecipientModel, RequestMailingModel, ResponseSuccessModel,
     ResponseFailureModel, SenderDataModel
@@ -272,7 +272,7 @@ def add_mailing():
                 messages_to_send = get_messages_to_send(
                     messages_enriched, messages_to_create
                 )
-                send_messages.delay(messages_to_send)
+                send_messages_delayed.delay(messages_to_send)
 
         except Exception as e:
             tx.rollback()
@@ -447,11 +447,11 @@ def update_mailing(mailing_id: int):
             now = datetime.now(pytz.utc)
             start = datetime.strptime(start, '%Y-%m-%dT%H:%M:%S.%f%z')
             end = datetime.strptime(end, '%Y-%m-%dT%H:%M:%S.%f%z')
-            if start <=now <= end:
+            if start <= now <= end:
                 messages_to_send = get_messages_to_send(
                     messages_enriched, messages_to_create
                 )
-                send_messages.delay(messages_to_send)            
+                send_messages_delayed.delay(messages_to_send)
 
         except Exception as e:
             tx.rollback()
