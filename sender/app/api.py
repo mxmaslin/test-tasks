@@ -322,8 +322,6 @@ def get_mailings_stat():
         success_message=f'Mailings stat success',
         data=mailings_data
     )
-    from tasks import periodic_send_messages
-    periodic_send_messages()
     return jsonify(json.loads(data.json())), 200
 
 

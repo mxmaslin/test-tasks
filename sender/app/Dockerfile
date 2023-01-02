@@ -11,4 +11,3 @@ RUN pip install -r requirements.txt
 ADD init.sql /docker-entrypoint-initdb.d
 
 EXPOSE 5000
-CMD ["python", "api.py"]
