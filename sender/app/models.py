@@ -5,7 +5,7 @@ from settings import settings
 
 db = PostgresqlExtDatabase(
     settings.POSTGRES_DB,
-    host='postgres',
+    host=settings.POSTGRES_HOST,
     port=settings.POSTGRES_PORT,
     user=settings.POSTGRES_USER,
     password=settings.POSTGRES_PASSWORD
