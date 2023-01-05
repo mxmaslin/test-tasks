@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from typing import List, Optional
 
 
-class UserModel(BaseModel):
+class PersonModel(BaseModel):
     first_name: str
     second_name: str
     username: str
