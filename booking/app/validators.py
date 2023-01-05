@@ -3,9 +3,10 @@ from typing import List, Optional
 
 
 class UserModel(BaseModel):
-    first_name = str
-    second_name = str
-    username = str
+    first_name: str
+    second_name: str
+    username: str
+    password: str
 
 
 class ApartmentModel(BaseModel):
