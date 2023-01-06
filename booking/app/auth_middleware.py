@@ -16,7 +16,7 @@ def token_required(f):
     def decorated(*args, **kwargs):
         token = None
         if 'Authorization' in request.headers:
-            token = request.headers['Authorization'].split()[1]
+            token = request.headers['Authorization']
         if not token:
             logger.error('Token is absent in headers')
             data = ResponseFailureModel(
@@ -30,7 +30,7 @@ def token_required(f):
             data = jwt.decode(
                 token, current_app.config['SECRET_KEY'], algorithms=['HS256']
             )
-            current_user = Person.get(Person.id == data['user_id'])
+            current_user = Person.get(Person.username == data['username'])
             if current_user is None:
                 data = ResponseFailureModel(
                     error=True,
@@ -48,6 +48,6 @@ def token_required(f):
             )
             return jsonify(json.loads(data.json())), 500
 
-        return f(current_user, *args, **kwargs)
+        return f(*args, **kwargs)
 
     return decorated

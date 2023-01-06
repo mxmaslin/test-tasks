@@ -6,6 +6,7 @@ from flask_pydantic_spec import FlaskPydanticSpec, Response, Request
 from peewee import OperationalError
 
 from app import app
+from auth_middleware import token_required
 from logger import logger
 from models import (db, Person, Apartment, Booking)
 from settings import settings
@@ -78,6 +79,7 @@ def login():
 
 
 @app.route(f'/{PREFIX}/person', methods=['POST'])
+@token_required
 @api.validate(
     body=Request(CreatePersonModel),
     resp=Response(HTTP_200=ResponseSuccessModel, HTTP_500=ResponseFailureModel),
