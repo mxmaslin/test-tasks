@@ -1,4 +1,5 @@
 import json
+import jwt
 
 from flask import jsonify, request
 from flask_pydantic_spec import FlaskPydanticSpec, Response, Request
@@ -9,14 +10,71 @@ from logger import logger
 from models import (db, Person, Apartment, Booking)
 from settings import settings
 from validators import (
-    CreatePersonModel, UpdatePersonModel, ApartmentModel, BookingModel,
-    ResponseSuccessModel, ResponseFailureModel
+    LoginModel, CreatePersonModel, UpdatePersonModel, ApartmentModel,
+    BookingModel, ResponseSuccessModel, ResponseFailureModel
 )
 
 
 PREFIX = f'api/v{settings.API_VERSION}'
 
 api = FlaskPydanticSpec('flask')
+
+
+@app.route(f'/{PREFIX}/login', methods=['POST'])
+@api.validate(
+    body=Request(LoginModel),
+    resp=Response(
+        HTTP_200=ResponseSuccessModel,
+        HTTP_404=ResponseFailureModel,
+        HTTP_500=ResponseFailureModel,
+    ),
+    tags=['person']
+)
+def login():
+    try:
+        body = request.get_json()
+        username = body['username']
+        password = body['password']
+        person = Person.login(username, password)
+        if person:
+            try:
+                # token should expire after 24 hours
+                token = jwt.encode(
+                    {'username': person.username},
+                    settings.SECRET_KEY,
+                    algorithm='HS256'
+                )
+                data = ResponseSuccessModel(
+                    error=False,
+                    error_message=None,
+                    success_message=f'Person {person.id} logged in',
+                    data={'token': token}
+                )
+                return jsonify(json.loads(data.json())), 200
+    
+            except Exception as e:
+                logger.error(str(e))
+                data = ResponseFailureModel(
+                    error=True,
+                    error_message='JWT encode error',
+                    success_message=None
+                )
+                return jsonify(json.loads(data.json())), 500
+
+        data = ResponseFailureModel(
+            error=True,
+            error_message='Invalid username or password',
+            success_message=None
+        )
+        return jsonify(json.loads(data.json())), 404
+
+    except Exception as e:
+        data = ResponseFailureModel(
+            error=True,
+            error_message='Login failure',
+            success_message=None
+        )
+        return jsonify(json.loads(data.json())), 500
 
 
 @app.route(f'/{PREFIX}/person', methods=['POST'])
@@ -81,7 +139,7 @@ def update_person(person_id: int):
                     error=True,
                     error_message=f'Person {person_id} not found',
                     success_message=None,
-                    data=[]
+                    data={}
                 )
                 return jsonify(json.loads(data.json())), 404
 
@@ -144,8 +202,7 @@ def delete_person(person_id: int):
                 data = ResponseFailureModel(
                     error=True,
                     error_message=f'Person {person_id} not found',
-                    success_message=None,
-                    data=[]
+                    success_message=None
                 )
                 return jsonify(json.loads(data.json())), 404
 
@@ -170,8 +227,7 @@ def delete_person(person_id: int):
         data = ResponseSuccessModel(
             error=False,
             error_message=None,
-            success_message=f'Person {person_id} deleted',
-            data=[]
+            success_message=f'Person {person_id} deleted'
         )
         return jsonify(json.loads(data.json())), 200
 
@@ -226,8 +282,7 @@ def update_apartment(apartment_id: int):
                 data = ResponseFailureModel(
                     error=True,
                     error_message=f'Apartment {apartment_id} not found',
-                    success_message=None,
-                    data=[]
+                    success_message=None
                 )
                 return jsonify(json.loads(data.json())), 404
 
@@ -279,8 +334,7 @@ def delete_apartment(apartment_id: int):
                 data = ResponseFailureModel(
                     error=True,
                     error_message=f'Apartment {apartment_id} not found',
-                    success_message=None,
-                    data=[]
+                    success_message=None
                 )
                 return jsonify(json.loads(data.json())), 404
 
@@ -301,8 +355,7 @@ def delete_apartment(apartment_id: int):
         data = ResponseSuccessModel(
             error=False,
             error_message=None,
-            success_message=f'Apartment {apartment_id} deleted',
-            data=[]
+            success_message=f'Apartment {apartment_id} deleted'
         )
         return jsonify(json.loads(data.json())), 200
 

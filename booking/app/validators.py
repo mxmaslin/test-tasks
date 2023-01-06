@@ -1,5 +1,10 @@
 from pydantic import BaseModel
-from typing import List, Optional
+from typing import Dict, List, Optional
+
+
+class LoginModel(BaseModel):
+    username: str
+    password: str
 
 
 class CreatePersonModel(BaseModel):
@@ -31,14 +36,13 @@ class ResponseModel(BaseModel):
     error: bool
     error_message: Optional[str] = None
     success_message: Optional[str] = None
-    data: Optional[List] = []
+    data: Optional[Dict] = {}
 
 
 class ResponseSuccessModel(ResponseModel):
     class Config:
         schema_extra = {
             'example': {
-                'data': [],
                 'error': False,
                 'error_message': None,
                 'success_message': 'Operation success'
@@ -50,7 +54,6 @@ class ResponseFailureModel(ResponseModel):
     class Config:
         schema_extra = {
             'example': {
-                'data': [],
                 'error': True,
                 'error_message': 'Operation failure',
                 'success_message': None

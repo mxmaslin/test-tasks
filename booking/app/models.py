@@ -2,6 +2,8 @@ from peewee import *
 from settings import settings
 from werkzeug.security import generate_password_hash, check_password_hash
 
+from exceptions import LoginFail
+
 
 db = PostgresqlDatabase(settings.POSTGRES_DB, user=settings.POSTGRES_USER)
 
@@ -22,6 +24,13 @@ class Person(BaseModel):
     
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    @staticmethod
+    def login(username, password):
+        person = Person.get(Person.username == username)
+        if not person or not person.check_password(password):
+            raise LoginFail
+        return person
 
 
 class Apartment(BaseModel):

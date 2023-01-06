@@ -1,11 +1,14 @@
+import json
+
 from functools import wraps
 
 import jwt
 
-from flask import request, abort
-from flask import current_app
+from flask import request, jsonify, current_app
 
+from logger import logger
 from models import Person
+from validators import ResponseFailureModel
 
 
 def token_required(f):
@@ -15,33 +18,35 @@ def token_required(f):
         if 'Authorization' in request.headers:
             token = request.headers['Authorization'].split()[1]
         if not token:
-            payload = {
-                'message': 'Auth token missing',
-                'data': None,
-                'error': 'Unauthorized'
-            }
-            return payload, 401
+            logger.error('Token is absent in headers')
+            data = ResponseFailureModel(
+                error=True,
+                error_message='Auth token missing',
+                success_message=None
+            )
+            return jsonify(json.loads(data.json())), 401
+
         try:
             data = jwt.decode(
                 token, current_app.config['SECRET_KEY'], algorithms=['HS256']
             )
             current_user = Person.get(Person.id == data['user_id'])
             if current_user is None:
-                payload = {
-                    'message': 'Invalid Authentication token!',
-                    'data': None,
-                    'error': 'Unauthorized'
-                }
-                return payload, 401
-            if not current_user['active']:
-                abort(403)
+                data = ResponseFailureModel(
+                    error=True,
+                    error_message='Invalid auth token',
+                    success_message=None
+                )
+                return jsonify(json.loads(data.json())), 401
+
         except Exception as e:
-            payload = {
-                'message': 'Something went wrong',
-                'data': None,
-                'error': str(e)
-            }
-            return payload, 500
+            logger.error(str(e))
+            data = ResponseFailureModel(
+                error=True,
+                error_message='Something went wrong',
+                success_message=None
+            )
+            return jsonify(json.loads(data.json())), 500
 
         return f(current_user, *args, **kwargs)
 

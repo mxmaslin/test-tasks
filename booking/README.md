@@ -1,9 +1,25 @@
+# Objective
+
 Create web-application for online reservations.
+
+# Completion levels
 
 Each level includes previous levels.
 
-Level 1 Only BE, allows at least basic CRUD operations, tests.
+## Level 1
 
-Level 2 More comprehensive db schema, more complex validation, thorough tests, well-documented readme, required tooling is included or can be deployed easily on local machine.
+Only BE, allows at least basic CRUD operations, tests.
 
-Level 3 Includes FE part (any of SPA, PWA, MPA), uses advanced tooling, hosted is a plus but not a must.
+## Level 2
+
+More comprehensive db schema, more complex validation, thorough tests, well-documented readme, required tooling is included or can be deployed easily on local machine.
+
+## Level 3
+
+Includes FE part (any of SPA, PWA, MPA), uses advanced tooling, hosted is a plus but not a must.
+
+# Implementation notes
+
+Для запуска проекта выполните команду `docker-compose up`.
+
+Документация реализована при помощи [flask-pydantic-spec](https://github.com/turner-townsend/flask-pydantic-spec) и доступна по адресу `/apidoc/swagger`.
