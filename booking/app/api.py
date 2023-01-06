@@ -121,6 +121,7 @@ def add_person():
 
 
 @app.route(f'/{PREFIX}/person/<int:person_id>', methods=['PUT'])
+@token_required
 @api.validate(
     body=Request(UpdatePersonModel),
     resp=Response(
@@ -187,6 +188,7 @@ def update_person(person_id: int):
 
 
 @app.route(f'/{PREFIX}/person/<int:person_id>', methods=['DELETE'])
+@token_required
 @api.validate(
     resp=Response(
         HTTP_200=ResponseSuccessModel,
@@ -235,6 +237,7 @@ def delete_person(person_id: int):
 
 
 @app.route(f'/{PREFIX}/apartment', methods=['POST'])
+@token_required
 @api.validate(
     body=Request(ApartmentModel),
     resp=Response(HTTP_200=ResponseSuccessModel, HTTP_500=ResponseFailureModel),
@@ -265,6 +268,7 @@ def add_apartment():
 
 
 @app.route(f'/{PREFIX}/apartment/<int:apartment_id>', methods=['PUT'])
+@token_required
 @api.validate(
     body=Request(ApartmentModel),
     resp=Response(
@@ -319,6 +323,7 @@ def update_apartment(apartment_id: int):
 
 
 @app.route(f'/{PREFIX}/apartment/<int:apartment_id>', methods=['DELETE'])
+@token_required
 @api.validate(
     resp=Response(
         HTTP_200=ResponseSuccessModel,
@@ -362,11 +367,12 @@ def delete_apartment(apartment_id: int):
         return jsonify(json.loads(data.json())), 200
 
 
-# auth
-
 # create booking
 # update booking
 # delete booking
+
+# docker
+# tests
 
 if __name__ == '__main__':
     api.register(app)
