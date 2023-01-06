@@ -2,11 +2,18 @@ from pydantic import BaseModel
 from typing import List, Optional
 
 
-class PersonModel(BaseModel):
+class CreatePersonModel(BaseModel):
     first_name: str
     second_name: str
     username: str
     password: str
+
+
+class UpdatePersonModel(BaseModel):
+    first_name: Optional[str]
+    second_name: Optional[str]
+    username: Optional[str]
+    password: Optional[str]
 
 
 class ApartmentModel(BaseModel):
