@@ -518,7 +518,6 @@ def delete_booking(booking_id: int):
         return jsonify(json.loads(data.json())), 200
 
 
-# docker
 # tests
 
 
