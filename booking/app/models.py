@@ -5,7 +5,13 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from exceptions import LoginFail
 
 
-db = PostgresqlDatabase(settings.POSTGRES_DB, user=settings.POSTGRES_USER)
+db = PostgresqlDatabase(
+    settings.POSTGRES_DB,
+    host=settings.POSTGRES_HOST,
+    port=settings.POSTGRES_PORT,
+    user=settings.POSTGRES_USER,
+    password=settings.POSTGRES_PASSWORD
+)
 
 
 class BaseModel(Model):
