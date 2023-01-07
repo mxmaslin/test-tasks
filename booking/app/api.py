@@ -12,7 +12,7 @@ from models import (db, Person, Apartment, Booking)
 from settings import settings
 from validators import (
     LoginModel, CreatePersonModel, UpdatePersonModel, ApartmentModel,
-    BookingModel, ResponseSuccessModel, ResponseFailureModel
+    BookingModel, UpdateBookingModel, ResponseSuccessModel, ResponseFailureModel
 )
 
 
@@ -367,12 +367,161 @@ def delete_apartment(apartment_id: int):
         return jsonify(json.loads(data.json())), 200
 
 
-# create booking
-# update booking
-# delete booking
+@app.route(f'/{PREFIX}/booking', methods=['POST'])
+@token_required
+@api.validate(
+    body=Request(BookingModel),
+    resp=Response(HTTP_200=ResponseSuccessModel, HTTP_500=ResponseFailureModel),
+    tags=['booking']
+)
+def add_booking():
+
+    body = request.get_json()
+    start_date = body['start_date']
+    end_date = body['end_date']
+    person_ids = body['person_ids']
+    apartment_id = body['apartment_id']
+
+    with db.atomic() as tx:
+        try:
+            apartment = Apartment.get_by_id(apartment_id)
+            persons = Person.select().where(Person.id.in_(person_ids))
+            data = [
+                {
+                    'start_date': start_date,
+                    'end_date': end_date,
+                    'apartment': apartment,
+                    'person': p,
+                }
+                for p in persons
+            ]
+            bookings = Booking.insert_many(data)
+            booking_ids = ', '.join([str(b[0]) for b in bookings])
+    
+        except Exception as e:
+            logger.error(str(e))
+            tx.rollback()
+            data = ResponseFailureModel(
+                error=True,
+                error_message='Create booking failure',
+                success_message=None
+            )
+            return jsonify(json.loads(data.json())), 500
+        
+        tx.commit()
+        data = ResponseSuccessModel(
+            error=False,
+            error_message=None,
+            success_message=f'Bookings {booking_ids} created'
+        )
+        return jsonify(json.loads(data.json())), 200
+
+
+@app.route(f'/{PREFIX}/booking/<int:booking_id>', methods=['PUT'])
+@token_required
+@api.validate(
+    body=Request(UpdateBookingModel),
+    resp=Response(HTTP_200=ResponseSuccessModel, HTTP_500=ResponseFailureModel),
+    tags=['booking']
+)
+def update_booking(booking_id):
+
+    with db.atomic() as tx:
+        try:
+            booking = Booking.get_or_none(Booking.id == booking_id)
+            if booking is None:
+                data = ResponseFailureModel(
+                    error=True,
+                    error_message=f'Booking {booking_id} not found',
+                    success_message=None,
+                    data={}
+                )
+                return jsonify(json.loads(data.json())), 404
+
+            body = request.get_json()
+            start_date = body['start_date']
+            end_date = body['end_date']
+            person_id = body['person_id']
+            apartment_id = body['apartment_id']
+
+            if start_date:
+                booking.start_date = start_date
+            if end_date:
+                booking.end_date = end_date
+            if person_id:
+                booking.person_id = person_id
+            if apartment_id:
+                booking.apartment_id = apartment_id
+            
+            booking.save()
+    
+        except Exception as e:
+            logger.error(str(e))
+            tx.rollback()
+            data = ResponseFailureModel(
+                error=True,
+                error_message='Create booking failure',
+                success_message=None
+            )
+            return jsonify(json.loads(data.json())), 500
+        
+        tx.commit()
+        data = ResponseSuccessModel(
+            error=False,
+            error_message=None,
+            success_message=f'Booking {booking_id} updated'
+        )
+        return jsonify(json.loads(data.json())), 200
+
+
+@app.route(f'/{PREFIX}/booking/<int:booking_id>', methods=['DELETE'])
+@token_required
+@api.validate(
+    resp=Response(
+        HTTP_200=ResponseSuccessModel,
+        HTTP_404=ResponseFailureModel,
+        HTTP_500=ResponseFailureModel
+    ),
+    tags=['booking']
+)
+def delete_booking(booking_id: int):
+
+    with db.atomic() as tx:
+        try:
+            booking = Booking.get_or_none(Booking.id == booking_id)
+            if booking is None:
+                data = ResponseFailureModel(
+                    error=True,
+                    error_message=f'Booking {booking_id} not found',
+                    success_message=None
+                )
+                return jsonify(json.loads(data.json())), 404
+
+            booking.delete_instance()
+        
+        except Exception as e:
+            tx.rollback()
+            logger.error(str(e))
+            error_data = ResponseFailureModel(
+                error=True,
+                error_message='Delete booking failure',
+                success_message=None
+            )
+            return jsonify(json.loads(error_data.json())), 500
+
+        tx.commit()
+
+        data = ResponseSuccessModel(
+            error=False,
+            error_message=None,
+            success_message=f'Booking {booking_id} deleted'
+        )
+        return jsonify(json.loads(data.json())), 200
+
 
 # docker
 # tests
+
 
 if __name__ == '__main__':
     api.register(app)

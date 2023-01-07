@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from datetime import date
 from typing import Dict, List, Optional
 
 
@@ -26,10 +27,17 @@ class ApartmentModel(BaseModel):
 
 
 class BookingModel(BaseModel):
-    start_date: str
-    end_date: str
-    person: List[str]
-    booking: List[int]
+    start_date: date
+    end_date: date
+    person_ids: List[int]
+    apartment_id: int
+
+
+class UpdateBookingModel(BaseModel):
+    start_date: Optional[date]
+    end_date: Optional[date]
+    person_id: Optional[int]
+    apartment_id: Optional[int]
 
 
 class ResponseModel(BaseModel):
