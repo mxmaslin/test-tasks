@@ -1,0 +1,28 @@
+version: '3.7'
+
+services:
+  web:
+    build: ./app
+    volumes:
+      - ./app/:/usr/src/app/
+    ports:
+      - 5000:5000
+    command: gunicorn --bind 0.0.0.0:5000 api:app
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres
+    restart: always
+    container_name: postgres
+    ports:
+      - 5432:5432
+    env_file:
+      - ./app/.env
+    volumes:
+      - ./app/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+    db_data:
+  

@@ -79,7 +79,6 @@ def login():
 
 
 @app.route(f'/{PREFIX}/person', methods=['POST'])
-@token_required
 @api.validate(
     body=Request(CreatePersonModel),
     resp=Response(HTTP_200=ResponseSuccessModel, HTTP_500=ResponseFailureModel),
