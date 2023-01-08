@@ -15,11 +15,11 @@ def with_test_db(func):
         models = (Booking, Person, Apartment)
         with test_db.bind_ctx(models):
             test_db.create_tables(models)
-            test_db.execute_sql(
-                '''INSERT INTO person VALUES (1, 'John', 'Doe', 'johndoe1', 'pbkdf2:sha256:260000$MsAdIe40HIsCBN5J$da412dd99a87b86b2adfc39d406bd63a0fd86bbaa2958fd40001dfe4da745ec8'),
-                (2, 'John', 'Doe', 'johndoe2', 'pbkdf2:sha256:260000$eqXwWOxYEK4adx4f$c8c42b7dfc308793b0a0353aaa60f97402b462cfcfdac6a1c591fa0e7ce892d0');
-                '''
-            )
+            test_db.execute_sql('''
+                INSERT INTO person VALUES (1, 'John', 'Doe', 'johndoe1', 'pbkdf2:sha256:260000$MsAdIe40HIsCBN5J$da412dd99a87b86b2adfc39d406bd63a0fd86bbaa2958fd40001dfe4da745ec8'),
+                    (2, 'John', 'Doe', 'johndoe2', 'pbkdf2:sha256:260000$eqXwWOxYEK4adx4f$c8c42b7dfc308793b0a0353aaa60f97402b462cfcfdac6a1c591fa0e7ce892d0');
+            ''')
+            test_db.execute_sql('INSERT INTO apartment VALUES (1, 100);')
             try:
                 return func(*args, **kwargs)
             finally:
@@ -96,3 +96,16 @@ def test_create_apartment(token):
         )
         assert response.status_code == 200
 
+
+@with_test_db
+def test_update_apartment(token):
+    with app.test_client() as test_client:
+        apartment = Apartment.select().first()
+        data = {'room_number': 666}
+        response = test_client.put(
+            f'{PREFIX}/apartment/{apartment.id}',
+            json=data,
+            headers={'Authorization': token}
+        )
+        assert response.status_code == 200
+        assert response.get_json()['data']['result'] == data['room_number']

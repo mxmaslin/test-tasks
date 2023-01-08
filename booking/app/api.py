@@ -329,7 +329,8 @@ def update_apartment(apartment_id: int):
         data = ResponseSuccessModel(
             error=False,
             error_message=None,
-            success_message=f'Apartment {apartment_id} updated'
+            success_message=f'Apartment {apartment_id} updated',
+            data={'result': room_number}
         )
         return jsonify(json.loads(data.json())), 200
 
