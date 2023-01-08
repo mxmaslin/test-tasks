@@ -1,12 +1,13 @@
 import json
-import jwt
+
+from datetime import timedelta
 
 from flask import jsonify, request
+from flask_jwt_extended import jwt_required, create_access_token
 from flask_pydantic_spec import FlaskPydanticSpec, Response, Request
 from peewee import OperationalError
 
 from app import app
-from auth_middleware import token_required
 from logger import logger
 from models import (db, Person, Apartment, Booking)
 from settings import settings
@@ -40,16 +41,14 @@ def login():
         if person:
             try:
                 # token should expire after 24 hours
-                token = jwt.encode(
-                    {'username': person.username},
-                    settings.SECRET_KEY,
-                    algorithm='HS256'
+                jwt_token = create_access_token(
+                    (username, password), expires_delta=timedelta(hours=24)
                 )
                 data = ResponseSuccessModel(
                     error=False,
                     error_message=None,
                     success_message=f'Person {person.id} logged in',
-                    data={'token': token}
+                    data={'token': jwt_token}
                 )
                 return jsonify(json.loads(data.json())), 200
     
@@ -120,7 +119,7 @@ def add_person():
 
 
 @app.route(f'/{PREFIX}/person/<int:person_id>', methods=['PUT'])
-@token_required
+@jwt_required()
 @api.validate(
     body=Request(UpdatePersonModel),
     resp=Response(
@@ -162,19 +161,23 @@ def update_person(person_id: int):
 
             person.save()
 
-            error_data = ResponseFailureModel(
-                error=True,
-                error_message='Update person failure',
-                success_message=None
-            )
-
         except OperationalError as e:
             logger.error(str(e))           
             tx.rollback()
+            error_data = ResponseFailureModel(
+                error=True,
+                error_message='Update person db failure',
+                success_message=None
+            )
             return jsonify(json.loads(error_data.json())), 500
         except Exception as e:
             logger.error(str(e))
             tx.rollback()
+            error_data = ResponseFailureModel(
+                error=True,
+                error_message='Update person client failure',
+                success_message=None
+            )
             return jsonify(json.loads(error_data.json())), 400
 
         tx.commit()
@@ -187,7 +190,7 @@ def update_person(person_id: int):
 
 
 @app.route(f'/{PREFIX}/person/<int:person_id>', methods=['DELETE'])
-@token_required
+@jwt_required()
 @api.validate(
     resp=Response(
         HTTP_200=ResponseSuccessModel,
@@ -211,19 +214,23 @@ def delete_person(person_id: int):
 
             person.delete_instance()
 
-            error_data = ResponseFailureModel(
-                error=True,
-                error_message='Delete person failure',
-                success_message=None
-            )
-
         except OperationalError as e:
             logger.error(str(e))
             tx.rollback()
+            error_data = ResponseFailureModel(
+                error=True,
+                error_message='Delete person db failure',
+                success_message=None
+            )
             return jsonify(json.loads(error_data.json())), 500
         except Exception as e:
             logger.error(str(e))
             tx.rollback()
+            error_data = ResponseFailureModel(
+                error=True,
+                error_message='Delete person client failure',
+                success_message=None
+            )
             return jsonify(json.loads(error_data.json())), 400
         
         tx.commit()
@@ -236,7 +243,7 @@ def delete_person(person_id: int):
 
 
 @app.route(f'/{PREFIX}/apartment', methods=['POST'])
-@token_required
+@jwt_required()
 @api.validate(
     body=Request(ApartmentModel),
     resp=Response(HTTP_200=ResponseSuccessModel, HTTP_500=ResponseFailureModel),
@@ -267,7 +274,7 @@ def add_apartment():
 
 
 @app.route(f'/{PREFIX}/apartment/<int:apartment_id>', methods=['PUT'])
-@token_required
+@jwt_required()
 @api.validate(
     body=Request(ApartmentModel),
     resp=Response(
@@ -297,19 +304,23 @@ def update_apartment(apartment_id: int):
                 Apartment.id==apartment_id
             ).execute()
 
-            error_data = ResponseFailureModel(
-                error=True,
-                error_message='Update apartment failure',
-                success_message=None
-            )
-
         except OperationalError as e:
             tx.rollback()
             logger.error(str(e))
+            error_data = ResponseFailureModel(
+                error=True,
+                error_message='Update apartment db failure',
+                success_message=None
+            )
             return jsonify(json.loads(error_data.json())), 500
         except Exception as e:
             tx.rollback()
             logger.error(str(e))
+            error_data = ResponseFailureModel(
+                error=True,
+                error_message='Update apartment client failure',
+                success_message=None
+            )
             return jsonify(json.loads(error_data.json())), 400
 
         tx.commit()
@@ -322,7 +333,7 @@ def update_apartment(apartment_id: int):
 
 
 @app.route(f'/{PREFIX}/apartment/<int:apartment_id>', methods=['DELETE'])
-@token_required
+@jwt_required()
 @api.validate(
     resp=Response(
         HTTP_200=ResponseSuccessModel,
@@ -367,7 +378,7 @@ def delete_apartment(apartment_id: int):
 
 
 @app.route(f'/{PREFIX}/booking', methods=['POST'])
-@token_required
+@jwt_required()
 @api.validate(
     body=Request(BookingModel),
     resp=Response(HTTP_200=ResponseSuccessModel, HTTP_500=ResponseFailureModel),
@@ -402,7 +413,7 @@ def add_booking():
             tx.rollback()
             data = ResponseFailureModel(
                 error=True,
-                error_message='Create booking failure',
+                error_message='Create booking db failure',
                 success_message=None
             )
             return jsonify(json.loads(data.json())), 500
@@ -417,7 +428,7 @@ def add_booking():
 
 
 @app.route(f'/{PREFIX}/booking/<int:booking_id>', methods=['PUT'])
-@token_required
+@jwt_required()
 @api.validate(
     body=Request(UpdateBookingModel),
     resp=Response(HTTP_200=ResponseSuccessModel, HTTP_500=ResponseFailureModel),
@@ -459,7 +470,7 @@ def update_booking(booking_id):
             tx.rollback()
             data = ResponseFailureModel(
                 error=True,
-                error_message='Create booking failure',
+                error_message='Create booking db failure',
                 success_message=None
             )
             return jsonify(json.loads(data.json())), 500
@@ -474,7 +485,7 @@ def update_booking(booking_id):
 
 
 @app.route(f'/{PREFIX}/booking/<int:booking_id>', methods=['DELETE'])
-@token_required
+@jwt_required()
 @api.validate(
     resp=Response(
         HTTP_200=ResponseSuccessModel,
@@ -503,7 +514,7 @@ def delete_booking(booking_id: int):
             logger.error(str(e))
             error_data = ResponseFailureModel(
                 error=True,
-                error_message='Delete booking failure',
+                error_message='Delete booking db failure',
                 success_message=None
             )
             return jsonify(json.loads(error_data.json())), 500
