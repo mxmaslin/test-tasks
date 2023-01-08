@@ -185,7 +185,8 @@ def update_person(person_id: int):
         data = ResponseSuccessModel(
             error=False,
             error_message=None,
-            success_message=f'Person {person_id} updated'
+            success_message=f'Person {person_id} updated',
+            data={'result': person_id}
         )
         return jsonify(json.loads(data.json())), 200
 

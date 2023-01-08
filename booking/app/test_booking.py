@@ -10,39 +10,67 @@ from api import app, PREFIX
 from models import Person
 
 
-def with_test_db():
-    def decorator(func):
-        @wraps(func)
-        def test_db_closure(*args, **kwargs):
-            test_db = SqliteExtDatabase(':memory:')
-            models = (Person,)
-            with test_db.bind_ctx(models):
-                test_db.create_tables(models)
-                test_db.execute_sql(
-                    '''INSERT INTO person VALUES (1, 'John', 'Doe', 'johndoe1', 'pbkdf2:sha256:260000$MsAdIe40HIsCBN5J$da412dd99a87b86b2adfc39d406bd63a0fd86bbaa2958fd40001dfe4da745ec8'),
-                    (2, 'John', 'Doe', 'johndoe2', 'pbkdf2:sha256:260000$eqXwWOxYEK4adx4f$c8c42b7dfc308793b0a0353aaa60f97402b462cfcfdac6a1c591fa0e7ce892d0');
-                    '''
-                )
-                try:
-                    func(*args, **kwargs)
-                finally:
-                    test_db.drop_tables(models)
-                    test_db.close()
+def with_test_db(func):
+    @wraps(func)
+    def test_db_closure(*args, **kwargs):
+        test_db = SqliteExtDatabase(':memory:')
+        models = (Person,)
+        with test_db.bind_ctx(models):
+            test_db.create_tables(models)
+            test_db.execute_sql(
+                '''INSERT INTO person VALUES (1, 'John', 'Doe', 'johndoe1', 'pbkdf2:sha256:260000$MsAdIe40HIsCBN5J$da412dd99a87b86b2adfc39d406bd63a0fd86bbaa2958fd40001dfe4da745ec8'),
+                (2, 'John', 'Doe', 'johndoe2', 'pbkdf2:sha256:260000$eqXwWOxYEK4adx4f$c8c42b7dfc308793b0a0353aaa60f97402b462cfcfdac6a1c591fa0e7ce892d0');
+                '''
+            )
+            try:
+                return func(*args, **kwargs)
+            finally:
+                test_db.drop_tables(models)
+                test_db.close()
 
-        return test_db_closure
-
-    return decorator
+    return test_db_closure
 
 
-@with_test_db()
+@pytest.fixture
+@with_test_db
+def token():
+    with app.test_client() as test_client:
+        person = Person.select().first()
+        response = test_client.post(
+            f'{PREFIX}/login',
+            json={'username': person.username, 'password': 'password'}
+        )
+        return 'Bearer ' + response.get_json()['data']['token']
+
+
+@with_test_db
 def test_create_person():
     with app.test_client() as test_client:
         data = {
             'first_name': 'John',
             'second_name': 'Doe',
-            'username': 'vovovo',
+            'username': 'johndoe3',
             'password': 'password'
         }
         response = test_client.post(f'{PREFIX}/person', json=data)
+        assert response.status_code == 200
+        assert 'result' in response.get_json()['data']
+
+
+@with_test_db
+def test_update_person(token):
+    with app.test_client() as test_client:
+        person = Person.select().first()
+        data = {
+            'first_name': 'John',
+            'second_name': 'Doe',
+            'username': 'johndoe4',
+            'password': 'password'
+        }
+        response = test_client.put(
+            f'{PREFIX}/person/{person.id}',
+            json=data,
+            headers={'Authorization': token}
+        )
         assert response.status_code == 200
         assert 'result' in response.get_json()['data']
