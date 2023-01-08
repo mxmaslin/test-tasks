@@ -146,6 +146,27 @@ def test_create_booking(token):
 
 
 @with_test_db
+def test_update_booking(token):
+    with app.test_client() as test_client:
+        booking = Booking.select().first()
+        person = Person.select().first()
+        apartment = Apartment.select().first()
+        data = {
+            'start_date': '2024-1-1',
+            'end_date': '2025-1-1',
+            'person_id': person.id,
+            'apartment_id': apartment.id
+        }
+        response = test_client.put(
+            f'{PREFIX}/booking/{booking.id}',
+            json=data,
+            headers={'Authorization': token}
+        )
+        assert response.status_code == 200
+        assert 'result' in response.get_json()['data']
+
+
+@with_test_db
 def test_delete_booking(token):
     with app.test_client() as test_client:
         booking = Booking.select().first()

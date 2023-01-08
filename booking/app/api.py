@@ -485,7 +485,8 @@ def update_booking(booking_id):
         data = ResponseSuccessModel(
             error=False,
             error_message=None,
-            success_message=f'Booking {booking_id} updated'
+            success_message=f'Booking {booking_id} updated',
+            data={'result': booking_id}
         )
         return jsonify(json.loads(data.json())), 200
 
