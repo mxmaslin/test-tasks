@@ -2,19 +2,17 @@ from functools import wraps
 
 import pytest
 
-from flask import Flask, jsonify
-from flask_jwt_extended import JWTManager, jwt_required, create_access_token
 from playhouse.sqlite_ext import SqliteExtDatabase
 
 from api import app, PREFIX
-from models import Person
+from models import Booking, Person
 
 
 def with_test_db(func):
     @wraps(func)
     def test_db_closure(*args, **kwargs):
         test_db = SqliteExtDatabase(':memory:')
-        models = (Person,)
+        models = (Booking, Person)
         with test_db.bind_ctx(models):
             test_db.create_tables(models)
             test_db.execute_sql(
@@ -74,3 +72,15 @@ def test_update_person(token):
         )
         assert response.status_code == 200
         assert 'result' in response.get_json()['data']
+
+
+@with_test_db
+def test_delete_person(token):
+    with app.test_client() as test_client:
+        person = Person.select().first()
+        response = test_client.delete(
+            f'{PREFIX}/person/{person.id}',
+            headers={'Authorization': token}
+        )
+        assert response.status_code == 200
+        # assert 'result' in response.get_json()['data']
