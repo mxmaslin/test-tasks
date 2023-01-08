@@ -212,7 +212,7 @@ def delete_person(person_id: int):
                 )
                 return jsonify(json.loads(data.json())), 404
 
-            person.delete_instance()
+            person.delete_instance(recursive=True)
 
         except OperationalError as e:
             logger.error(str(e))
