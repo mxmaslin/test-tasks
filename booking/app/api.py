@@ -113,7 +113,8 @@ def add_person():
         data = ResponseSuccessModel(
             error=False,
             error_message=None,
-            success_message=f'Person {person.id} created'
+            success_message=f'Person {person.id} created',
+            data={'result': person.id}
         )
         return jsonify(json.loads(data.json())), 200
 
