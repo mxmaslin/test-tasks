@@ -409,8 +409,9 @@ def add_booking():
                 }
                 for p in persons
             ]
-            bookings = Booking.insert_many(data)
-            booking_ids = ', '.join([str(b[0]) for b in bookings])
+            inserted_bookings = Booking.insert_many(data).returning(Booking.id).execute()
+            inserted_booking_ids = [b.id for b in inserted_bookings]
+            booking_ids_message = ', '.join([str(x) for x in inserted_booking_ids])
     
         except Exception as e:
             logger.error(str(e))
@@ -426,7 +427,8 @@ def add_booking():
         data = ResponseSuccessModel(
             error=False,
             error_message=None,
-            success_message=f'Bookings {booking_ids} created'
+            success_message=f'Bookings {booking_ids_message} created',
+            data={'result': inserted_booking_ids}
         )
         return jsonify(json.loads(data.json())), 200
 

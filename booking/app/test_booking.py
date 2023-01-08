@@ -121,3 +121,24 @@ def test_delete_apartment(token):
             headers={'Authorization': token}
         )
         assert response.status_code == 200
+
+
+@with_test_db
+def test_create_booking(token):
+    with app.test_client() as test_client:
+        apartment = Apartment.select().first()
+        person_ids = [p.id for p in Person.select().execute()]
+        data = {
+            'start_date': '2023-1-1',
+            'end_date': '2024-1-1',
+            'person_ids': person_ids,
+            'apartment_id': apartment.id
+        }
+        response = test_client.post(
+            f'{PREFIX}/booking',
+            json=data,
+            headers={'Authorization': token}
+        )
+        assert response.status_code == 200
+        assert 'result' in response.get_json()['data']
+        assert len(person_ids) == len(response.get_json()['data']['result'])
