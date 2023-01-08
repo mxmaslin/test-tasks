@@ -5,14 +5,14 @@ import pytest
 from playhouse.sqlite_ext import SqliteExtDatabase
 
 from api import app, PREFIX
-from models import Booking, Person
+from models import Booking, Person, Apartment
 
 
 def with_test_db(func):
     @wraps(func)
     def test_db_closure(*args, **kwargs):
         test_db = SqliteExtDatabase(':memory:')
-        models = (Booking, Person)
+        models = (Booking, Person, Apartment)
         with test_db.bind_ctx(models):
             test_db.create_tables(models)
             test_db.execute_sql(
@@ -83,4 +83,16 @@ def test_delete_person(token):
             headers={'Authorization': token}
         )
         assert response.status_code == 200
-        # assert 'result' in response.get_json()['data']
+
+
+@with_test_db
+def test_create_apartment(token):
+    with app.test_client() as test_client:
+        data = {'room_number': 777}
+        response = test_client.post(
+            f'{PREFIX}/apartment',
+            json=data,
+            headers={'Authorization': token}
+        )
+        assert response.status_code == 200
+
