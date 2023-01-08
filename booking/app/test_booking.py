@@ -109,3 +109,14 @@ def test_update_apartment(token):
         )
         assert response.status_code == 200
         assert response.get_json()['data']['result'] == data['room_number']
+
+
+@with_test_db
+def test_delete_apartment(token):
+    with app.test_client() as test_client:
+        apartment = Apartment.select().first()
+        response = test_client.delete(
+            f'{PREFIX}/apartment/{apartment.id}',
+            headers={'Authorization': token}
+        )
+        assert response.status_code == 200
