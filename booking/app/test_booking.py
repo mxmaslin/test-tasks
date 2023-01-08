@@ -142,3 +142,14 @@ def test_create_booking(token):
         assert response.status_code == 200
         assert 'result' in response.get_json()['data']
         assert len(person_ids) == len(response.get_json()['data']['result'])
+
+
+@with_test_db
+def test_delete_booking(token):
+    with app.test_client() as test_client:
+        booking = Booking.select().first()
+        response = test_client.delete(
+            f'{PREFIX}/booking/{booking.id}',
+            headers={'Authorization': token}
+        )
+        assert response.status_code == 200
