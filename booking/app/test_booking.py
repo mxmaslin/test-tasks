@@ -95,6 +95,7 @@ def test_create_apartment(token):
             headers={'Authorization': token}
         )
         assert response.status_code == 200
+        assert 'result' in response.get_json()['data']
 
 
 @with_test_db

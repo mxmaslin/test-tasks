@@ -270,7 +270,8 @@ def add_apartment():
     data = ResponseSuccessModel(
         error=False,
         error_message=None,
-        success_message=f'Apartment {apartment_id} created'
+        success_message=f'Apartment {apartment_id} created',
+        data={'result': apartment_id}
     )
     return jsonify(json.loads(data.json())), 200
 
