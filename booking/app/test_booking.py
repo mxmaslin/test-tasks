@@ -20,6 +20,7 @@ def with_test_db(func):
                     (2, 'John', 'Doe', 'johndoe2', 'pbkdf2:sha256:260000$eqXwWOxYEK4adx4f$c8c42b7dfc308793b0a0353aaa60f97402b462cfcfdac6a1c591fa0e7ce892d0');
             ''')
             test_db.execute_sql('INSERT INTO apartment VALUES (1, 100);')
+            test_db.execute_sql("INSERT INTO booking VALUES (1, '2023-01-01', '2024-01-01', 1, 2);")
             try:
                 return func(*args, **kwargs)
             finally:
