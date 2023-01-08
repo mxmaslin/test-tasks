@@ -30,25 +30,14 @@ def with_test_db(models: tuple):
     return decorator
 
 
-@pytest.fixture(scope="function")
-def app():
-    app = Flask(__name__)
-    app.config["JWT_SECRET_KEY"] = "foobarbaz"
-    JWTManager(app)
-
-    @app.route("/login", methods=["POST"])
-    def login():
-        return jsonify(access_token=create_access_token("test_user"))
-
-    @app.route("/protected", methods=["GET"])
-    @jwt_required
-    def access_protected():
-        return jsonify(foo="bar")
-
-    return app
-
-
 @with_test_db((Person,))
 def test_something():
-    response = app.test_client().post(f'{PREFIX}/person')
-    print('yay', response)
+    with app.test_client() as test_client:
+        data = {
+            'first_name': 'John',
+            'second_name': 'Doe',
+            'username': 'johndoe',
+            'password': 'password'
+        }
+        response = test_client.post(f'{PREFIX}/person', json=data)
+        print('yay', response.get_json())

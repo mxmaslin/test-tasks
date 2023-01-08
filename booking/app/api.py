@@ -530,6 +530,7 @@ def delete_booking(booking_id: int):
 
 
 # tests
+# resource
 
 
 if __name__ == '__main__':
