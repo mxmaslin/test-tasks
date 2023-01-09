@@ -173,7 +173,7 @@ def update_person(person_id: int):
                 error_message='Update person db failure',
                 success_message=None
             )
-            return jsonify(json.loads(error_data.json())), 500
+            return jsonify(error_data.dict()), 500
         except Exception as e:
             logger.error(str(e))
             tx.rollback()
@@ -182,7 +182,7 @@ def update_person(person_id: int):
                 error_message='Update person client failure',
                 success_message=None
             )
-            return jsonify(json.loads(error_data.json())), 400
+            return jsonify(error_data.dict()), 400
 
         tx.commit()
         data = ResponseSuccessModel(
@@ -227,7 +227,7 @@ def delete_person(person_id: int):
                 error_message='Delete person db failure',
                 success_message=None
             )
-            return jsonify(json.loads(error_data.json())), 500
+            return jsonify(error_data.dict()), 500
         except Exception as e:
             logger.error(str(e))
             tx.rollback()
@@ -236,7 +236,7 @@ def delete_person(person_id: int):
                 error_message='Delete person client failure',
                 success_message=None
             )
-            return jsonify(json.loads(error_data.json())), 400
+            return jsonify(error_data.dict()), 400
         
         tx.commit()
         data = ResponseSuccessModel(
@@ -318,7 +318,7 @@ def update_apartment(apartment_id: int):
                 error_message='Update apartment db failure',
                 success_message=None
             )
-            return jsonify(json.loads(error_data.json())), 500
+            return jsonify(error_data.dict()), 500
         except Exception as e:
             tx.rollback()
             logger.error(str(e))
@@ -327,7 +327,7 @@ def update_apartment(apartment_id: int):
                 error_message='Update apartment client failure',
                 success_message=None
             )
-            return jsonify(json.loads(error_data.json())), 400
+            return jsonify(error_data.dict()), 400
 
         tx.commit()
         data = ResponseSuccessModel(
@@ -372,7 +372,7 @@ def delete_apartment(apartment_id: int):
                 error_message='Delete apartment failure',
                 success_message=None
             )
-            return jsonify(json.loads(error_data.json())), 500
+            return jsonify(error_data.dict()), 500
 
         tx.commit()
 
@@ -527,7 +527,7 @@ def delete_booking(booking_id: int):
                 error_message='Delete booking db failure',
                 success_message=None
             )
-            return jsonify(json.loads(error_data.json())), 500
+            return jsonify(error_data.dict()), 500
 
         tx.commit()
 
