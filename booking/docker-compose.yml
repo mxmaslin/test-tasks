@@ -6,8 +6,8 @@ services:
     volumes:
       - ./app/:/usr/src/app/
     ports:
-      - 5000:5000
-    command: gunicorn --bind 0.0.0.0:5000 api:app
+      - ${APP_PORT}:${APP_PORT}
+    command: gunicorn --bind ${APP_HOST}:${APP_PORT} app:app
     depends_on:
       - postgres
 
