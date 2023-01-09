@@ -20,6 +20,8 @@ Includes FE part (any of SPA, PWA, MPA), uses advanced tooling, hosted is a plus
 
 # Implementation notes
 
+Перед запуском проекта, переименуйте `.env.local` в `.env` и задайте переменные для используемой бд. 
+
 Для запуска проекта выполните команду `docker-compose up`.
 
 Для запуска юнит-тестов выполните команду `pytest test_booking.py`.

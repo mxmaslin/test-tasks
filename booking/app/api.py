@@ -7,7 +7,7 @@ from flask_jwt_extended import jwt_required, create_access_token
 from flask_pydantic_spec import FlaskPydanticSpec, Response, Request
 from peewee import OperationalError
 
-from app import app
+from app import app, api
 from logger import logger
 from models import (db, Person, Apartment, Booking)
 from settings import settings
@@ -18,8 +18,6 @@ from validators import (
 
 
 PREFIX = f'api/v{settings.API_VERSION}'
-
-api = FlaskPydanticSpec('flask')
 
 
 @app.route(f'/{PREFIX}/login', methods=['POST'])
@@ -50,7 +48,7 @@ def login():
                     success_message=f'Person {person.id} logged in',
                     data={'token': jwt_token}
                 )
-                return jsonify(json.loads(data.json())), 200
+                return jsonify(data.dict()), 200
     
             except Exception as e:
                 logger.error(str(e))
@@ -59,22 +57,23 @@ def login():
                     error_message='JWT encode error',
                     success_message=None
                 )
-                return jsonify(json.loads(data.json())), 500
+                return jsonify(data.dict()), 500
 
         data = ResponseFailureModel(
             error=True,
             error_message='Invalid username or password',
             success_message=None
         )
-        return jsonify(json.loads(data.json())), 404
+        return jsonify(data.dict()), 404
 
     except Exception as e:
+        logger.error(str(e))
         data = ResponseFailureModel(
             error=True,
             error_message='Login failure',
             success_message=None
         )
-        return jsonify(json.loads(data.json())), 500
+        return jsonify(data.dict()), 500
 
 
 @app.route(f'/{PREFIX}/person', methods=['POST'])
@@ -107,7 +106,7 @@ def add_person():
                 error_message='Create person failure',
                 success_message=None
             )
-            return jsonify(json.loads(data.json())), 500
+            return jsonify(data.dict()), 500
         
         tx.commit()
         data = ResponseSuccessModel(
@@ -116,7 +115,7 @@ def add_person():
             success_message=f'Person {person.id} created',
             data={'result': person.id}
         )
-        return jsonify(json.loads(data.json())), 200
+        return jsonify(data.dict()), 200
 
 
 @app.route(f'/{PREFIX}/person/<int:person_id>', methods=['PUT'])
@@ -143,7 +142,7 @@ def update_person(person_id: int):
                     success_message=None,
                     data={}
                 )
-                return jsonify(json.loads(data.json())), 404
+                return jsonify(data.dict()), 404
 
             body = request.get_json()
             first_name = body.get('first_name')
@@ -188,7 +187,7 @@ def update_person(person_id: int):
             success_message=f'Person {person_id} updated',
             data={'result': person_id}
         )
-        return jsonify(json.loads(data.json())), 200
+        return jsonify(data.dict()), 200
 
 
 @app.route(f'/{PREFIX}/person/<int:person_id>', methods=['DELETE'])
@@ -212,7 +211,7 @@ def delete_person(person_id: int):
                     error_message=f'Person {person_id} not found',
                     success_message=None
                 )
-                return jsonify(json.loads(data.json())), 404
+                return jsonify(data.dict()), 404
 
             person.delete_instance(recursive=True)
 
@@ -241,7 +240,7 @@ def delete_person(person_id: int):
             error_message=None,
             success_message=f'Person {person_id} deleted'
         )
-        return jsonify(json.loads(data.json())), 200
+        return jsonify(data.dict()), 200
 
 
 @app.route(f'/{PREFIX}/apartment', methods=['POST'])
@@ -265,7 +264,7 @@ def add_apartment():
             error_message='Create apartment failure',
             success_message=None
         )
-        return jsonify(json.loads(data.json())), 500
+        return jsonify(data.dict()), 500
 
     data = ResponseSuccessModel(
         error=False,
@@ -273,7 +272,7 @@ def add_apartment():
         success_message=f'Apartment {apartment_id} created',
         data={'result': apartment_id}
     )
-    return jsonify(json.loads(data.json())), 200
+    return jsonify(data.dict()), 200
 
 
 @app.route(f'/{PREFIX}/apartment/<int:apartment_id>', methods=['PUT'])
@@ -299,7 +298,7 @@ def update_apartment(apartment_id: int):
                     error_message=f'Apartment {apartment_id} not found',
                     success_message=None
                 )
-                return jsonify(json.loads(data.json())), 404
+                return jsonify(data.dict()), 404
 
             body = request.get_json()
             room_number = body['room_number']
@@ -333,7 +332,7 @@ def update_apartment(apartment_id: int):
             success_message=f'Apartment {apartment_id} updated',
             data={'result': room_number}
         )
-        return jsonify(json.loads(data.json())), 200
+        return jsonify(data.dict()), 200
 
 
 @app.route(f'/{PREFIX}/apartment/<int:apartment_id>', methods=['DELETE'])
@@ -357,7 +356,7 @@ def delete_apartment(apartment_id: int):
                     error_message=f'Apartment {apartment_id} not found',
                     success_message=None
                 )
-                return jsonify(json.loads(data.json())), 404
+                return jsonify(data.dict()), 404
 
             apartment.delete_instance()
         
@@ -378,7 +377,7 @@ def delete_apartment(apartment_id: int):
             error_message=None,
             success_message=f'Apartment {apartment_id} deleted'
         )
-        return jsonify(json.loads(data.json())), 200
+        return jsonify(data.dict()), 200
 
 
 @app.route(f'/{PREFIX}/booking', methods=['POST'])
@@ -421,7 +420,7 @@ def add_booking():
                 error_message='Create booking db failure',
                 success_message=None
             )
-            return jsonify(json.loads(data.json())), 500
+            return jsonify(data.dict()), 500
         
         tx.commit()
         data = ResponseSuccessModel(
@@ -430,7 +429,7 @@ def add_booking():
             success_message=f'Bookings {booking_ids_message} created',
             data={'result': inserted_booking_ids}
         )
-        return jsonify(json.loads(data.json())), 200
+        return jsonify(data.dict()), 200
 
 
 @app.route(f'/{PREFIX}/booking/<int:booking_id>', methods=['PUT'])
@@ -452,7 +451,7 @@ def update_booking(booking_id):
                     success_message=None,
                     data={}
                 )
-                return jsonify(json.loads(data.json())), 404
+                return jsonify(data.dict()), 404
 
             body = request.get_json()
             start_date = body['start_date']
@@ -479,7 +478,7 @@ def update_booking(booking_id):
                 error_message='Create booking db failure',
                 success_message=None
             )
-            return jsonify(json.loads(data.json())), 500
+            return jsonify(data.dict()), 500
         
         tx.commit()
         data = ResponseSuccessModel(
@@ -488,7 +487,7 @@ def update_booking(booking_id):
             success_message=f'Booking {booking_id} updated',
             data={'result': booking_id}
         )
-        return jsonify(json.loads(data.json())), 200
+        return jsonify(data.dict()), 200
 
 
 @app.route(f'/{PREFIX}/booking/<int:booking_id>', methods=['DELETE'])
@@ -512,7 +511,7 @@ def delete_booking(booking_id: int):
                     error_message=f'Booking {booking_id} not found',
                     success_message=None
                 )
-                return jsonify(json.loads(data.json())), 404
+                return jsonify(data.dict()), 404
 
             booking.delete_instance()
         
@@ -533,13 +532,13 @@ def delete_booking(booking_id: int):
             error_message=None,
             success_message=f'Booking {booking_id} deleted'
         )
-        return jsonify(json.loads(data.json())), 200
-
-
-# tests
-# resource
+        return jsonify(data.dict()), 200
 
 
 if __name__ == '__main__':
     api.register(app)
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(
+        host=settings.APP_HOST,
+        port=settings.APP_PORT,
+        debug=settings.FLASK_DEBUG
+    )
