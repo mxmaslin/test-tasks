@@ -4,7 +4,7 @@ import pytest
 
 from playhouse.sqlite_ext import SqliteExtDatabase
 
-from api import app, PREFIX
+from app import app, PREFIX
 from models import Booking, Person, Apartment
 
 
