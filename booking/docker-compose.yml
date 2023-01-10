@@ -5,6 +5,8 @@ services:
     build: ./app
     volumes:
       - ./app/:/usr/src/app/
+    env_file:
+      - .env
     ports:
       - ${APP_PORT}:${APP_PORT}
     command: gunicorn --bind ${APP_HOST}:${APP_PORT} app:app
@@ -16,9 +18,9 @@ services:
     restart: always
     container_name: postgres
     ports:
-      - 5432:5432
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
     env_file:
-      - ./app/.env
+      - .env
     volumes:
       - ./app/init.sql:/docker-entrypoint-initdb.d/init.sql
       - db_data:/var/lib/postgresql/data

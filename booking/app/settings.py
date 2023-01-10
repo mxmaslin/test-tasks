@@ -1,3 +1,4 @@
+from pathlib import Path
 from pydantic import BaseSettings
 
 
@@ -17,4 +18,5 @@ class Settings(BaseSettings):
     APP_PORT: str = '5000'
 
 
-settings = Settings(_env_file='.env', _env_file_encoding='utf-8')
+env = Path.cwd().joinpath('.env')
+settings = Settings(_env_file=env, _env_file_encoding='utf-8')
