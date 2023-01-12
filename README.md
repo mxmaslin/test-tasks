@@ -8,6 +8,7 @@
 
 # Тестовые задания
 
+- [Сервис бронирования](https://github.com/mxmaslin/test-tasks/tree/master/booking)
 - [Загрузка csv в бд](https://github.com/mxmaslin/test-tasks/tree/master/csv2db)
 - [Задание от deloitte](https://github.com/mxmaslin/test-tasks/tree/master/deloitte)
 - [Очень простое задание на оценку результата предсказания](https://github.com/mxmaslin/test-tasks/tree/master/evaluate_prediction)
