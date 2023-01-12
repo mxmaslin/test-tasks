@@ -5,17 +5,21 @@ services:
     build: ./app
     volumes:
       - ./app/:/usr/src/app/
+    env_file:
+      - .env
     ports:
-      - 5000:5000
-    command: gunicorn --bind 0.0.0.0:5000 api:app
+      - ${APP_PORT}:${APP_PORT}
+    command: gunicorn --bind ${APP_HOST}:${APP_PORT} app:app
     depends_on:
       - celery
       - postgres
   
   redis:
     image: redis:alpine
+    env_file:
+      - .env
     ports:
-      - '6379:6379'
+      - ${REDIS_PORT}:${REDIS_PORT}
     restart: always
     command: redis-server
     environment:
@@ -24,6 +28,8 @@ services:
 
   celery:
     build: ./app
+    env_file:
+      - .env
     command: celery -A app.celery worker --loglevel=info -B
     volumes:
       - ./app/:/usr/src/app/
@@ -34,10 +40,10 @@ services:
     image: postgres
     restart: always
     container_name: postgres
-    ports:
-      - 5432:5432
     env_file:
-      - ./app/.env
+      - .env
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
     volumes:
       - ./app/init.sql:/docker-entrypoint-initdb.d/init.sql
       - db_data:/var/lib/postgresql/data

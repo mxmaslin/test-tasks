@@ -1,4 +1,6 @@
-Для запуска проекта выполните команду `docker-compose up`
+Перед запуском переименуйте файл `.env.local` в `.env`, и при необходимости измените значения переменных в нём.
+
+Для запуска проекта выполните команду `docker-compose up`.
 
 Документация реализована при помощи [flask-pydantic-spec](https://github.com/turner-townsend/flask-pydantic-spec) и доступна по адресу `/apidoc/swagger`.
 

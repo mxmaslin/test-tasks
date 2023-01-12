@@ -14,11 +14,12 @@ logger = get_task_logger(__name__)
 HOUR = 3600
 
 
-@celery.on_after_configure.connect
-def setup_periodic_tasks(sender, **kwargs):
-    sender.add_periodic_task(
-        HOUR, periodic_send_messages.s(), name=f'start every {HOUR} seconds'
-    )
+celery.conf.beat_schedule = {
+    'every-hour': {
+        'task': 'tasks.periodic_send_messages',
+        'schedule': HOUR
+    }
+}
 
 
 def get_periodic_messages_to_send() -> list:
