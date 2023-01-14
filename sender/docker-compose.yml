@@ -30,11 +30,25 @@ services:
     build: ./app
     env_file:
       - .env
-    command: celery -A app.celery worker --loglevel=info -B
+    command: celery -A app.celery worker --loglevel=info
     volumes:
       - ./app/:/usr/src/app/
     depends_on:
       - redis
+
+  celery_beat:
+    build: ./app
+    env_file:
+      - .env
+    command: celery -A app.celery beat --loglevel=info
+    environment:
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+    depends_on:
+      - redis
+      - celery
+    volumes:
+      - ./app/:/usr/src/app/
+
 
   postgres:
     image: postgres
