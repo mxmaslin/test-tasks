@@ -16,7 +16,7 @@
 |---|---|
 |task_1_data/{test_name}/players.txt|task_1_data/{test_name}/teams.txt|
 
-В папке task_1_data ты найдешь папки с юнит-тестами (test_A, test_b и т. д.). Каждая из папок содержит 2 файла:
+В папке [task_1_data](https://github.com/mxmaslin/test-tasks/tree/master/Wargaming%20Forge%20Task/Wargaming%20Forge%20Task/task_1_data) ты найдешь папки с юнит-тестами (test_A, test_b и т. д.). Каждая из папок содержит 2 файла:
 - Текстовый файл players.txt содержит записи об игроках и их рейтингах. Один игрок в строке, без заголовка, в формате "<user_id> <rating>".
 - Текстовый файл teams.txt содержит строки-записи о командах и список игроков каждой команды. Без заголовка, в формате "<team_id> <user_id> <user_id>... <user_id>".
 

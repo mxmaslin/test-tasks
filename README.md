@@ -8,9 +8,10 @@
 
 # Тестовые задания
 
+- [Простой RESTful API для социальной сети на FastAPI](https://github.com/mxmaslin/test-tasks/tree/master/social)
 - [Сервис бронирования](https://github.com/mxmaslin/test-tasks/tree/master/booking)
 - [Загрузка csv в бд](https://github.com/mxmaslin/test-tasks/tree/master/csv2db)
-- [Задание от deloitte](https://github.com/mxmaslin/test-tasks/tree/master/deloitte)
+- [Действие после таймаута. Отправка сообщений через websockets](https://github.com/mxmaslin/test-tasks/tree/master/deloitte)
 - [Очень простое задание на оценку результата предсказания](https://github.com/mxmaslin/test-tasks/tree/master/evaluate_prediction)
 - [Небольшой проект на fastapi](https://github.com/mxmaslin/test-tasks/tree/master/fastapi_simple)
 - [Работа с fingerprintjs2](https://github.com/mxmaslin/test-tasks/tree/master/fingerprint)
