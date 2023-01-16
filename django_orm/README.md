@@ -17,7 +17,7 @@ class Reservation(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reservations')
 ```
 
-1) Get the list of users are living in hotel Maryland. [Solution]()
+1) Get the list of users are living in hotel Maryland. [Solution](https://github.com/mxmaslin/test-tasks/blob/master/django_orm/marylanders.py)
 
 2) What should be fixed and improved in these views (in terms of concurrency)
 
@@ -35,7 +35,7 @@ class Reservation(models.Model):
 		return HttpResponse({'details': 'success'})
 ```
 
-[Solution]()
+[Solution](https://github.com/mxmaslin/test-tasks/blob/master/django_orm/improve_concurrency.py)
 
 3) Get list of all rooms with sold_out(True|False) sign (attribute of room object). Sold_out sign should be calculated for user’s move in and move out dates.
 
@@ -44,4 +44,6 @@ def get_rooms_list_with_sold_out_sign(move_in, move_out):
 	# your code here
 ```
 
-[Solution]()
+[Solution](https://github.com/mxmaslin/test-tasks/blob/master/django_orm/annotate.py)
+
+4. Get list of hotels with only one free room (for today) [Solution](https://github.com/mxmaslin/test-tasks/blob/master/django_orm/single_roomers_for_today.py)

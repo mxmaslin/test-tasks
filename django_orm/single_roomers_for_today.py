@@ -1,3 +1,5 @@
+# Get list of hotels with only one free room (for today)
+
 from datetime import date
 from django.db.models import Q, Count
 

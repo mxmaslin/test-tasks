@@ -1,3 +1,5 @@
+# improved views
+
 from django.db.models import F
 
 def like_hotel_view(request, hotel_id):
