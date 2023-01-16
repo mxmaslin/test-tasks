@@ -28,7 +28,7 @@ class Reservation(models.Model):
 		hotel.save()
 		return HttpResponse({'details': 'success'})
 	
-	def dislike_holet_view(request, hotel_id):
+	def dislike_hotel_view(request, hotel_id):
 		hotel = get_object_or_404(Hotel, id=hotel_id)
 		hotel.dislikes += 1
 		hotel.save()
