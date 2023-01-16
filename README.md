@@ -8,7 +8,7 @@
 
 # Тестовые задания
 
-- [Тест на знание Django ORM]()
+- [Тест на знание Django ORM](https://github.com/mxmaslin/test-tasks/tree/master/django_orm)
 - [Простой RESTful API для социальной сети на FastAPI](https://github.com/mxmaslin/test-tasks/tree/master/social)
 - [Сервис бронирования](https://github.com/mxmaslin/test-tasks/tree/master/booking)
 - [Сервис рассылки сообщений](https://github.com/mxmaslin/test-tasks/tree/master/sender)
