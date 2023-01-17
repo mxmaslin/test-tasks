@@ -7,30 +7,37 @@ from fastapi import FastAPI, HTTPException, Depends
 from fastapi_jwt_auth import AuthJWT
 
 from settings import settings, Settings
-from validators import UserRegistration
+from validators import UserLoginModel
 
 
 app = FastAPI()
 
 
-@app.post('/auth/register', tags=['auth'])
-async def create_user(
-    user_registration: UserRegistration,
+@app.post('/token', tags=['auth'])
+async def login_for_access_token(
+    user_data: UserLoginModel,
     settings: Settings = Depends(settings)
 ):
-    
-    # Verify email with emailhunter.co
-    async with aiohttp.ClientSession() as session:
-        url = settings.EMAILHUNTER_URL.format(
-            email=user_registration.email,
-            api_key=settings.EMAILHUNTER_API_KEY
-        )
-        async with session.get(url) as response:
-            response = await response.json()
-            if response.get('result') != 'deliverable':
-                raise HTTPException(status_code=400, detail='Invalid email')
+    print(user_data)
 
-        print(response)
+    # # Verify username and password
+    # # ...
+    # # Create JWT token
+    # access_token = AuthJWT.create_access_token(data={"sub": username})
+    # return {"access_token": access_token}
+
+    # Verify email with emailhunter.co
+    # async with aiohttp.ClientSession() as session:
+    #     url = settings.EMAILHUNTER_URL.format(
+    #         email=user_registration.email,
+    #         api_key=settings.EMAILHUNTER_API_KEY
+    #     )
+    #     async with session.get(url) as response:
+    #         response = await response.json()
+    #         if response.get('result') != 'deliverable':
+    #             raise HTTPException(status_code=400, detail='Invalid email')
+
+    #     print(response)
 
 
 #     # Get additional data for the user with clearbit.com
@@ -40,16 +47,6 @@ async def create_user(
 #     # Save user data to in-memory database
 #     # ...
 #     return {"message": "Successfully registered"}
-
-
-# # User login
-# @app.post("/auth/login", tags=["auth"])
-# def login(username: str, password: str):
-#     # Verify username and password
-#     # ...
-#     # Create JWT token
-#     access_token = AuthJWT.create_access_token(data={"sub": username})
-#     return {"access_token": access_token}
 
 
 # # Post creation, editing, deletion and viewing
@@ -87,5 +84,8 @@ async def create_user(
 
 if __name__ == '__main__':
     uvicorn.run(
-        app, host=settings().APP_HOST, port=settings().APP_PORT, reload=True
+        'app:app',
+        host=settings().APP_HOST,
+        port=settings().APP_PORT,
+        reload=True
     )

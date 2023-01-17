@@ -1,5 +1,11 @@
+from dotenv import load_dotenv
 from pathlib import Path
 from pydantic import BaseSettings
+from functools import lru_cache
+
+
+env_path = Path.cwd().joinpath('.env')
+load_dotenv(env_path)
 
 
 class Settings(BaseSettings):
@@ -13,8 +19,12 @@ class Settings(BaseSettings):
     POSTGRES_PASSWORD: str
 
     APP_HOST: str = '0.0.0.0'
-    APP_PORT: str = '5000'
+    APP_PORT: int = 5000
+
+    class Config:
+        env_file = env_path
 
 
-env = Path.cwd().joinpath('.env')
-settings = Settings(_env_file=env, _env_file_encoding='utf-8')
+@lru_cache()
+def settings():
+    return Settings()
