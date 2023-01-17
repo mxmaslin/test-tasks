@@ -21,6 +21,10 @@ class Settings(BaseSettings):
     APP_HOST: str = '0.0.0.0'
     APP_PORT: int = 5000
 
+    SECRET_KEY: str = 'secret_key'
+    ALGORITHM: str = 'HS256'
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 15
+
     class Config:
         env_file = env_path
 

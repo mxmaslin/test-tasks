@@ -24,10 +24,9 @@ def get_password_hash(password):
 
 def authenticate_user(email: str, password: str) -> User | bool:
     user = User.get_or_none(User.email == email)
-
     if user is None:
         return False
-    if not verify_password(password, user.hashed_password):
+    if not verify_password(password, user.password_hash):
         return False
     return user
 
