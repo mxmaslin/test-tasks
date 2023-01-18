@@ -6,8 +6,9 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 
-from models import db, User
+from models import objects, User
 from settings import settings
+from validators import TokenData
 
 
 pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
@@ -22,8 +23,8 @@ def get_password_hash(password):
     return pwd_context.hash(password)
 
 
-def authenticate_user(email: str, password: str) -> User | bool:
-    user = User.get_or_none(User.email == email)
+async def authenticate_user(email: str, password: str) -> User | bool:
+    user = await objects.get(User, User.email==email)
     if user is None:
         return False
     if not verify_password(password, user.password_hash):
@@ -54,14 +55,14 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         payload = jwt.decode(
             token, settings().SECRET_KEY, algorithms=[settings().ALGORITHM]
         )
-        username: str = payload.get('sub')
-        if username is None:
+        email: str = payload.get('sub')
+        if email is None:
             raise credentials_exception
 
-        token_data = TokenData(username=username)
+        token_data = TokenData(email=email)
     except JWTError:
         raise credentials_exception
-    user = get_user(fake_users_db, username=token_data.username)
+    user = objects.get(User, User.email==token_data.email)
     if user is None:
         raise credentials_exception
     return user

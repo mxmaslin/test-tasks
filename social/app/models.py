@@ -1,37 +1,30 @@
-from peewee import *
+import asyncio
+
+from peewee import Model, CharField, ForeignKeyField, TextField
+from peewee_async import Manager, PostgresqlDatabase
 from settings import settings
 
 
-db = PostgresqlDatabase(
+loop = asyncio.new_event_loop()
+database = PostgresqlDatabase(
     settings().POSTGRES_DB,
     host=settings().POSTGRES_HOST,
     port=settings().POSTGRES_PORT,
     user=settings().POSTGRES_USER,
     password=settings().POSTGRES_PASSWORD
 )
+objects = Manager(database, loop=loop)
+objects.database.allow_sync = False
 
 
 class BaseModel(Model):
     class Meta:
-        database = db
+        database = database
 
 
 class User(BaseModel):
     email = CharField(unique=True)
     password_hash = CharField(null=True)
-
-    # def set_password(self, password):
-    #     self.password_hash = generate_password_hash(password)
-    
-    # def check_password(self, password):
-    #     return check_password_hash(self.password_hash, password)
-
-    # @staticmethod
-    # def login(email, password):
-    #     person = User.get(User.email == email)
-    #     if not person or not person.check_password(password):
-    #         raise LoginFail
-    #     return person
 
 
 class Post(BaseModel):

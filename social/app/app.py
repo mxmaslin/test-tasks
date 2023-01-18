@@ -4,13 +4,12 @@ import aiohttp
 
 import uvicorn
 
-from clearbit import Enrichment
 from fastapi import Depends, FastAPI, HTTPException, status
-from fastapi_jwt_auth import AuthJWT
 
-from auth import authenticate_user, create_access_token
+from auth import authenticate_user, create_access_token, get_password_hash
+from models import objects, User
 from settings import settings, Settings
-from validators import UserLoginModel
+from validators import UserLoginModel, UserSignupModel
 
 
 app = FastAPI()
@@ -21,43 +20,15 @@ async def login_for_access_token(
     user_data: UserLoginModel,
     settings: Settings = Depends(settings)
 ):
-
-    # import bcrypt
-    # password = user_data.password.encode('utf-8')
-    # hashed = bcrypt.hashpw(password, bcrypt.gensalt())
-    # print(hashed)
-
-    # Verify email with emailhunter.co
-    async with aiohttp.ClientSession() as session:
-        url = settings.EMAILHUNTER_URL.format(
-            email=user_data.email,
-            api_key=settings.EMAILHUNTER_API_KEY
-        )
-        async with session.get(url) as response:
-            response = await response.json()
-            if response.get('result') != 'deliverable':
-                raise HTTPException(
-                    status_code=status.HTTP_400_BAD_REQUEST,
-                    detail='Invalid email'
-                )
-
     user = authenticate_user(user_data.email, user_data.password)
     if not user:
+        print('log error')
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail='Incorrect username or password',
             headers={'WWW-Authenticate': 'Bearer'}
         )
     
-    # # Get additional data for the user with clearbit.com
-    # enrichment = Enrichment.find(email=user_data.email, stream=True)
-    # if enrichment['person'] is None:
-    #     raise HTTPException(
-    #         status_code=status.HTTP_400_BAD_REQUEST,
-    #         detail='Invalid email'
-    #     )
-    # print(enrichment)
-
     access_token_expires = timedelta(
         minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
     )
@@ -67,9 +38,40 @@ async def login_for_access_token(
     return {'access_token': access_token, 'token_type': 'bearer'}
 
 
-#     # Save user data to in-memory database
-#     # ...
-#     return {"message": "Successfully registered"}
+@app.post('/signup', tags=['auth'])
+async def login_for_access_token(
+    user_data: UserSignupModel,
+    settings: Settings = Depends(settings)
+):
+    # Verify email with emailhunter.co
+    async with aiohttp.ClientSession() as session:
+        url = settings.EMAILHUNTER_URL.format(
+            email=user_data.email,
+            api_key=settings.EMAILHUNTER_API_KEY
+        )
+        async with session.get(url) as response:
+            response = await response.json()
+            if response.get('result') == 'undeliverable':
+                print('log error')
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail='Invalid email'
+                )
+    password_hash = get_password_hash(user_data.password)
+    try:
+        user = await objects.create(
+            User,
+            email=user_data.email,
+            password_hash=password_hash
+        )
+    except Exception as e:
+        print(e, 'log error')
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail='Error writing to db'
+        )
+    return {f'user {user.id} create success': True}
+
 
 
 # # Post creation, editing, deletion and viewing

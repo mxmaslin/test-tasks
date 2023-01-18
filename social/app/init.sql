@@ -16,7 +16,3 @@ CREATE INDEX IF NOT EXISTS "like_post_id" ON "like" ("post_id");
 CREATE INDEX IF NOT EXISTS "like_user_id" ON "like" ("user_id"); 
 CREATE INDEX IF NOT EXISTS "dislike_user_id" ON "dislike" ("user_id"); 
 CREATE INDEX IF NOT EXISTS "dislike_post_id" ON "dislike" ("post_id");
-
-INSERT INTO public."user" (email,password_hash) VALUES
-	 ('boyish.whippet_0f@icloud.com','$2b$12$MPhEeIMW4sZueLFoqnQfsezedrNcqWnsRbNJDT1UAQpePZm9VPPgK');
-
