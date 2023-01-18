@@ -21,6 +21,26 @@ async def login_for_access_token(
     user_data: UserLoginModel,
     settings: Settings = Depends(settings)
 ):
+
+    # import bcrypt
+    # password = user_data.password.encode('utf-8')
+    # hashed = bcrypt.hashpw(password, bcrypt.gensalt())
+    # print(hashed)
+
+    # Verify email with emailhunter.co
+    async with aiohttp.ClientSession() as session:
+        url = settings.EMAILHUNTER_URL.format(
+            email=user_data.email,
+            api_key=settings.EMAILHUNTER_API_KEY
+        )
+        async with session.get(url) as response:
+            response = await response.json()
+            if response.get('result') != 'deliverable':
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail='Invalid email'
+                )
+
     user = authenticate_user(user_data.email, user_data.password)
     if not user:
         raise HTTPException(
@@ -36,20 +56,6 @@ async def login_for_access_token(
     )
     return {'access_token': access_token, 'token_type': 'bearer'}
 
-
-
-    # Verify email with emailhunter.co
-    # async with aiohttp.ClientSession() as session:
-    #     url = settings.EMAILHUNTER_URL.format(
-    #         email=user_registration.email,
-    #         api_key=settings.EMAILHUNTER_API_KEY
-    #     )
-    #     async with session.get(url) as response:
-    #         response = await response.json()
-    #         if response.get('result') != 'deliverable':
-    #             raise HTTPException(status_code=400, detail='Invalid email')
-
-    #     print(response)
 
 
 #     # Get additional data for the user with clearbit.com

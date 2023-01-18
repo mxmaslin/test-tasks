@@ -21,9 +21,12 @@ class Settings(BaseSettings):
     APP_HOST: str = '0.0.0.0'
     APP_PORT: int = 5000
 
-    SECRET_KEY: str = 'secret_key'
-    ALGORITHM: str = 'HS256'
+    SECRET_KEY: str
+    ALGORITHM: str
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 15
+
+    EMAILHUNTER_API_KEY: str
+    EMAILHUNTER_URL: str = 'https://api.emailhunter.co/v1/verify?email={email}&api_key=${EMAILHUNTER_API_KEY}'
 
     class Config:
         env_file = env_path
