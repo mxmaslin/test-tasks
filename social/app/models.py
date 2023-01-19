@@ -1,6 +1,6 @@
 import asyncio
 
-from peewee import Model, CharField, ForeignKeyField, TextField
+from peewee import Model, BooleanField, CharField, ForeignKeyField, TextField
 from peewee_async import Manager, PostgresqlDatabase
 from settings import settings
 
@@ -14,7 +14,7 @@ database = PostgresqlDatabase(
     password=settings().POSTGRES_PASSWORD
 )
 objects = Manager(database, loop=loop)
-objects.database.allow_sync = False
+objects.database.allow_sync = True  # set to True to make db migrations
 
 
 class BaseModel(Model):
@@ -24,6 +24,7 @@ class BaseModel(Model):
 
 class User(BaseModel):
     email = CharField(unique=True)
+    disabled = BooleanField(default=False)
     password_hash = CharField(null=True)
 
 

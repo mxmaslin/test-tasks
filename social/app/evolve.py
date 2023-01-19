@@ -1,5 +1,5 @@
 import peeweedbevolve
 
-from models import db
+from models import database
 
-db.evolve()
+database.evolve()

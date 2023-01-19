@@ -58,11 +58,11 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         email: str = payload.get('sub')
         if email is None:
             raise credentials_exception
-
         token_data = TokenData(email=email)
     except JWTError:
         raise credentials_exception
-    user = objects.get(User, User.email==token_data.email)
+
+    user = await objects.get(User, User.email==token_data.email)
     if user is None:
         raise credentials_exception
     return user
@@ -70,5 +70,5 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
 
 async def get_current_active_user(current_user: User = Depends(get_current_user)):
     if current_user.disabled:
-        raise HTTPException(status_code=400, detail="Inactive user")
+        raise HTTPException(status_code=400, detail='Inactive user')
     return current_user

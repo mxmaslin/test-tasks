@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Optional, Dict
 
 
 class UserLoginModel(BaseModel):
@@ -11,22 +12,15 @@ class UserSignupModel(BaseModel):
     password: str
 
 
+class PostCreateModel(BaseModel):
+    title: str
+    content: str
 
-class Token(BaseModel):
-    access_token: str
-    token_type: str
+
+class PostUpdateModel(BaseModel):
+    title: str
+    content: str
 
 
 class TokenData(BaseModel):
     email: str | None = None
-
-
-class User(BaseModel):
-    username: str
-    email: str | None = None
-    full_name: str | None = None
-    disabled: bool | None = None
-
-
-class UserInDB(User):
-    hashed_password: str
