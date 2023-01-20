@@ -14,7 +14,7 @@ database = PostgresqlDatabase(
     password=settings().POSTGRES_PASSWORD
 )
 objects = Manager(database, loop=loop)
-objects.database.allow_sync = True  # set to True to make db migrations
+objects.database.allow_sync = False  # set to True to make db migrations
 
 
 class BaseModel(Model):

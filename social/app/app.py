@@ -108,8 +108,26 @@ async def create_post(
 
 
 @app.get('/posts', tags=['posts'])
-async def read_posts():
-    ...
+async def read_posts(skip: int = 0, limit: int = 10):
+    try:
+        posts = await objects.execute(
+            Post.select().order_by(Post.id).offset(skip).limit(limit)
+        )
+    except Exception as e:
+        logger.error(str(e))
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail='Failed to get posts from DB'
+        )
+    return JSONResponse(content={'posts': [
+        {
+            'id': post.id,
+            'title': post.title,
+            'content': post.content
+        } for post in posts
+    ]})
+
+
 
 
 @app.get('/posts/{post_id}', tags=['posts'])
