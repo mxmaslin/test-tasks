@@ -79,7 +79,7 @@ async def login_for_access_token(
         logger.error(str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail='Error writing to db'
+            detail='Error writing user to db'
         )
 
     return JSONResponse(content={'message': f'User {user.id} created'})
@@ -101,7 +101,7 @@ async def create_post(
         logger.error(str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail='Error writing to db'
+            detail='Error writing post to db'
         )
 
     return JSONResponse(content={'message': f'Post {post.id} created'})
@@ -119,15 +119,17 @@ async def read_posts(skip: int = 0, limit: int = 10):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail='Failed to get posts from DB'
         )
-    return JSONResponse(content={'posts': [
-        {
-            'id': post.id,
-            'title': post.title,
-            'content': post.content
-        } for post in posts
-    ]})
-
-
+    return JSONResponse(
+        content={
+            'posts': [
+                {
+                    'id': post.id,
+                    'title': post.title,
+                    'content': post.content
+                } for post in posts
+            ]
+        }
+    )
 
 
 @app.get('/posts/{post_id}', tags=['posts'])
@@ -140,9 +142,9 @@ async def read_post(post_id: int):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail='Post does not exist'
         )
-    return JSONResponse(content={'data': {
-        'title': post.title, 'content': post.content
-    }})
+    return JSONResponse(
+        content={'data': {'title': post.title, 'content': post.content}}
+    )
 
 
 @app.put('/posts/{post_id}', tags=['posts'])
@@ -152,8 +154,11 @@ async def update_post(
     current_user: User = Depends(get_current_active_user)
 ):
     try:
-        post = await objects.get(Post, id=post_id)
-    except DoesNotExist as e:
+        post = await objects.execute(
+            Post.select(Post, User).join(User).where(Post.id == post_id)
+        )
+        post = [x for x in post][0]
+    except Exception as e:
         logger.error(str(e))
         return HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -176,7 +181,7 @@ async def update_post(
         logger.error(str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail='Error writing to db'
+            detail='Error writing post update to db'
         )
 
     return JSONResponse(content={'message': f'Post {post.id} updated'})
@@ -188,7 +193,10 @@ async def delete_post(
     current_user: User = Depends(get_current_active_user)
 ):
     try:
-        post = await objects.get(Post, id=post_id)
+        post = await objects.execute(
+            Post.select(Post, User).join(User).where(Post.id == post_id)
+        )
+        post = [x for x in post][0]
     except DoesNotExist as e:
         logger.error(str(e))
         return HTTPException(
@@ -214,6 +222,92 @@ async def delete_post(
         )
 
     return JSONResponse(content={'message': f'Post {post.id} deleted'})
+
+
+@app.post('/posts/{post_id}/like', tags=['posts'])
+async def like_post(
+    post_id: int,
+    current_user: User = Depends(get_current_active_user)
+):
+    try:
+        post = await objects.execute(
+            Post.select(Post, User).join(User).where(Post.id == post_id)
+        )
+        post = [x for x in post][0]
+    except DoesNotExist as e:
+        logger.error(str(e))
+        return HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail='Post does not exist'
+        )
+
+    if post.user == current_user:
+        message = 'Unable to like own post'
+        logger.error(message)
+        return HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=message
+        )
+    
+    try:
+        await objects.get_or_create(
+            Like,
+            post=post,
+            user=post.user
+        )
+    except Exception as e:
+        logger.error(str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail='Error writing like to db'
+        )
+
+    return JSONResponse(
+        content={'message': f'Post {post.id} liked by {post.user}'}
+    )
+
+
+@app.post('/posts/{post_id}/dislike', tags=['posts'])
+async def dislike_post(
+    post_id: int,
+    current_user: User = Depends(get_current_active_user)
+):
+    try:
+        post = await objects.execute(
+            Post.select(Post, User).join(User).where(Post.id == post_id)
+        )
+        post = [x for x in post][0]
+    except DoesNotExist as e:
+        logger.error(str(e))
+        return HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail='Post does not exist'
+        )
+
+    if post.user == current_user:
+        message = 'Unable to dislike own post'
+        logger.error(message)
+        return HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=message
+        )
+    
+    try:
+        await objects.get_or_create(
+            Dislike,
+            post=post,
+            user=post.user
+        )
+    except Exception as e:
+        logger.error(str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail='Error writing dislike to db'
+        )
+
+    return JSONResponse(
+        content={'message': f'Post {post.id} disliked by {post.user}'}
+    )
 
 
 if __name__ == '__main__':
