@@ -96,6 +96,8 @@ When implementing your solution, please make sure that the code is:
 
 [**Код решения**](https://github.com/mxmaslin/test-tasks/tree/master/social/app)
 
+В решении реализована верификация email при помощи emailhunter.co и кэширование лайков и дизлайков при помощи Redis.
+
 ## Запуск решения
 
 1. `git clone https://github.com/mxmaslin/test-tasks.git`
@@ -112,8 +114,7 @@ When implementing your solution, please make sure that the code is:
 4. Укажите в файле `.env` собственный `EMAILHUNTER_API_KEY`
 5. `python3 -m venv venv`
 6. `source venv/bin/activate`
-7. `pip install app/requirements.txt`
-8. `python app/app.py`
+7. `pip install -r app/requirements.txt && python app/app.py`
 
 ## Документация
 

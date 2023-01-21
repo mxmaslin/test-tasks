@@ -29,7 +29,7 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
 
     EMAILHUNTER_API_KEY: str
-    EMAILHUNTER_URL: str = 'https://api.emailhunter.co/v1/verify?email={email}&api_key=${EMAILHUNTER_API_KEY}'
+    EMAILHUNTER_URL: str = 'https://api.emailhunter.co/v1/verify?email={email}&api_key={api_key}'
 
     class Config:
         env_file = env_path

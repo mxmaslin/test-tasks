@@ -1,0 +1,42 @@
+version: '3.7'
+
+services:
+  web:
+    build: ./app
+    volumes:
+      - ./app/:/usr/src/app/
+    env_file:
+      - .env
+    ports:
+      - ${APP_PORT}:${APP_PORT}
+    command: uvicorn app:app --host ${APP_HOST} --port ${APP_PORT} --reload
+    depends_on:
+      - postgres
+  
+  redis:
+    image: redis:alpine
+    env_file:
+      - .env
+    ports:
+      - ${REDIS_PORT}:${REDIS_PORT}
+    restart: always
+    command: redis-server
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    hostname: redis
+
+  postgres:
+    image: postgres
+    restart: always
+    container_name: postgres
+    env_file:
+      - .env
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    volumes:
+      - ./app/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+    db_data:
+  
