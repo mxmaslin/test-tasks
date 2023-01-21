@@ -9,10 +9,7 @@ from unittest import mock
 from fastapi.testclient import TestClient
 from peewee_async import PostgresqlDatabase
 
-
-import sys, os
-sys.path.insert(0, os.path.abspath('..'))
-
+import app
 from app.main import app
 from app.settings import settings
 from app.storage import User, Post, Like, Dislike

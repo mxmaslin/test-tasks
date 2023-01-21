@@ -1,7 +1,8 @@
-from dotenv import load_dotenv
-from pathlib import Path
-from pydantic import BaseSettings
 from functools import lru_cache
+from pathlib import Path
+
+from dotenv import load_dotenv
+from pydantic import BaseSettings
 
 
 env_path = Path.cwd().joinpath('.env')
