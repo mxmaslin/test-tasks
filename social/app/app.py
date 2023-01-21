@@ -7,13 +7,14 @@ import uvicorn
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.responses import JSONResponse
 from peewee import DoesNotExist
+from redis import Redis
 
 from auth import (
     authenticate_user, create_access_token, get_current_active_user,
     get_password_hash
 )
 from logger import logger
-from models import objects, User, Post, Like, Dislike
+from storage import get_redis, database, objects, User, Post, Like, Dislike
 from settings import settings, Settings
 from validators import (
     PostCreateModel, PostUpdateModel, UserLoginModel, UserSignupModel
@@ -27,7 +28,7 @@ async def login_for_access_token(
     user_data: UserLoginModel,
     settings: Settings = Depends(settings)
 ):
-    user = authenticate_user(user_data.email, user_data.password)
+    user = await authenticate_user(user_data.email, user_data.password)
     if not user:
         logger.error('Failed to authenticate user')
         raise HTTPException(
@@ -227,14 +228,15 @@ async def delete_post(
 @app.post('/posts/{post_id}/like', tags=['posts'])
 async def like_post(
     post_id: int,
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_active_user),
+    cache: Redis = Depends(get_redis)
 ):
     try:
         post = await objects.execute(
             Post.select(Post, User).join(User).where(Post.id == post_id)
         )
         post = [x for x in post][0]
-    except DoesNotExist as e:
+    except Exception as e:
         logger.error(str(e))
         return HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -248,36 +250,53 @@ async def like_post(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=message
         )
-    
-    try:
-        await objects.get_or_create(
-            Like,
-            post=post,
-            user=post.user
-        )
-    except Exception as e:
-        logger.error(str(e))
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail='Error writing like to db'
+
+    if cache.get(f'like:{post_id}:{current_user.id}'):
+        message = f'Post {post_id} was already liked by user {current_user.id}'
+        logger.error(message)
+        return HTTPException(
+            status_code=status.HTTP_409_CONFLICT, detail=message
         )
 
+    with database.atomic() as tx:
+        try:
+            if cache.get(f'dislike:{post_id}:{current_user.id}'):
+                cache.delete(f'dislike:{post_id}:{current_user.id}')
+            cache.set(f'like:{post_id}:{current_user.id}', 1)
+
+            await objects.execute(
+                Dislike.delete().where(
+                    Dislike.post == post,
+                    Dislike.user == current_user
+                )
+            )
+            await objects.create(Like, post=post, user=current_user)
+        except Exception as e:
+            logger.error(str(e))
+            tx.rollback()
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail='Error writing like to db'
+            )
+        tx.commit()
+
     return JSONResponse(
-        content={'message': f'Post {post.id} liked by {post.user}'}
+        content={'message': f'Post {post_id} liked by {current_user.id}'}
     )
 
 
 @app.post('/posts/{post_id}/dislike', tags=['posts'])
 async def dislike_post(
     post_id: int,
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_active_user),
+    cache: Redis = Depends(get_redis)
 ):
     try:
         post = await objects.execute(
             Post.select(Post, User).join(User).where(Post.id == post_id)
         )
         post = [x for x in post][0]
-    except DoesNotExist as e:
+    except Exception as e:
         logger.error(str(e))
         return HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -291,22 +310,37 @@ async def dislike_post(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=message
         )
-    
-    try:
-        await objects.get_or_create(
-            Dislike,
-            post=post,
-            user=post.user
-        )
-    except Exception as e:
-        logger.error(str(e))
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail='Error writing dislike to db'
+
+    if cache.get(f'dislike:{post_id}:{current_user.id}'):
+        message = f'Post {post_id} was already disliked by user {current_user.id}'
+        logger.error(message)
+        return HTTPException(
+            status_code=status.HTTP_409_CONFLICT, detail=message
         )
 
+    with database.atomic() as tx:
+        try:
+            if cache.get(f'like:{post_id}:{current_user.id}'):
+                cache.delete(f'like:{post_id}:{current_user.id}')
+            cache.set(f'dislike:{post_id}:{current_user.id}', 1)
+
+            await objects.execute(
+                Like.delete().where(
+                    Like.post == post, Like.user == current_user
+                )
+            )
+            await objects.create(Dislike, post=post.id, user=current_user)
+        except Exception as e:
+            logger.error(str(e))
+            tx.rollback()
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail='Error writing dislike to db'
+            )
+        tx.commit()
+
     return JSONResponse(
-        content={'message': f'Post {post.id} disliked by {post.user}'}
+        content={'message': f'Post {post_id} disliked by {current_user.id}'}
     )
 
 

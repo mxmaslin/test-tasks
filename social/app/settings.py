@@ -14,16 +14,19 @@ class Settings(BaseSettings):
 
     POSTGRES_HOST: str = 'localhost'
     POSTGRES_DB: str
-    POSTGRES_PORT: str = '5432'
+    POSTGRES_PORT: int = 5432
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str
+
+    REDIS_HOST: str = 'localhost'
+    REDIS_PORT: int = 6379
 
     APP_HOST: str = '0.0.0.0'
     APP_PORT: int = 5000
 
     SECRET_KEY: str
     ALGORITHM: str
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 15
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
 
     EMAILHUNTER_API_KEY: str
     EMAILHUNTER_URL: str = 'https://api.emailhunter.co/v1/verify?email={email}&api_key=${EMAILHUNTER_API_KEY}'

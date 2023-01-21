@@ -1,7 +1,11 @@
 import asyncio
 
+from functools import lru_cache
+
 from peewee import Model, BooleanField, CharField, ForeignKeyField, TextField
 from peewee_async import Manager, PostgresqlDatabase
+from redis import Redis, ConnectionPool
+
 from settings import settings
 
 
@@ -15,6 +19,17 @@ database = PostgresqlDatabase(
 )
 objects = Manager(database, loop=loop)
 objects.database.allow_sync = False  # set to True to make db migrations
+
+pool = ConnectionPool(
+    host=settings().REDIS_HOST,
+    port=settings().REDIS_PORT,
+    db=0
+)
+
+
+@lru_cache
+def get_redis() -> Redis:
+    return Redis(connection_pool=pool)
 
 
 class BaseModel(Model):

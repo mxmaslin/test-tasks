@@ -13,7 +13,7 @@ async def logs(cont, name):
                 print(name, line)
 ```
 
-**Результат**
+**Решение**
 
 ```
 import aiohttp
@@ -33,7 +33,7 @@ async def test_logs(aioresponses, capsys):
 
 Напишите эндпойнт, который в качестве параметра сможет принимать незакодированную (unencoded) ссылку и возвращать её закодированной.
 
-**Результат**
+**Решение**
 
 ```
 from flask import Flask, request, jsonify
@@ -58,7 +58,7 @@ if __name__ == '__main__':
 
 # Основное задание
 
-Create a simple RESTful API using FastAPI for a social networking application
+Create a simple RESTful API using FastAPI for a social networking application.
 
 ## Functional requirements
 
@@ -91,3 +91,26 @@ When implementing your solution, please make sure that the code is:
 - Contains instructions (best to be put into readme.md) about how to deploy and test it
 - Clean
 - The program you implement must be a complete program product, i.e. should be easy to install, provide for the handling of non-standard situations, be resistant to incorrect user actions, etc.
+
+## Решение
+
+[**Код решения**](https://github.com/mxmaslin/test-tasks/tree/master/social/app)
+
+## Запуск решения
+
+1. `git clone https://github.com/mxmaslin/test-tasks.git`
+2. `cd test-tasks/social`
+3. `mv .env.local .env`
+4. Укажите в файле `.env` собственный `EMAILHUNTER_API_KEY`
+5. `docker-compose up`
+
+## Документация
+
+Доступна после запуска решения на http://0.0.0.0:5000/docs
+
+## Тесты
+
+[**Код тестов**]()
+
+Запуск тестов ...
+
