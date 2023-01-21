@@ -9,7 +9,7 @@ services:
       - .env
     ports:
       - ${APP_PORT}:${APP_PORT}
-    command: uvicorn app:app --host ${APP_HOST} --port ${APP_PORT} --reload
+    command: uvicorn main:app --host ${APP_HOST} --port ${APP_PORT} --reload
     depends_on:
       - postgres
   
