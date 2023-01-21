@@ -110,7 +110,7 @@ When implementing your solution, please make sure that the code is:
 
 ## Тесты
 
-[**Код тестов**]()
+[**Код тестов**](https://github.com/mxmaslin/test-tasks/blob/master/social/app/tests.py)
 
 Запуск тестов ...
 
