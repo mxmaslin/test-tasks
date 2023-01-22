@@ -4,7 +4,7 @@ services:
   web:
     build: ./app
     volumes:
-      - ./app/:/usr/src/app/
+      - ./app/:/usr/src/social/app/
     env_file:
       - .env
     ports:
@@ -36,6 +36,20 @@ services:
     volumes:
       - ./app/init.sql:/docker-entrypoint-initdb.d/init.sql
       - db_data:/var/lib/postgresql/data
+
+  tests:
+    build: ./tests
+    volumes:
+      - ./app/:/usr/src/social/app/
+      - ./tests/:/usr/src/social/tests/
+      - db_data:/var/lib/postgresql/data
+      - ./app/init.sql:/docker-entrypoint-initdb.d/init.sql
+    env_file:
+      - .env
+    command: pytest test_social.py
+    depends_on:
+      - web
+      - postgres
 
 volumes:
     db_data:

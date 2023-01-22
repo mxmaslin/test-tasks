@@ -135,7 +135,7 @@ def test_like_own_post(client):
 
 @with_test_db
 def test_like_others_post(client):
-    # TBD: fix this test
+    # TBD: this test is broken. Possibly redis mock is not applied
     # create UserA and get a token for the UserA
     data_a = {'email': 'project777@mail.ru', 'password': 'test'}
     client.post('/signup', json=data_a)
@@ -161,5 +161,7 @@ def test_like_others_post(client):
     headers_b = {'Authorization': f'Bearer {token_b}'}
     response = client.post(f'/posts/{post_id}/like', headers=headers_b)
     data = response.json()
+    print('possibly redis mock wasn\'t apply')
+    assert False
     # the post will already be liked. Looks like redis mock wasn't apply
     # assert data['detail'] == 'Unable to like own post'

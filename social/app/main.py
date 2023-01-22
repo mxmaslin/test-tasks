@@ -1,4 +1,7 @@
+import sys
+
 from datetime import timedelta
+from pathlib import Path
 
 import aiohttp
 import uvicorn
@@ -8,14 +11,17 @@ from fastapi.responses import JSONResponse
 from peewee import DoesNotExist
 from redis import Redis
 
-from auth import (
+app_path = Path.cwd().parent
+sys.path.append(str(app_path))
+
+from app.auth import (
     authenticate_user, create_access_token, get_current_active_user,
     get_password_hash
 )
-from logger import logger
-from storage import get_redis, database, objects, User, Post, Like, Dislike
-from settings import settings, Settings
-from validators import (
+from app.logger import logger
+from app.storage import get_redis, database, objects, User, Post, Like, Dislike
+from app.settings import settings, Settings
+from app.validators import (
     PostCreateModel, PostUpdateModel, UserLoginModel, UserSignupModel
 )
 

@@ -6,10 +6,10 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 
-from logger import logger
-from storage import objects, User
-from settings import settings
-from validators import TokenData
+from app.logger import logger
+from app.storage import objects, User
+from app.settings import settings
+from app.validators import TokenData
 
 
 pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
