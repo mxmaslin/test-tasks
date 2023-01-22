@@ -27,7 +27,6 @@ pool = ConnectionPool(
 )
 
 
-@lru_cache
 def get_redis() -> Redis:
     return Redis(connection_pool=pool)
 

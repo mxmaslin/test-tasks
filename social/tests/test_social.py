@@ -1,7 +1,3 @@
-import os
-
-from functools import wraps
-
 import pytest
 
 from unittest.mock import patch
@@ -9,29 +5,18 @@ from unittest.mock import patch
 from fastapi.testclient import TestClient
 
 from app.main import app
-from app.storage import User, Post, Like, Dislike
-from tests.mocks import redis, test_database
+from app.storage import get_redis
+from tests.mocks import get_redis_mock, with_test_db
 
 
-def with_test_db(func):
-    @wraps(func)
-    def test_db_closure(*args, **kwargs):
-        models = User, Post, Like, Dislike
-        with test_database.bind_ctx(models):
-            test_database.create_tables(models)
-            try:
-                return func(*args, **kwargs)
-            finally:
-                test_database.drop_tables(models)
-                test_database.close()
-
-    return test_db_closure
+app.dependency_overrides[get_redis] = get_redis_mock
 
 
 @with_test_db
 @pytest.fixture(scope='session')
 def client() -> TestClient:
-    with TestClient(app) as c:
+    client = TestClient(app)
+    with client as c:
         yield c
 
 
@@ -149,8 +134,8 @@ def test_like_own_post(client):
 
 
 @with_test_db
-@patch('app.storage.get_redis', new=redis)
 def test_like_others_post(client):
+    # TBD: fix this test
     # create UserA and get a token for the UserA
     data_a = {'email': 'project777@mail.ru', 'password': 'test'}
     client.post('/signup', json=data_a)
@@ -159,9 +144,9 @@ def test_like_others_post(client):
     token_a = data['access_token']
 
     # create post by userA
-    data_a_post = {'title': 'post title', 'content': 'post content'}
+    post_data = {'title': 'post title', 'content': 'post content'}
     headers_a = {'Authorization': f'Bearer {token_a}'}
-    response = client.post('/posts', json=data_a_post, headers=headers_a)
+    response = client.post('/posts', json=post_data, headers=headers_a)
     data = response.json()
     _, post_id, _ = data['message'].split()
 
@@ -176,5 +161,5 @@ def test_like_others_post(client):
     headers_b = {'Authorization': f'Bearer {token_b}'}
     response = client.post(f'/posts/{post_id}/like', headers=headers_b)
     data = response.json()
-    print('2', data)
+    # the post will already be liked. Looks like redis mock wasn't apply
     # assert data['detail'] == 'Unable to like own post'

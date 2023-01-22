@@ -1,7 +1,6 @@
 from datetime import timedelta
 
 import aiohttp
-
 import uvicorn
 
 from fastapi import Depends, FastAPI, HTTPException, status
