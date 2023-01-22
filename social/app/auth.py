@@ -6,6 +6,7 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 
+from logger import logger
 from storage import objects, User
 from settings import settings
 from validators import TokenData
@@ -24,8 +25,10 @@ def get_password_hash(password):
 
 
 async def authenticate_user(email: str, password: str) -> User | bool:
-    user = await objects.get(User, User.email==email)
-    if user is None:
+    try:
+        user = await objects.get(User, User.email==email)
+    except Exception as e:
+        logger.error(str(e))
         return False
     if not verify_password(password, user.password_hash):
         return False
