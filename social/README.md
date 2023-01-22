@@ -115,6 +115,10 @@ When implementing your solution, please make sure that the code is:
 5. `python3 -m venv venv`
 6. `source venv/bin/activate`
 7. `pip install -r app/requirements.txt && python app/app.py`
+8. Поменяйте в файле `.env` значение переменной `POSTGRES_HOST` на `localhost`
+9. Поменяйте в файле `.env` значение переменной `REDIS_HOST` на `localhost`
+10. `python app/main.py`
+
 
 ## Документация
 
