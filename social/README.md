@@ -106,20 +106,6 @@ When implementing your solution, please make sure that the code is:
 4. Укажите в файле `.env` собственный `EMAILHUNTER_API_KEY`
 5. `docker-compose up`
 
-## Альтернативный запуск решения
-
-1. `git clone https://github.com/mxmaslin/test-tasks.git`
-2. `cd test-tasks/social`
-3. `mv .env.local .env`
-4. Укажите в файле `.env` собственный `EMAILHUNTER_API_KEY`
-5. `python3 -m venv venv`
-6. `source venv/bin/activate`
-7. `pip install -r app/requirements.txt && python app/app.py`
-8. Поменяйте в файле `.env` значение переменной `POSTGRES_HOST` на `localhost`
-9. Поменяйте в файле `.env` значение переменной `REDIS_HOST` на `localhost`
-10. `python app/main.py`
-
-
 ## Документация
 
 Доступна после запуска решения на http://0.0.0.0:5000/docs
