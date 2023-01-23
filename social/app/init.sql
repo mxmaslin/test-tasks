@@ -1,11 +1,12 @@
--- DROP DATABASE "social";
--- CREATE DATABASE "social";
--- DROP USER "social";
--- CREATE USER "social";
--- GRANT ALL PRIVILEGES ON DATABASE "social" to "social";
+DROP DATABASE IF EXISTS "social";
+CREATE DATABASE "social";
+DROP DATABASE IF EXISTS "test_social";
+CREATE DATABASE "test_social";
 
--- CREATE DATABASE IF NOT EXISTS "test_social";
--- GRANT ALL PRIVILEGES ON DATABASE "test_social" to "social";
+CREATE USER "social";
+
+GRANT ALL PRIVILEGES ON DATABASE "social" to "social";
+GRANT ALL PRIVILEGES ON DATABASE "test_social" to "social";
 
 CREATE TABLE IF NOT EXISTS "basemodel" ("id" SERIAL NOT NULL PRIMARY KEY); 
 CREATE TABLE IF NOT EXISTS "user" ("id" SERIAL NOT NULL PRIMARY KEY, "email" VARCHAR(255) NOT NULL, "disabled" BOOLEAN DEFAULT FALSE, "password_hash" VARCHAR(255) NOT NULL); 
