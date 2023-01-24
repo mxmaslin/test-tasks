@@ -3,15 +3,16 @@ from functools import wraps
 from peewee_async import PostgresqlDatabase
 
 from app.storage import User, Post, Like, Dislike
-from app.settings import settings
+
+from settings import settings
 
 
 test_database = PostgresqlDatabase(
-    'test_social',
-    host=settings().POSTGRES_HOST,
-    port=settings().POSTGRES_PORT,
-    user=settings().POSTGRES_USER,
-    password=settings().POSTGRES_PASSWORD
+    settings().TEST_POSTGRES_DB,
+    host=settings().TEST_POSTGRES_HOST,
+    port=settings().TEST_POSTGRES_PORT,
+    user=settings().TEST_POSTGRES_USER,
+    password=settings().TEST_POSTGRES_PASSWORD
 )
 
 
