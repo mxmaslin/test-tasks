@@ -1,5 +1,7 @@
 import asyncio
 
+from functools import lru_cache
+
 from peewee import Model, BooleanField, CharField, ForeignKeyField, TextField
 from peewee_async import Manager, PostgresqlDatabase
 from redis import Redis, ConnectionPool
@@ -25,6 +27,7 @@ pool = ConnectionPool(
 )
 
 
+@lru_cache
 def get_redis() -> Redis:
     return Redis(connection_pool=pool)
 
