@@ -103,7 +103,6 @@ When implementing your solution, please make sure that the code is:
 1. `git clone https://github.com/mxmaslin/test-tasks.git`
 2. `cd test-tasks/social`
 3. `mv .env.local .env`
-4. Укажите в файле `.env` собственный `EMAILHUNTER_API_KEY`
 5. `docker-compose up`
 
 ## Документация
