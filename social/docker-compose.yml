@@ -13,43 +13,42 @@ services:
     command: uvicorn main:app --host ${APP_HOST} --port ${APP_PORT} --reload
     depends_on:
       - prod_db
-      - test_db
+      - redis
   
   redis:
     container_name: redis
     image: redis:alpine
-    # env_file:
-    #   - .env
+    env_file:
+      - .env
     ports:
       - ${REDIS_PORT}:${REDIS_PORT}
     restart: always
     command: redis-server
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
-    hostname: redis
 
   prod_db:
     container_name: prod_db
-    image: postgres
+    image: postgres:15
     restart: always
-    # env_file:
-    #   - .env
+    env_file:
+      - .env
     ports:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
     volumes:
-      - ./app/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./app/init_prod.sql:/docker-entrypoint-initdb.d/init_prod.sql
       - db_data:/var/lib/postgresql/data
 
   test_db:
     container_name: test_db
-    image: postgres
+    image: postgres:15
     restart: always
     env_file:
-      - .test.env
-    ports:
-      - ${TEST_POSTGRES_PORT}:${TEST_POSTGRES_PORT}
+      - .env
+    command:
+      -p ${TEST_POSTGRES_PORT}
     volumes:
-      - ./tests/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./tests/init_test.sql:/docker-entrypoint-initdb.d/init_test.sql
       - test_db_data:/var/lib/postgresql/data
 
   tests:
@@ -60,13 +59,11 @@ services:
       - ./tests/:/usr/src/social/tests/
       - test_db_data:/var/lib/postgresql/data
     env_file:
-      - .test.env
+      - .env
     command: pytest test_social.py -s --disable-warnings
     depends_on:
-      - web
       - test_db
 
 volumes:
     db_data:
     test_db_data:
-  

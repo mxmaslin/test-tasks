@@ -7,7 +7,7 @@ from fastapi.testclient import TestClient
 from app.main import app
 from app.storage import get_redis
 from tests.mocks import get_redis_mock, with_test_db
-
+from tests.settings import settings, Settings
 
 app.dependency_overrides[get_redis] = get_redis_mock
 
@@ -27,7 +27,6 @@ def test_signup(client):
     assert response.status_code == 200
     data = response.json()
     assert data['message'] == 'User 1 created'
-
 
 @with_test_db
 def test_signup_not_unique(client):

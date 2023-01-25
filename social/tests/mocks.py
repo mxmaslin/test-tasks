@@ -4,22 +4,20 @@ from peewee_async import PostgresqlDatabase
 
 from app.storage import User, Post, Like, Dislike
 
-from settings import settings
-
-
-test_database = PostgresqlDatabase(
-    settings().TEST_POSTGRES_DB,
-    host=settings().TEST_POSTGRES_HOST,
-    port=settings().TEST_POSTGRES_PORT,
-    user=settings().TEST_POSTGRES_USER,
-    password=settings().TEST_POSTGRES_PASSWORD
-)
+from tests.settings import settings
 
 
 def with_test_db(func):
     @wraps(func)
     def test_db_closure(*args, **kwargs):
         models = User, Post, Like, Dislike
+        test_database = PostgresqlDatabase(
+            settings().TEST_POSTGRES_DB,
+            host=settings().TEST_POSTGRES_HOST,
+            port=settings().TEST_POSTGRES_PORT,
+            user=settings().TEST_POSTGRES_USER,
+            password=settings().TEST_POSTGRES_PASSWORD
+        )
         with test_database.bind_ctx(models):
             test_database.create_tables(models)
             try:

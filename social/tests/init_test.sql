@@ -1,7 +1,8 @@
-CREATE DATABASE "social";
-CREATE USER "social";
+CREATE DATABASE "test_social";
 
-GRANT ALL PRIVILEGES ON DATABASE "social" to "social";
+CREATE USER "test_social" with password "test";
+
+GRANT ALL PRIVILEGES ON DATABASE "test_social" to "test_social";
 
 CREATE TABLE IF NOT EXISTS "basemodel" ("id" SERIAL NOT NULL PRIMARY KEY); 
 CREATE TABLE IF NOT EXISTS "user" ("id" SERIAL NOT NULL PRIMARY KEY, "email" VARCHAR(255) NOT NULL, "disabled" BOOLEAN DEFAULT FALSE, "password_hash" VARCHAR(255) NOT NULL); 

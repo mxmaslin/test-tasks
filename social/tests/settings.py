@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from pydantic import BaseSettings
 
 
-env_path = Path.cwd().joinpath('.test.env')
+env_path = Path.cwd().joinpath('.env')
 load_dotenv(env_path)
 
 
@@ -18,9 +18,6 @@ class Settings(BaseSettings):
     TEST_POSTGRES_PORT: int = 5433
     TEST_POSTGRES_USER: str
     TEST_POSTGRES_PASSWORD: str
-
-    TEST_REDIS_HOST: str = 'localhost'
-    TEST_REDIS_PORT: int = 6380
 
     SECRET_KEY: str
     ALGORITHM: str
