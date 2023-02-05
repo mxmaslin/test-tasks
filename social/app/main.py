@@ -6,34 +6,38 @@ from pathlib import Path
 import aiohttp
 import uvicorn
 
-from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi import Depends, FastAPI, HTTPException, status, Response
 from fastapi.responses import JSONResponse
-from peewee import DoesNotExist
 from redis import Redis
+from sqlalchemy.orm import Session
+from sqlalchemy.orm.exc import NoResultFound
 
 app_path = Path.cwd().parent
 sys.path.append(str(app_path))
 
+from app import crud
+from app.schemas import User
 from app.auth import (
     authenticate_user, create_access_token, get_current_active_user,
     get_password_hash
 )
+from app.dependencies import get_redis, get_db
 from app.logger import logger
-from app.storage import get_redis, database, objects, User, Post, Like, Dislike
-from app.settings import settings, Settings
-from app.validators import (
-    PostCreateModel, PostUpdateModel, UserLoginModel, UserSignupModel
+from app.schemas import (
+    PostCreate, PostUpdate, UserLogin, UserCreate
 )
+from app.settings import settings, Settings
 
 app = FastAPI()
 
 
 @app.post('/token', tags=['auth'])
 async def login_for_access_token(
-    user_data: UserLoginModel,
+    user_data: UserLogin,
+    db: Session = Depends(get_db),
     settings: Settings = Depends(settings)
-):
-    user = await authenticate_user(user_data.email, user_data.password)
+) -> Response:
+    user = await authenticate_user(db, user_data.email, user_data.password)
     if not user:
         logger.error('Failed to authenticate user')
         raise HTTPException(
@@ -54,10 +58,11 @@ async def login_for_access_token(
 
 
 @app.post('/signup', tags=['auth'])
-async def login_for_access_token(
-    user_data: UserSignupModel,
+async def signup(
+    user_data: UserCreate,
+    db: Session = Depends(get_db),
     settings: Settings = Depends(settings)
-):
+) -> Response:
     # Verify email with emailhunter.co
     async with aiohttp.ClientSession() as session:
         url = settings.EMAILHUNTER_URL.format(
@@ -76,11 +81,7 @@ async def login_for_access_token(
     password_hash = get_password_hash(user_data.password)
 
     try:
-        user = await objects.create(
-            User,
-            email=user_data.email,
-            password_hash=password_hash
-        )
+        user = crud.create_user(db, user_data.email, password_hash)
     except Exception as e:
         logger.error(str(e))
         raise HTTPException(
@@ -93,15 +94,13 @@ async def login_for_access_token(
 
 @app.post('/posts', tags=['posts'])
 async def create_post(
-    post_data: PostCreateModel,
+    post_data: PostCreate,
+    db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user)
-):
+) -> Response:
     try:
-        post = await objects.create(
-            Post,
-            user=current_user,
-            title=post_data.title,
-            content=post_data.content
+        post = crud.create_post(
+            db, current_user, post_data.title, post_data.content
         )
     except Exception as e:
         logger.error(str(e))
@@ -109,22 +108,16 @@ async def create_post(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail='Error writing post to db'
         )
-
     return JSONResponse(content={'message': f'Post {post.id} created'})
 
 
 @app.get('/posts', tags=['posts'])
-async def read_posts(skip: int = 0, limit: int = 10):
-    try:
-        posts = await objects.execute(
-            Post.select().order_by(Post.id).offset(skip).limit(limit)
-        )
-    except Exception as e:
-        logger.error(str(e))
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail='Failed to get posts from DB'
-        )
+async def read_posts(
+    db: Session = Depends(get_db),
+    skip: int = 0,
+    limit: int = 10
+):
+    posts = crud.get_posts(db, skip, limit)
     return JSONResponse(
         content={
             'posts': [
@@ -139,11 +132,10 @@ async def read_posts(skip: int = 0, limit: int = 10):
 
 
 @app.get('/posts/{post_id}', tags=['posts'])
-async def read_post(post_id: int):
-    try:
-        post = await objects.get(Post, id=post_id)
-    except DoesNotExist as e:
-        logger.error(str(e))
+async def read_post(post_id: int, db: Session = Depends(get_db)):
+    post = crud.get_post(db, post_id)
+    if not post:
+        logger.error(f'Post {post_id} not found')
         return HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail='Post does not exist'
@@ -156,14 +148,12 @@ async def read_post(post_id: int):
 @app.put('/posts/{post_id}', tags=['posts'])
 async def update_post(
     post_id: int,
-    post_data: PostUpdateModel,
+    post_data: PostUpdate,
+    db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user)
 ):
     try:
-        post = await objects.execute(
-            Post.select(Post, User).join(User).where(Post.id == post_id)
-        )
-        post = [x for x in post][0]
+        post = crud.get_post(db, post_id)
     except Exception as e:
         logger.error(str(e))
         return HTTPException(
@@ -180,9 +170,7 @@ async def update_post(
         )
 
     try:
-        post.title = post_data.title
-        post.content = post_data.content
-        await objects.update(post)
+        crud.update_post(db, post.id, post_data.title, post_data.content)
     except Exception as e:
         logger.error(str(e))
         raise HTTPException(
@@ -196,14 +184,12 @@ async def update_post(
 @app.delete('/posts/{post_id}', tags=['posts'])
 async def delete_post(
     post_id: int,
+    db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user)
 ):
     try:
-        post = await objects.execute(
-            Post.select(Post, User).join(User).where(Post.id == post_id)
-        )
-        post = [x for x in post][0]
-    except DoesNotExist as e:
+        post = crud.get_user_post(db, post_id)
+    except NoResultFound as e:
         logger.error(str(e))
         return HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -219,7 +205,7 @@ async def delete_post(
         )
 
     try:
-        await objects.delete(post)
+        crud.delete_post(db, post.id)
     except Exception as e:
         logger.error(str(e))
         return HTTPException(
@@ -230,123 +216,123 @@ async def delete_post(
     return JSONResponse(content={'message': f'Post {post.id} deleted'})
 
 
-@app.post('/posts/{post_id}/like', tags=['posts'])
-async def like_post(
-    post_id: int,
-    current_user: User = Depends(get_current_active_user),
-    cache: Redis = Depends(get_redis)
-):
-    try:
-        post = await objects.execute(
-            Post.select(Post, User).join(User).where(Post.id == post_id)
-        )
-        post = [x for x in post][0]
-    except Exception as e:
-        logger.error(str(e))
-        return HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail='Post does not exist'
-        )
+# @app.post('/posts/{post_id}/like', tags=['posts'])
+# async def like_post(
+#     post_id: int,
+#     current_user: User = Depends(get_current_active_user),
+#     cache: Redis = Depends(get_redis)
+# ):
+#     try:
+#         post = await objects.execute(
+#             Post.select(Post, User).join(User).where(Post.id == post_id)
+#         )
+#         post = [x for x in post][0]
+#     except Exception as e:
+#         logger.error(str(e))
+#         return HTTPException(
+#             status_code=status.HTTP_400_BAD_REQUEST,
+#             detail='Post does not exist'
+#         )
 
-    if post.user == current_user:
-        message = 'Unable to like own post'
-        logger.error(message)
-        return HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=message
-        )
+#     if post.user == current_user:
+#         message = 'Unable to like own post'
+#         logger.error(message)
+#         return HTTPException(
+#             status_code=status.HTTP_400_BAD_REQUEST,
+#             detail=message
+#         )
 
-    if cache.get(f'like:{post_id}:{current_user.id}'):
-        message = f'Post {post_id} was already liked by user {current_user.id}'
-        logger.error(message)
-        return HTTPException(
-            status_code=status.HTTP_409_CONFLICT, detail=message
-        )
+#     if cache.get(f'like:{post_id}:{current_user.id}'):
+#         message = f'Post {post_id} was already liked by user {current_user.id}'
+#         logger.error(message)
+#         return HTTPException(
+#             status_code=status.HTTP_409_CONFLICT, detail=message
+#         )
 
-    with database.atomic() as tx:
-        try:
-            if cache.get(f'dislike:{post_id}:{current_user.id}'):
-                cache.delete(f'dislike:{post_id}:{current_user.id}')
-            cache.set(f'like:{post_id}:{current_user.id}', 1)
+#     with database.atomic() as tx:
+#         try:
+#             if cache.get(f'dislike:{post_id}:{current_user.id}'):
+#                 cache.delete(f'dislike:{post_id}:{current_user.id}')
+#             cache.set(f'like:{post_id}:{current_user.id}', 1)
 
-            await objects.execute(
-                Dislike.delete().where(
-                    Dislike.post == post,
-                    Dislike.user == current_user
-                )
-            )
-            await objects.create(Like, post=post, user=current_user)
-        except Exception as e:
-            logger.error(str(e))
-            tx.rollback()
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail='Error writing like to db'
-            )
-        tx.commit()
+#             await objects.execute(
+#                 Dislike.delete().where(
+#                     Dislike.post == post,
+#                     Dislike.user == current_user
+#                 )
+#             )
+#             await objects.create(Like, post=post, user=current_user)
+#         except Exception as e:
+#             logger.error(str(e))
+#             tx.rollback()
+#             raise HTTPException(
+#                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+#                 detail='Error writing like to db'
+#             )
+#         tx.commit()
 
-    return JSONResponse(
-        content={'message': f'Post {post_id} liked by {current_user.id}'}
-    )
+#     return JSONResponse(
+#         content={'message': f'Post {post_id} liked by {current_user.id}'}
+#     )
 
 
-@app.post('/posts/{post_id}/dislike', tags=['posts'])
-async def dislike_post(
-    post_id: int,
-    current_user: User = Depends(get_current_active_user),
-    cache: Redis = Depends(get_redis)
-):
-    try:
-        post = await objects.execute(
-            Post.select(Post, User).join(User).where(Post.id == post_id)
-        )
-        post = [x for x in post][0]
-    except Exception as e:
-        logger.error(str(e))
-        return HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail='Post does not exist'
-        )
+# @app.post('/posts/{post_id}/dislike', tags=['posts'])
+# async def dislike_post(
+#     post_id: int,
+#     current_user: User = Depends(get_current_active_user),
+#     cache: Redis = Depends(get_redis)
+# ):
+#     try:
+#         post = await objects.execute(
+#             Post.select(Post, User).join(User).where(Post.id == post_id)
+#         )
+#         post = [x for x in post][0]
+#     except Exception as e:
+#         logger.error(str(e))
+#         return HTTPException(
+#             status_code=status.HTTP_400_BAD_REQUEST,
+#             detail='Post does not exist'
+#         )
 
-    if post.user == current_user:
-        message = 'Unable to dislike own post'
-        logger.error(message)
-        return HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=message
-        )
+#     if post.user == current_user:
+#         message = 'Unable to dislike own post'
+#         logger.error(message)
+#         return HTTPException(
+#             status_code=status.HTTP_400_BAD_REQUEST,
+#             detail=message
+#         )
 
-    if cache.get(f'dislike:{post_id}:{current_user.id}'):
-        message = f'Post {post_id} was already disliked by user {current_user.id}'
-        logger.error(message)
-        return HTTPException(
-            status_code=status.HTTP_409_CONFLICT, detail=message
-        )
+#     if cache.get(f'dislike:{post_id}:{current_user.id}'):
+#         message = f'Post {post_id} was already disliked by user {current_user.id}'
+#         logger.error(message)
+#         return HTTPException(
+#             status_code=status.HTTP_409_CONFLICT, detail=message
+#         )
 
-    with database.atomic() as tx:
-        try:
-            if cache.get(f'like:{post_id}:{current_user.id}'):
-                cache.delete(f'like:{post_id}:{current_user.id}')
-            cache.set(f'dislike:{post_id}:{current_user.id}', 1)
+#     with database.atomic() as tx:
+#         try:
+#             if cache.get(f'like:{post_id}:{current_user.id}'):
+#                 cache.delete(f'like:{post_id}:{current_user.id}')
+#             cache.set(f'dislike:{post_id}:{current_user.id}', 1)
 
-            await objects.execute(
-                Like.delete().where(
-                    Like.post == post, Like.user == current_user
-                )
-            )
-            await objects.create(Dislike, post=post.id, user=current_user)
-        except Exception as e:
-            logger.error(str(e))
-            tx.rollback()
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail='Error writing dislike to db'
-            )
-        tx.commit()
+#             await objects.execute(
+#                 Like.delete().where(
+#                     Like.post == post, Like.user == current_user
+#                 )
+#             )
+#             await objects.create(Dislike, post=post.id, user=current_user)
+#         except Exception as e:
+#             logger.error(str(e))
+#             tx.rollback()
+#             raise HTTPException(
+#                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+#                 detail='Error writing dislike to db'
+#             )
+#         tx.commit()
 
-    return JSONResponse(
-        content={'message': f'Post {post_id} disliked by {current_user.id}'}
-    )
+#     return JSONResponse(
+#         content={'message': f'Post {post_id} disliked by {current_user.id}'}
+#     )
 
 
 if __name__ == '__main__':

@@ -1,7 +1,5 @@
 from functools import wraps
 
-from peewee_async import PostgresqlDatabase
-
 from app.storage import User, Post, Like, Dislike
 
 from tests.settings import settings
