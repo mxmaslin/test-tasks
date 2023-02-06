@@ -2,7 +2,6 @@ import sys
 
 from datetime import timedelta
 from pathlib import Path
-from typing import List
 
 import aiohttp
 import uvicorn
@@ -24,8 +23,9 @@ from app.auth import (
 from app.dependencies import get_redis, get_db
 from app.logger import logger
 from app.schemas import (
-    PostCreate, PostUpdate, UserLogin, UserCreate, UserModel, PostModel
+    PostCreate, PostUpdate, UserLogin, UserCreate, UserModel
 )
+from app.models import Post, User, Like, Dislike
 from app.settings import settings, Settings
 
 app = FastAPI()
@@ -37,7 +37,7 @@ async def login_for_access_token(
     db: Session = Depends(get_db),
     settings: Settings = Depends(settings)
 ) -> Response:
-    user = authenticate_user(db, user_data.email, user_data.password)
+    user: User = authenticate_user(db, user_data.email, user_data.password)
     if not user:
         logger.error('Failed to authenticate user')
         raise HTTPException(
@@ -95,11 +95,12 @@ async def signup(
 @app.post('/posts', tags=['posts'])
 async def create_post(
     post_data: PostCreate,
+    db: Session = Depends(get_db),
     current_user: UserModel = Depends(get_current_active_user),
 ) -> Response:
     try:
         post = crud.create_post(
-            current_user, post_data.title, post_data.content
+            db, current_user.id, post_data.title, post_data.content
         )
     except Exception as e:
         logger.error(str(e))
@@ -143,18 +144,18 @@ async def read_post(post_id: int) -> Response:
 @app.put('/posts/{post_id}', tags=['posts'])
 async def update_post(
     post_id: int,
-    post_data: PostUpdate,
+    post_new_data: PostUpdate,
+    db: Session = Depends(get_db),
     current_user: UserModel = Depends(get_current_active_user),
 ) -> Response:
     try:
-        post = crud.get_post(post_id)
+        post: Post = crud.get_user_post(db, post_id)
     except Exception as e:
         logger.error(str(e))
         return HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail='Post does not exist'
         )
-
     if post.user != current_user:
         message = 'Unable to update other\'s posts'
         logger.error(message)
@@ -164,7 +165,7 @@ async def update_post(
         )
 
     try:
-        crud.update_post(post.id, post_data.title, post_data.content)
+        crud.update_post(db, post, post_new_data)
     except Exception as e:
         logger.error(str(e))
         raise HTTPException(
@@ -178,12 +179,12 @@ async def update_post(
 @app.delete('/posts/{post_id}', tags=['posts'])
 async def delete_post(
     post_id: int,
+    db: Session = Depends(get_db),
     current_user: UserModel = Depends(get_current_active_user),
 ):
-    try:
-        post = crud.get_user_post(post_id)
-    except NoResultFound as e:
-        logger.error(str(e))
+    post: Post = crud.get_user_post(db, post_id)
+    if not post:
+        logger.error(f'Post {post_id} not found')
         return HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail='Post does not exist'
@@ -198,7 +199,7 @@ async def delete_post(
         )
 
     try:
-        crud.delete_post(post.id)
+        crud.delete_post(db, post.id)
     except Exception as e:
         logger.error(str(e))
         return HTTPException(
@@ -217,7 +218,7 @@ async def like_post(
     db: Session = Depends(get_db),
 ):
     try:
-        post = crud.get_user_post(post_id)
+        post = crud.get_user_post(db, post_id)
     except Exception as e:
         logger.error(str(e))
         return HTTPException(

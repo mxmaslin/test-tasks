@@ -1,9 +1,7 @@
-from fastapi import Depends
 from sqlalchemy.orm import Session
 
 from app.models import User, Post, Like, Dislike
-from app.auth import get_password_hash
-from app.dependencies import get_db
+from app.schemas import PostModel
 
 
 def get_user(db: Session, email: str) -> User:
@@ -23,41 +21,71 @@ def get_post(db: Session, post_id: int) -> Post:
 
 
 def get_user_post(db: Session, post_id: int):
-    return db.query(User).join(User.posts).filter(Post.id==post_id).all()
+    return db.query(Post).join(
+        User,
+        User.id == Post.user_id
+    ).filter(Post.id==post_id).first()
 
 
 def get_posts(db: Session, limit: int = 0, offset: int = 0):
     return db.query(Post).filter().limit(limit).offset(offset)
 
 
-def create_post(db: Session, title: str, content: str):
-    return db.query(Post).insert().values(
-        {'title': title, 'content': content}
-    )
+def create_post(db: Session, user_id: int, title: str, content: str):
+    post = Post(user_id=user_id, title=title, content=content)
+    db.add(post)
+    db.commit()
+    db.refresh(post)
+    return post
 
 
-def update_post(db: Session, post_id: int, title: str, content: str):
-    return db.query(Post).update().where(Post.id==post_id).values(
-        {'title': title, 'content': content}
-    )
+def update_post(
+    db: Session,
+    post: Post,
+    post_new_data: PostModel
+):
+    new_data = post_new_data.dict(exclude_unset=True)
+    for k, v in new_data.items():
+        setattr(post, k, v)
+    db.add(post)
+    db.commit()
+    db.refresh(post)
+    return post
 
 
 def delete_post(db: Session, post_id: int):
-    db.query(Post).delete().where(Post.id==post_id)
+    post = get_post(db, post_id)
+    db.delete(post)
+    db.commit()
 
 
 def delete_like(db: Session, post_id: int, user: User):
-    db.query(Like).delete().where(Dislike.post.id==post_id, Dislike.user==user)
+    like = db.query(Like).filter(
+        Like.id==post_id, Like.user_id==user.id
+    ).first()
+    db.delete(like)
+    db.commit()
 
 
 def delete_dislike(db: Session, post_id: int, user: User):
-    db.query(Dislike).delete().where(
-        Dislike.post.id==post_id, Dislike.user==user
-    )
+    dislike = db.query(Dislike).filter(
+        Dislike.id==post_id, Dislike.user_id==user.id
+    ).first()
+    db.delete(dislike)
+    db.commit()
+
 
 def create_like(db: Session, post_id: int, user: User):
-    db.query(Like).insert().values({'post': post_id, 'user': user})
+    like = Like(post=post_id, user=user)
+    db.add(like)
+    db.commit()
+    db.refresh(like)
+    return like
 
 
 def create_dislike(db: Session, post_id: int, user: User):
-    db.query(Dislike).insert().values({'post': post_id, 'user': user})
+    dislike = Dislike(post=post_id, user=user)
+    db.add(dislike)
+    db.commit()
+    db.refresh(dislike)
+    return dislike
