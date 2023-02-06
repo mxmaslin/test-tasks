@@ -18,6 +18,7 @@ class Settings(BaseSettings):
     POSTGRES_PORT: int = 5432
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str
+    SQLALCHEMY_DATABASE_URL: str
 
     REDIS_HOST: str = 'localhost'
     REDIS_PORT: int = 6379

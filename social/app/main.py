@@ -34,9 +34,10 @@ app = FastAPI()
 @app.post('/token', tags=['auth'])
 async def login_for_access_token(
     user_data: UserLogin,
+    db: Session = Depends(get_db),
     settings: Settings = Depends(settings)
 ) -> Response:
-    user = await authenticate_user(user_data.email, user_data.password)
+    user = authenticate_user(db, user_data.email, user_data.password)
     if not user:
         logger.error('Failed to authenticate user')
         raise HTTPException(
@@ -59,6 +60,7 @@ async def login_for_access_token(
 @app.post('/signup', tags=['auth'])
 async def signup(
     user_data: UserCreate,
+    db: Session = Depends(get_db),
     settings: Settings = Depends(settings)
 ) -> Response:
     # Verify email with emailhunter.co
@@ -79,7 +81,7 @@ async def signup(
     password_hash = get_password_hash(user_data.password)
 
     try:
-        user = crud.create_user(user_data.email, password_hash)
+        user = crud.create_user(db, user_data.email, password_hash)
     except Exception as e:
         logger.error(str(e))
         raise HTTPException(

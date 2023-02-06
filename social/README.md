@@ -115,3 +115,14 @@ When implementing your solution, please make sure that the code is:
 
 Запуск тестов ...
 
+## Миграции
+
+### Автогенерация миграций
+
+В корневой директории проекта запустите команду
+
+`alembic -c alembic.ini revision --autogenerate -m "init"`
+
+### Применение миграций
+
+`alembic upgrade head`

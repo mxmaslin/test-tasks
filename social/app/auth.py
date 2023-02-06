@@ -26,9 +26,9 @@ def get_password_hash(password):
     return pwd_context.hash(password)
 
 
-async def authenticate_user(email: str, password: str, db: Session = Depends(get_db)) -> User | bool:
+def authenticate_user(db: Session, email: str, password: str) -> User | bool:
     try:
-        user = db.query(User).filter(User.email==email).first()
+        user = crud.get_user(db, email)
     except Exception as e:
         logger.error(str(e))
         return False
@@ -50,7 +50,7 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     return encoded_jwt
 
 
-async def get_current_user(
+def get_current_user(
     db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)
 ):
     credentials_exception = HTTPException(
@@ -75,7 +75,7 @@ async def get_current_user(
     return user
 
 
-async def get_current_active_user(
+def get_current_active_user(
     current_user: User = Depends(get_current_user)
 ):
     if current_user.disabled:
