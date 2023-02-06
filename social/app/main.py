@@ -112,8 +112,10 @@ async def create_post(
 
 
 @app.get('/posts', tags=['posts'])
-async def read_posts(skip: int = 0, limit: int = 10) -> Response:
-    posts = crud.get_posts(skip, limit)
+async def read_posts(
+    limit: int = 10, offset: int = 0, db: Session = Depends(get_db)
+) -> Response:
+    posts = crud.get_posts(db, limit, offset)
     return JSONResponse(
         content={
             'posts': [
@@ -127,9 +129,9 @@ async def read_posts(skip: int = 0, limit: int = 10) -> Response:
     )
 
 
-@app.get('/posts/{post_id}', tags=['posts'])
-async def read_post(post_id: int) -> Response:
-    post = crud.get_post(post_id)
+@app.get('/post/{post_id}', tags=['posts'])
+async def read_post(post_id: int, db: Session = Depends(get_db)) -> Response:
+    post: Post = crud.get_post(db, post_id)
     if not post:
         logger.error(f'Post {post_id} not found')
         return HTTPException(
@@ -241,22 +243,20 @@ async def like_post(
             status_code=status.HTTP_409_CONFLICT, detail=message
         )
 
-    with db.begin() as tx:
-        try:
-            if cache.get(f'dislike:{post_id}:{current_user.id}'):
-                cache.delete(f'dislike:{post_id}:{current_user.id}')
-            cache.set(f'like:{post_id}:{current_user.id}', 1)
-
-            crud.delete_dislike(post.id, current_user)
-            crud.create_like(post.id, current_user)
-        except Exception as e:
-            logger.error(str(e))
-            tx.rollback()
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail='Error writing like to db'
-            )
-        tx.commit()
+    try:
+        if cache.get(f'dislike:{post_id}:{current_user.id}'):
+            cache.delete(f'dislike:{post_id}:{current_user.id}')
+        cache.set(f'like:{post_id}:{current_user.id}', 1)
+        
+        crud.delete_dislike(db, post.id, current_user.id)
+        crud.create_like(db, post.id, current_user.id)
+    except Exception as e:
+        logger.error(str(e))
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail='Error writing like to db'
+        )
 
     return JSONResponse(
         content={'message': f'Post {post_id} liked by {current_user.id}'}
@@ -271,7 +271,7 @@ async def dislike_post(
     db: Session = Depends(get_db),
 ):
     try:
-        post = crud.get_user_post(post_id)
+        post = crud.get_user_post(db, post_id)
     except Exception as e:
         logger.error(str(e))
         return HTTPException(
@@ -294,22 +294,20 @@ async def dislike_post(
             status_code=status.HTTP_409_CONFLICT, detail=message
         )
 
-    with db.begin() as tx:
-        try:
-            if cache.get(f'like:{post_id}:{current_user.id}'):
-                cache.delete(f'like:{post_id}:{current_user.id}')
-            cache.set(f'dislike:{post_id}:{current_user.id}', 1)
+    try:
+        if cache.get(f'like:{post_id}:{current_user.id}'):
+            cache.delete(f'like:{post_id}:{current_user.id}')
+        cache.set(f'dislike:{post_id}:{current_user.id}', 1)
 
-            crud.delete_like(post_id, current_user)
-            crud.create_dislike(post_id, current_user)
-        except Exception as e:
-            logger.error(str(e))
-            tx.rollback()
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail='Error writing dislike to db'
-            )
-        tx.commit()
+        crud.delete_like(db, post_id, current_user.id)
+        crud.create_dislike(db, post_id, current_user.id)
+    except Exception as e:
+        logger.error(str(e))
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail='Error writing dislike to db'
+        )
 
     return JSONResponse(
         content={'message': f'Post {post_id} disliked by {current_user.id}'}

@@ -3,8 +3,9 @@ from functools import lru_cache
 from redis import Redis, ConnectionPool
 from sqlalchemy.orm import Session
 
-from app.settings import settings
+from app.logger import logger
 from app.models import SessionLocal
+from app.settings import settings
 
 
 pool = ConnectionPool(
@@ -20,8 +21,8 @@ def get_redis() -> Redis:
 
 
 def get_db() -> Session:
-    db = SessionLocal()
+    session = SessionLocal()
     try:
-        yield db
+        yield session
     finally:
-        db.close()
+        session.close()

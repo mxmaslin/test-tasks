@@ -59,32 +59,34 @@ def delete_post(db: Session, post_id: int):
     db.commit()
 
 
-def delete_like(db: Session, post_id: int, user: User):
+def delete_like(db: Session, post_id: int, user_id: int):
     like = db.query(Like).filter(
-        Like.id==post_id, Like.user_id==user.id
+        Like.post_id==post_id, Like.user_id==user_id
     ).first()
-    db.delete(like)
-    db.commit()
+    if like is not None:
+        db.delete(like)
+        db.commit()
 
 
-def delete_dislike(db: Session, post_id: int, user: User):
+def delete_dislike(db: Session, post_id: int, user_id: int):
     dislike = db.query(Dislike).filter(
-        Dislike.id==post_id, Dislike.user_id==user.id
+        Dislike.post_id==post_id, Dislike.user_id==user_id
     ).first()
-    db.delete(dislike)
-    db.commit()
+    if dislike is not None:
+        db.delete(dislike)
+        db.commit()
 
 
-def create_like(db: Session, post_id: int, user: User):
-    like = Like(post=post_id, user=user)
+def create_like(db: Session, post_id: int, user_id: int):
+    like = Like(post_id=post_id, user_id=user_id)
     db.add(like)
     db.commit()
     db.refresh(like)
     return like
 
 
-def create_dislike(db: Session, post_id: int, user: User):
-    dislike = Dislike(post=post_id, user=user)
+def create_dislike(db: Session, post_id: int, user_id: int):
+    dislike = Dislike(post_id=post_id, user_id=user_id)
     db.add(dislike)
     db.commit()
     db.refresh(dislike)
