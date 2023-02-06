@@ -26,7 +26,7 @@ def get_password_hash(password):
     return pwd_context.hash(password)
 
 
-async def authenticate_user(db: Session, email: str, password: str) -> User | bool:
+async def authenticate_user(email: str, password: str, db: Session = Depends(get_db)) -> User | bool:
     try:
         user = db.query(User).filter(User.email==email).first()
     except Exception as e:
