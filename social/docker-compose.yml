@@ -57,7 +57,7 @@ services:
     volumes:
       - ./app/:/usr/src/social/app/
       - ./tests/:/usr/src/social/tests/
-      - test_db_data:/var/lib/postgresql/data
+      # - test_db_data:/var/lib/postgresql/data
     env_file:
       - .env
     command: pytest test_social.py -s --disable-warnings

@@ -1,6 +1,5 @@
 from pydantic import BaseModel
-from sqlalchemy.orm import Session
-from typing import List, Union, Optional
+from typing import List
 
 from app.models import User, Post, Like, Dislike
 

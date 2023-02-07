@@ -27,10 +27,9 @@ def get_password_hash(password):
 
 
 def authenticate_user(db: Session, email: str, password: str) -> User | bool:
-    try:
-        user = crud.get_user(db, email)
-    except Exception as e:
-        logger.error(str(e))
+    user = crud.get_user(db, email)
+    if user is None:
+        logger.error(f'User {email} not found')
         return False
     if not verify_password(password, user.password_hash):
         return False

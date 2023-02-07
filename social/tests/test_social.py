@@ -1,13 +1,10 @@
 import pytest
 
-from unittest.mock import patch
-
 from fastapi.testclient import TestClient
 
 from app.main import app
 from app.dependencies import get_db, get_redis
-from tests.dependencies import get_redis_mock, override_get_db
-
+from tests.dependencies import get_redis_mock, override_get_db, test_db
 
 app.dependency_overrides[get_redis] = get_redis_mock
 app.dependency_overrides[get_db] = override_get_db
@@ -20,7 +17,7 @@ def client() -> TestClient:
         yield c
 
 
-def test_signup(client):
+def test_signup(client, test_db):
     data = {'email': 'project777@mail.ru', 'password': 'test'}
     response = client.post('/signup', json=data)
     assert response.status_code == 200
@@ -28,14 +25,14 @@ def test_signup(client):
     assert data['message'] == 'User 1 created'
 
 
-def test_signup_not_unique(client):
+def test_signup_not_unique(client, test_db):
     data = {'email': 'project777@mail.ru', 'password': 'test'}
     client.post('/signup', json=data)
     response = client.post('/signup', json=data)
     assert response.status_code == 500
 
 
-def test_get_token(client):
+def test_get_token(client, test_db):
     data = {'email': 'project777@mail.ru', 'password': 'test'}
     client.post('/signup', json=data)
     response = client.post('/token', json=data)
@@ -44,14 +41,14 @@ def test_get_token(client):
     assert 'access_token' in data
 
 
-def test_get_token_invalid_user(client):
+def test_get_token_invalid_user(client, test_db):
     data = {'email': 'wrong@mail.ru', 'password': 'test'}
     response = client.post('/token', json=data)
     data = response.json()
     assert data['detail'] == 'Incorrect username or password'
 
 
-def test_create_post(client):
+def test_create_post(client, test_db):
     data = {'email': 'project777@mail.ru', 'password': 'test'}
     client.post('/signup', json=data)
     response = client.post('/token', json=data)
@@ -66,7 +63,7 @@ def test_create_post(client):
     assert data['message'] == 'Post 1 created'
 
 
-def test_update_post(client):
+def test_update_post(client, test_db):
     data = {'email': 'project777@mail.ru', 'password': 'test'}
     client.post('/signup', json=data)
     response = client.post('/token', json=data)
@@ -87,7 +84,7 @@ def test_update_post(client):
     assert data['message'] == 'Post 1 updated'
 
 
-def test_delete_post(client):
+def test_delete_post(client, test_db):
     data = {'email': 'project777@mail.ru', 'password': 'test'}
     client.post('/signup', json=data)
     response = client.post('/token', json=data)
@@ -106,7 +103,7 @@ def test_delete_post(client):
     assert data['message'] == 'Post 1 deleted'
 
 
-def test_like_own_post(client):
+def test_like_own_post(client, test_db):
     data = {'email': 'project777@mail.ru', 'password': 'test'}
     client.post('/signup', json=data)
     response = client.post('/token', json=data)
@@ -125,8 +122,7 @@ def test_like_own_post(client):
     assert data['detail'] == 'Unable to like own post'
 
 
-def test_like_others_post(client):
-    # TBD: this test is broken. Possibly redis mock is not applied
+def test_like_others_post(client, test_db):
     # create UserA and get a token for the UserA
     data_a = {'email': 'project777@mail.ru', 'password': 'test'}
     client.post('/signup', json=data_a)
@@ -151,8 +147,4 @@ def test_like_others_post(client):
     # like UserA post by UserB
     headers_b = {'Authorization': f'Bearer {token_b}'}
     response = client.post(f'/posts/{post_id}/like', headers=headers_b)
-    data = response.json()
-    print('possibly redis mock wasn\'t apply')
-    assert False
-    # the post will already be liked. Looks like redis mock wasn't apply
-    # assert data['detail'] == 'Unable to like own post'
+    assert response.status_code == 200

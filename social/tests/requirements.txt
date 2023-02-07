@@ -28,12 +28,10 @@ mirakuru==2.4.2
 multidict==6.0.4
 packaging==23.0
 passlib==1.7.4
-peewee==3.15.4
-peewee-db-evolve==3.7.6
 pluggy==1.0.0
 port-for==0.6.3
 psutil==5.9.4
-psycopg2==2.9.5
+# psycopg2==2.9.5
 psycopg2-binary==2.9.5
 pyasn1==0.4.8
 pycparser==2.21

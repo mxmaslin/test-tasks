@@ -3,7 +3,6 @@ from functools import lru_cache
 from redis import Redis, ConnectionPool
 from sqlalchemy.orm import Session
 
-from app.logger import logger
 from app.models import SessionLocal
 from app.settings import settings
 

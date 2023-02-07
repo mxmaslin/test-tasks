@@ -10,7 +10,6 @@ from fastapi import Depends, FastAPI, HTTPException, status, Response
 from fastapi.responses import JSONResponse
 from redis import Redis
 from sqlalchemy.orm import Session
-from sqlalchemy.orm.exc import NoResultFound
 
 app_path = Path.cwd().parent
 sys.path.append(str(app_path))
