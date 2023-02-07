@@ -148,3 +148,50 @@ def test_like_others_post(client, test_db):
     headers_b = {'Authorization': f'Bearer {token_b}'}
     response = client.post(f'/posts/{post_id}/like', headers=headers_b)
     assert response.status_code == 200
+
+
+def test_dislike_own_post(client, test_db):
+    data = {'email': 'project777@mail.ru', 'password': 'test'}
+    client.post('/signup', json=data)
+    response = client.post('/token', json=data)
+    data = response.json()
+    token = data['access_token']
+
+    data = {'title': 'post title', 'content': 'post content'}
+    headers = {'Authorization': f'Bearer {token}'}
+    response = client.post('/posts', json=data, headers=headers)
+    data = response.json()
+    _, post_id, _ = data['message'].split()
+
+    response = client.post(f'/posts/{post_id}/dislike', headers=headers)
+    data = response.json()
+    assert data['status_code'] == 400
+    assert data['detail'] == 'Unable to dislike own post'
+
+
+def test_dislike_others_post(client, test_db):
+    # create UserA and get a token for the UserA
+    data_a = {'email': 'project777@mail.ru', 'password': 'test'}
+    client.post('/signup', json=data_a)
+    response = client.post('/token', json=data_a)
+    data = response.json()
+    token_a = data['access_token']
+
+    # create post by userA
+    post_data = {'title': 'post title', 'content': 'post content'}
+    headers_a = {'Authorization': f'Bearer {token_a}'}
+    response = client.post('/posts', json=post_data, headers=headers_a)
+    data = response.json()
+    _, post_id, _ = data['message'].split()
+
+    # create UserB and get a token for the UserB
+    data_b = {'email': 'project888@gmail.com', 'password': 'test'}
+    client.post('/signup', json=data_b)
+    response = client.post('/token', json=data_b)
+    data = response.json()
+    token_b = data['access_token']
+
+    # like UserA post by UserB
+    headers_b = {'Authorization': f'Bearer {token_b}'}
+    response = client.post(f'/posts/{post_id}/dislike', headers=headers_b)
+    assert response.status_code == 200
