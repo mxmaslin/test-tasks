@@ -1,0 +1,53 @@
+version: '3.7'
+
+services:
+  web:
+    container_name: web
+    build: ./app
+    volumes:
+      - ./app/:/usr/src/user_crud/app/
+    env_file:
+      - .env
+    ports:
+      - ${APP_PORT}:${APP_PORT}
+    command: uvicorn main:app --host ${APP_HOST} --port ${APP_PORT} --reload
+    depends_on:
+      - prod_db
+      - redis
+  
+  redis:
+    container_name: redis
+    image: redis:alpine
+    env_file:
+      - .env
+    ports:
+      - ${REDIS_PORT}:${REDIS_PORT}
+    restart: always
+    command: redis-server
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+
+  prod_db:
+    container_name: prod_db
+    image: postgres
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    volumes:
+      - ./app/init_prod.sql:/docker-entrypoint-initdb.d/init_prod.sql
+      - db_data:/var/lib/postgresql/data
+
+  tests:
+    container_name: tests
+    build: ./tests
+    volumes:
+      - ./app/:/usr/src/user_crud/app/
+      - ./tests/:/usr/src/user_crud/tests/
+    env_file:
+      - .env
+    command: pytest test_crud.py -s --disable-warnings
+
+volumes:
+    db_data:
