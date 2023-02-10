@@ -8,7 +8,8 @@
 
 # Тестовые задания
 
-- [Простой RESTful API для социальной сети на FastAPI](https://github.com/mxmaslin/test-tasks/tree/master/social)
+- [Формирование дерева из списка строк]()
+- [REST API для социальной сети на FastAPI](https://github.com/mxmaslin/test-tasks/tree/master/social)
 - [Сервис бронирования](https://github.com/mxmaslin/test-tasks/tree/master/booking)
 - [Сервис рассылки сообщений](https://github.com/mxmaslin/test-tasks/tree/master/sender)
 - [Загрузка csv в бд](https://github.com/mxmaslin/test-tasks/tree/master/csv2db)
