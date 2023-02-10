@@ -1,51 +1,52 @@
-from pydantic import BaseModel
-from typing import List
+from typing import Optional
 
-from app.models import User, Post, Like, Dislike
+from pydantic import BaseModel, Field, validator
+
+from app.models import StringValidator
 
 
 class UserBase(BaseModel):
-    email: str
+    phone_number: Field(min_length=11, max_length=11)
+
+    @validator
+    def validate_phone_number(cls, value):
+        return StringValidator.is_valid_phone_number(value)
+
+
+
+class UserGet(UserBase):
+    ...
+
+
+class UserDelete(UserBase):
+    ...
 
 
 class UserCreate(UserBase):
-    password: str
+    name: Field(max_length=50)
+    surname: Field(max_length=50)
+    patronymic: Optional[str]
+    email: Optional[str]
+    country: Field(max_length=50)
 
+    @validator('name')
+    def validate_name(cls, value):
+        return StringValidator.is_cyrillic_plus(value)
 
-class UserLogin(UserCreate):
-    ...
+    @validator('surname')
+    def validate_surname(cls, value):
+        return StringValidator.is_cyrillic_plus(value)
 
+    @validator('patronymic')
+    def validate_patronymic(cls, value):
+        if value:
+            return StringValidator.is_cyrillic_plus(value)
 
-class UserModel(UserCreate):
-    id: int
-    disabled: bool
-    password_hash: str
-    posts: List[Post] = []
+    @validator('email')
+    def validate_email(cls, value):
+        if value:
+            return StringValidator.is_valid_email(value)
 
-    class Config:
-        orm_mode = True
-        arbitrary_types_allowed = True
-
-
-class PostBase(BaseModel):
-    title: str
-    content: str
-
-
-class PostCreate(PostBase):
-    ...
-
-
-class PostUpdate(PostBase):
-    ...
-
-
-class PostModel(PostBase):
-    id: int
-
-    class Config:
-        orm_mode = True    
-
-
-class TokenData(BaseModel):
-    email: str | None = None
+    @validator('country')
+    def validate_country(cls, value):
+        return StringValidator.is_cyrillic_plus(value)

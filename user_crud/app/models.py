@@ -21,7 +21,7 @@ class StringValidator:
         return bool(re.match(r'^[\u0400-\u04FF \-]+$', string))
 
     @staticmethod
-    def is_phone_number(string):
+    def is_valid_phone_number(string):
         return bool(re.match(r'^7\d{10}$', string))
 
     @staticmethod
@@ -38,8 +38,8 @@ class User(Base):
     user_id: Mapped[int] = mapped_column(String(12), primary_key=True)
     name: Mapped[str] = mapped_column(String(50))
     surname: Mapped[str] = mapped_column(String(50))
-    patronymic: Mapped[str] = mapped_column(String(50))
-    phone: Mapped[str] = mapped_column(String(11))
+    patronymic: Mapped[str] = mapped_column(String(50), nullable=True)
+    phone_number: Mapped[str] = mapped_column(String(11))
     email: Mapped[str] = mapped_column(String, nullable=True)
     country: Mapped[str] = mapped_column(String(50))
     date_created: Mapped[DateTime] = mapped_column(
@@ -51,9 +51,9 @@ class User(Base):
         onupdate=expression.text('CURRENT_TIMESTAMP')
     )
 
-    @validates('phone')
-    def validate_phone(self, key, phone_number):
-        if not StringValidator.is_phone_number(phone_number):
+    @validates('phone_number')
+    def validate_phone_number(self, key, phone_number):
+        if not StringValidator.is_valid_phone_number(phone_number):
             raise ValueError(f'{phone_number} is not a valid ru phone number')
         return phone_number
 
