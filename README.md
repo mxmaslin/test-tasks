@@ -8,7 +8,8 @@
 
 # Тестовые задания
 
-- [Формирование дерева из списка строк]()
+- [Базовый CRUD на FastAPI с валидацией](https://github.com/mxmaslin/test-tasks/tree/master/user_crud)
+- [Формирование дерева из списка строк](https://github.com/mxmaslin/test-tasks/tree/master/mapper)
 - [REST API для социальной сети на FastAPI](https://github.com/mxmaslin/test-tasks/tree/master/social)
 - [Сервис бронирования](https://github.com/mxmaslin/test-tasks/tree/master/booking)
 - [Сервис рассылки сообщений](https://github.com/mxmaslin/test-tasks/tree/master/sender)
