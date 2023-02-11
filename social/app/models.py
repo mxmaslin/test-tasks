@@ -40,8 +40,6 @@ class Like(Base):
     post_id: Mapped[int] = mapped_column(
         ForeignKey('posts.id'), primary_key=True
     )
-    # user: Mapped[User] = relationship(backref='user_likes')
-    # post: Mapped[Post] = relationship(backref='post_likes')
 
 
 class Dislike(Base):
@@ -53,5 +51,3 @@ class Dislike(Base):
     post_id: Mapped[int] = mapped_column(
         ForeignKey('posts.id'), primary_key=True
     )
-    # user: Mapped[User] = relationship(backref='user_dislikes')
-    # post: Mapped[Post] = relationship(backref='post_dislikes')
