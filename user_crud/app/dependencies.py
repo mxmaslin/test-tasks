@@ -1,5 +1,6 @@
 from functools import lru_cache
 
+from dadata import Dadata
 from redis import Redis, ConnectionPool
 from sqlalchemy.orm import Session
 
@@ -25,3 +26,8 @@ def get_db() -> Session:
         yield session
     finally:
         session.close()
+
+
+@lru_cache
+def get_dadata() -> Dadata:
+    return Dadata(settings().DADATA_KEY)

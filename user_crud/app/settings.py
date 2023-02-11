@@ -26,9 +26,7 @@ class Settings(BaseSettings):
     APP_HOST: str = '0.0.0.0'
     APP_PORT: int = 5000
 
-    SECRET_KEY: str
-    ALGORITHM: str
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
+    DADATA_KEY: str
 
 
 @lru_cache()

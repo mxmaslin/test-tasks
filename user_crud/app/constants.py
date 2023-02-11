@@ -1,0 +1,7 @@
+INVALID_NAME = '{} is not a valid ru name'
+INVALID_SURNAME = '{} is not a valid ru surname'
+INVALID_PATRONYMIC = '{} is not a valid ru patronymic'
+INVALID_PHONE = '{} is not a valid ru phone number'
+INVALID_EMAIL = '{} is not a valid email'
+INVALID_COUNTRY = '{} is not a valid ru country'
+CACHE_KEY = 'user_phone:{}:country'

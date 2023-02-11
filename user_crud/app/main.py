@@ -5,6 +5,7 @@ from pathlib import Path
 import aiohttp
 import uvicorn
 
+from dadata import Dadata
 from fastapi import Depends, FastAPI, HTTPException, status, Response
 from fastapi.responses import JSONResponse
 from redis import Redis
@@ -15,7 +16,7 @@ sys.path.append(str(app_path))
 
 import crud
 from app.constants import CACHE_KEY
-from app.dependencies import get_redis, get_db
+from app.dependencies import get_redis, get_db, get_dadata
 from app.logger import logger
 from app.schemas import UserGet, UserCreate, UserDelete
 from app.models import User
@@ -26,8 +27,17 @@ app = FastAPI()
 
 @app.post('/save_user_data', tags=['users'])
 def create_user(
-    user_data: UserCreate, db: Session = Depends(get_db),
+    user_data: UserCreate,
+    db: Session = Depends(get_db),
+    cache: Redis = Depends(get_redis),
+    dadata: Dadata = Depends(get_dadata),
 ) -> Response:
+    country_code = cache.get(CACHE_KEY.format(user_data.country))
+    if country_code is None:
+        country_code = dadata.suggest(
+            'country', user_data.country
+        )[0].get('data', {}).get('alfa3')
+        cache.set(CACHE_KEY.format(user_data.country), country_code)
     try:
         user = crud.create_user(db, user_data.dict())
     except Exception as e:
@@ -41,16 +51,11 @@ def create_user(
 
 
 @app.post('/get_user_data', tags=['users'])
-def get_user(
+async def get_user(
     user_phone: UserGet,
     db: Session = Depends(get_db),
     cache: Redis = Depends(get_redis),
 ) -> Response:
-    country_code = cache.get(CACHE_KEY.format(user_phone.phone_number))
-    if country_code is None:
-        country_code = 'request to dadata'
-        cache.set(CACHE_KEY.format(user_phone.phone_number), country_code)
-
     user: User = crud.get_user(db, user_phone)
     if user is None:
         logger.error(str(f'User {user_phone} does not exist'))
