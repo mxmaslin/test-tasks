@@ -1,4 +1,4 @@
-FROM python:3.11.1-buster
+FROM python:3-alpine
 
 WORKDIR /usr/src/user_crud/app
 

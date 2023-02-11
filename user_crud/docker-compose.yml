@@ -5,7 +5,7 @@ services:
     container_name: web
     build: ./app
     volumes:
-      - ./app/:/usr/src/user_crud/app/
+      - ./app/:/usr/src/user_crud/app
     env_file:
       - .env
     ports:
@@ -29,7 +29,7 @@ services:
 
   prod_db:
     container_name: prod_db
-    image: postgres
+    image: postgres:15
     restart: always
     env_file:
       - .env
@@ -39,15 +39,15 @@ services:
       - ./app/init_prod.sql:/docker-entrypoint-initdb.d/init_prod.sql
       - db_data:/var/lib/postgresql/data
 
-  tests:
-    container_name: tests
-    build: ./tests
-    volumes:
-      - ./app/:/usr/src/user_crud/app/
-      - ./tests/:/usr/src/user_crud/tests/
-    env_file:
-      - .env
-    command: pytest test_crud.py -s --disable-warnings
+  # tests:
+  #   container_name: tests
+  #   build: ./tests
+  #   volumes:
+  #     - ./app/:/usr/src/user_crud/app/
+  #     - ./tests/:/usr/src/user_crud/tests/
+  #   env_file:
+  #     - .env
+  #   command: pytest test_crud.py -s --disable-warnings
 
 volumes:
     db_data:

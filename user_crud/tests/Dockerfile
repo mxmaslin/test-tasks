@@ -1,4 +1,3 @@
-# FROM python:3.11.1-buster
 FROM ubuntu:latest
 
 WORKDIR /usr/src/social/tests

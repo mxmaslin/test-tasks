@@ -3,6 +3,9 @@ from typing import Optional
 from pydantic import BaseModel, Field, validator
 
 from models import StringValidator
+from constants import (
+    INVALID_EMAIL, INVALID_NAME, INVALID_SURNAME, INVALID_PATRONYMIC, INVALID_COUNTRY, INVALID_EMAIL, INVALID_PHONE
+)
 
 
 class UserBase(BaseModel):
@@ -10,8 +13,9 @@ class UserBase(BaseModel):
 
     @validator('phone_number')
     def validate_phone_number(cls, value):
-        return StringValidator.is_valid_phone_number(value)
-
+        if StringValidator.is_valid_phone_number(value):
+            return value
+        raise ValueError(INVALID_PHONE.format(value))
 
 
 class UserGet(UserBase):
@@ -31,22 +35,30 @@ class UserCreate(UserBase):
 
     @validator('name')
     def validate_name(cls, value):
-        return StringValidator.is_cyrillic_plus(value)
-
+        if StringValidator.is_cyrillic_plus(value):
+            return value
+        raise ValueError(INVALID_NAME.format(value))
+        
     @validator('surname')
     def validate_surname(cls, value):
-        return StringValidator.is_cyrillic_plus(value)
+        if StringValidator.is_cyrillic_plus(value):
+            return value
+        raise ValueError(INVALID_SURNAME.format(value))
 
     @validator('patronymic')
     def validate_patronymic(cls, value):
-        if value:
-            return StringValidator.is_cyrillic_plus(value)
+        if StringValidator.is_cyrillic_plus(value):
+            return value
+        raise ValueError(INVALID_PATRONYMIC.format(value))
 
     @validator('email')
     def validate_email(cls, value):
-        if value:
-            return StringValidator.is_valid_email(value)
+        if StringValidator.is_valid_email(value):
+            return value
+        raise ValueError(INVALID_EMAIL.format(value))
 
     @validator('country')
     def validate_country(cls, value):
-        return StringValidator.is_cyrillic_plus(value)
+        if StringValidator.is_cyrillic_plus(value):
+            return value
+        raise ValueError(INVALID_COUNTRY.format(value))
