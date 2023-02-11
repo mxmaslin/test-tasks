@@ -14,14 +14,12 @@ from sqlalchemy.orm import Session
 app_path = Path.cwd().parent
 sys.path.append(str(app_path))
 
-from app import crud
-from app.dependencies import get_redis, get_db
-from app.logger import logger
-from app.schemas import (
-    PostCreate, PostUpdate, UserLogin, UserCreate, UserModel
-)
-from app.models import User
-from app.settings import settings, Settings
+import crud
+from dependencies import get_redis, get_db
+from logger import logger
+from schemas import (UserGet, UserCreate, UserDelete)
+from models import User
+from settings import settings, Settings
 
 app = FastAPI()
 

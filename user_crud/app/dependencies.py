@@ -3,8 +3,8 @@ from functools import lru_cache
 from redis import Redis, ConnectionPool
 from sqlalchemy.orm import Session
 
-from app.models import SessionLocal
-from app.settings import settings
+from models import SessionLocal
+from settings import settings
 
 
 pool = ConnectionPool(

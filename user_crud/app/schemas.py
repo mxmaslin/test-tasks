@@ -2,13 +2,13 @@ from typing import Optional
 
 from pydantic import BaseModel, Field, validator
 
-from app.models import StringValidator
+from models import StringValidator
 
 
 class UserBase(BaseModel):
-    phone_number: Field(min_length=11, max_length=11)
+    phone_number: str = Field(min_length=11, max_length=11)
 
-    @validator
+    @validator('phone_number')
     def validate_phone_number(cls, value):
         return StringValidator.is_valid_phone_number(value)
 
@@ -23,11 +23,11 @@ class UserDelete(UserBase):
 
 
 class UserCreate(UserBase):
-    name: Field(max_length=50)
-    surname: Field(max_length=50)
-    patronymic: Optional[str]
-    email: Optional[str]
-    country: Field(max_length=50)
+    name: str = Field(max_length=50)
+    surname: str = Field(max_length=50)
+    patronymic: str = Optional[str]
+    email: str = Optional[str]
+    country: str = Field(max_length=50)
 
     @validator('name')
     def validate_name(cls, value):

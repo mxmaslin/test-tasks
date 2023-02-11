@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker, Mapped, mapped_column, validates
 from sqlalchemy.sql import expression
 from sqlalchemy.ext.declarative import declarative_base
 
-from app.settings import settings
+from settings import settings
 
 
 engine = create_engine(settings().SQLALCHEMY_DATABASE_URL)
@@ -34,7 +34,7 @@ class StringValidator:
 
 class User(Base):
     __tablename__ = 'users'
-    
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
     user_id: Mapped[int] = mapped_column(String(12), primary_key=True)
     name: Mapped[str] = mapped_column(String(50))
     surname: Mapped[str] = mapped_column(String(50))
