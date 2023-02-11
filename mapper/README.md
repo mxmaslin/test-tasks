@@ -120,5 +120,5 @@
 
 ```
 docker build -t mapper .
-docker run -it mapper --build
+docker run -it mapper
 ```
