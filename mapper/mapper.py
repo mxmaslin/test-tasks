@@ -44,6 +44,9 @@ def build_tree(endpoints: List[str]) -> Dict:
 
 
 def main(input_data):
+    """
+    Wrapper to get things done.
+    """
     refined_endpoints = [refine_entry(x) for x in input_data]
     deduped = sorted(dedupe(refined_endpoints))
     result = build_tree(deduped)
