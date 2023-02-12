@@ -82,3 +82,10 @@ data:
 
 Таблица2: https://drive.google.com/file/d/1BwtkhyttJcYTVo_Vg76Sz87l7Pea7F9M/view?usp=sharing 
 
+# Решение
+
+Запуск: `docker-compose up`
+
+Документация: `http://0.0.0.0:5000/doc`
+
+Тесты: выполняются автоматически при запуске решения
