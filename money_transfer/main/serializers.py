@@ -13,7 +13,7 @@ def validate_recipients(recipients):
 
 class PaymentUserSerializer(serializers.ModelSerializer):
     send_sum = serializers.DecimalField(
-        max_digits=14, decimal_places=2, min_value=0, required=True
+        max_digits=14, decimal_places=2, min_value=0.01, required=True
     )
     recipients = serializers.ListField(
         child=serializers.CharField(

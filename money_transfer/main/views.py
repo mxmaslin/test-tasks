@@ -29,14 +29,14 @@ class MoneySender(APIView):
                 'Отправитель не найден', status=status.HTTP_404_NOT_FOUND
             )
 
-        send_sum = request.data['send_sum']
-        if send_sum > sender.balance.amount:
+        send_sum = serializer.validated_data['send_sum']
+        if serializer.validated_data['send_sum'] > sender.balance.amount:
             return Response(
                 'Недостаточно средств на балансе пользователя',
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        recipients = request.data['recipients']
+        recipients = serializer.validated_data['recipients']
         valid_recipient_count = PaymentUser.objects.filter(
             inn__in=recipients
         ).count()

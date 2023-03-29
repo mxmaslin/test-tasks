@@ -2,13 +2,18 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
+import configurations
 
 
 def main():
     """Run administrative tasks."""
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'money_transfer.settings')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'money_transfer.config')
+    os.environ["DJANGO_CONFIGURATION"] = os.getenv('ENVIRONMENT', default='Common')
+
+    configurations.setup()
+
     try:
-        from django.core.management import execute_from_command_line
+        from configurations.management import execute_from_command_line
     except ImportError as exc:
         raise ImportError(
             "Couldn't import Django. Are you sure it's installed and "
