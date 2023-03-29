@@ -20,13 +20,13 @@ class MoneySender(APIView):
         serializer = PaymentUserSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(
-                serializer.errors, status=status.HTTP_404_NOT_FOUND
+                serializer.errors, status=status.HTTP_400_BAD_REQUEST
             )
 
         sender = PaymentUser.objects.filter(inn=inn).first()
         if sender is None:
             return Response(
-                'Отправитель не найден', status=status.HTTP_404_NOT_FOUND
+                'Отправитель не найден', status=status.HTTP_400_BAD_REQUEST
             )
 
         send_sum = serializer.validated_data['send_sum']
@@ -66,4 +66,4 @@ class MoneySender(APIView):
                 recipient.balance = F('balance') + send_sum_each_money
             PaymentUser.objects.bulk_update(recipient_objs, ['balance'])
 
-        return Response(status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_200_OK)
