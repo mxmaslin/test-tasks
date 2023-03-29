@@ -1,0 +1,30 @@
+version: '3.7'
+
+services:
+  web:
+    container_name: web
+    build: .
+    ports:
+      - ${APP_PORT}:${APP_PORT}
+    volumes:
+      - .:/usr/src/money_transfer/
+    env_file:
+      - .env
+    command: ./manage.py runserver 0.0.0.0:8000
+    depends_on:
+      - db_test
+
+  db_test:
+    container_name: db_test
+    image: postgres
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    volumes:
+      - ./init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+    db_data:

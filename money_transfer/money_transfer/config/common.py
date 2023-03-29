@@ -1,15 +1,22 @@
+import os
+
 from configurations import Configuration
+from dotenv import load_dotenv
 from pathlib import Path
+
+
+env_path = Path.cwd().joinpath('.env')
+load_dotenv(env_path)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 class Common(Configuration):
-    SECRET_KEY = 'django-insecure-q_&8d1@nx1m13ywxp1%evlw%vylzx^xl_qv1sre3hefc06qa#6'
+    SECRET_KEY = os.getenv('SECRET_KEY')
     ENVIRONMENT = 'Common'
     APP_NAME = 'money_transfer'
     DEBUG = True
-    ALLOWED_HOSTS = []
+    ALLOWED_HOSTS = ['*']
 
     INSTALLED_APPS = [
         'django.contrib.admin',

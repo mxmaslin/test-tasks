@@ -1,7 +1,13 @@
 import os
+from dotenv import load_dotenv
 from os.path import join
+from pathlib import Path
 
 from .common import Common
+
+
+env_path = Path.cwd().joinpath('.env')
+load_dotenv(env_path)
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -18,11 +24,11 @@ class Tests(Common):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'HOST': 'localhost',
-            'PORT': '5432',
-            'NAME': 'money_transfer_test',
-            'USER': 'money_transfer_test',
-            'PASSWORD': 'money_transfer_test',
+            'HOST': os.getenv('POSTGRES_HOST'),
+            'PORT': os.getenv('POSTGRES_PORT'),
+            'NAME': os.getenv('POSTGRES_DBNAME'),
+            'USER': os.getenv('POSTGRES_USER'),
+            'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
         }
     }
 

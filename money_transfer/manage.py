@@ -8,7 +8,7 @@ import configurations
 def main():
     """Run administrative tasks."""
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'money_transfer.config')
-    os.environ["DJANGO_CONFIGURATION"] = os.getenv('ENVIRONMENT', default='Common')
+    os.environ["DJANGO_CONFIGURATION"] = os.getenv('ENVIRONMENT', default='Tests')
 
     configurations.setup()
 
