@@ -6,6 +6,6 @@ from main import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path(
-        'send/<int:inn>/', views.MoneySender.as_view(), name='money_transfer'
+        'send/', views.MoneySender.as_view(), name='send'
     ),
 ]

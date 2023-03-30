@@ -49,10 +49,11 @@ def user3(db):
 )
 @pytest.mark.django_db(transaction=True)
 def test_sending_including_self(sent, expected, user1, user2, user3):
-    url = f'{reverse("money_transfer", kwargs={"inn": user1.inn})}'
+    url = reverse("send")
     data = {
         'send_sum': sent,
-        'recipients': ['1234567890', '1234567891', '1234567892']
+        'sender': user1.inn,
+        'recipients': [user1.inn, user2.inn, user3.inn]
     }
     client = APIClient()
     response = client.post(url, data)
@@ -83,10 +84,11 @@ def test_sending_including_self(sent, expected, user1, user2, user3):
 )
 @pytest.mark.django_db(transaction=True)
 def test_sending_excluding_self(sent, expected, user1, user2, user3):
-    url = f'{reverse("money_transfer", kwargs={"inn": user1.inn})}'
+    url = reverse('send')
     data = {
         'send_sum': sent,
-        'recipients': ['1234567891', '1234567892']
+        'sender': user1.inn,
+        'recipients': [user2.inn, user3.inn]
     }
     client = APIClient()
     response = client.post(url, data)

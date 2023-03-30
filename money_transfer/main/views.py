@@ -16,14 +16,15 @@ class MoneySender(APIView):
     """
     Отправка суммы с баланса пользователя другим пользователям.
     """
-    def post(self, request, inn):
+    def post(self, request):
         serializer = PaymentUserSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(
                 serializer.errors, status=status.HTTP_400_BAD_REQUEST
             )
 
-        sender = PaymentUser.objects.filter(inn=inn).first()
+        sender_inn = serializer.validated_data['sender']
+        sender = PaymentUser.objects.filter(inn=sender_inn).first()
         if sender is None:
             return Response(
                 'Отправитель не найден', status=status.HTTP_400_BAD_REQUEST
