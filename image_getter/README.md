@@ -40,6 +40,6 @@ http://localhost:8080/?category[]=auto&category[]=trains
 
 # Решение
 
-[https://github.com/mxmaslin/test-tasks/blob/master/image_getter/prepare_config.py](Подготовка конфига)
+[Подготовка конфига](https://github.com/mxmaslin/test-tasks/blob/master/image_getter/prepare_config.py)
 
-[https://github.com/mxmaslin/test-tasks/blob/master/image_getter/app.py](Веб-сервис)
+[Веб-сервис](https://github.com/mxmaslin/test-tasks/blob/master/image_getter/app.py)
