@@ -8,6 +8,7 @@
 
 # Тестовые задания
 
+- [Сервис просмотра контента](https://github.com/mxmaslin/test-tasks/tree/master/image_getter)
 - [Базовый CRUD на FastAPI с валидацией](https://github.com/mxmaslin/test-tasks/tree/master/user_crud)
 - [Формирование дерева из списка строк](https://github.com/mxmaslin/test-tasks/tree/master/mapper)
 - [REST API для социальной сети на FastAPI](https://github.com/mxmaslin/test-tasks/tree/master/social)
