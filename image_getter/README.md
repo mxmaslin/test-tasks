@@ -38,3 +38,8 @@ http://localhost:8080/?category[]=auto&category[]=trains
 2. Механизм, который уменьшает вероятность выдачи одной и той же картинки несколько раз подряд 
 3. Механизм, позволяющий минимизировать вероятность возникновения случаев, когда подходящие картинки уже исчерпали свой лимит и ответить на запрос нечем.
 
+# Решение
+
+[https://github.com/mxmaslin/test-tasks/blob/master/image_getter/prepare_config.py](Подготовка конфига)
+
+[https://github.com/mxmaslin/test-tasks/blob/master/image_getter/app.py](Веб-сервис)
