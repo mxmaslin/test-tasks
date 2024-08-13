@@ -2,12 +2,9 @@ from typing import Iterator, Iterable
 
 
 def chunked_list(iterable: Iterable, chunk_size: int) -> Iterator[list]:
-    i = 0
-    chunk = []
-    while i < len(iterable):
+    for i in range(0, len(iterable), chunk_size):
         chunk = iterable[i:i+chunk_size]
         yield chunk
-        i += chunk_size
 
 
 list_to_chunk, size = [1, 2, 3, 4], 2
