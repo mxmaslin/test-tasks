@@ -29,3 +29,4 @@
 - [Определение эмоциональной окраски твитов](https://github.com/mxmaslin/test-tasks/tree/master/tweets_sentiment)
 - [Загрузка/проверка/скачивание файла](https://github.com/mxmaslin/test-tasks/tree/master/uploader)
 - [Получение из MongoDB данных и их форматирование](https://github.com/mxmaslin/test-tasks/tree/master/yellowblackwhite-test01_python-9615024cdffa)
+- [Реализовать аналог itertools.chunked](https://github.com/mxmaslin/test-tasks/blob/master/chunked/solution.py)
