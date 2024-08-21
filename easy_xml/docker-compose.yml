@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  db:
+    container_name: postgres
+    image: postgres:15-alpine
+    restart: always    
+    environment:
+      POSTGRES_DB: easy_xml
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:
