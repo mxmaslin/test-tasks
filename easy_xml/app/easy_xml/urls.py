@@ -4,5 +4,5 @@ from easy_xml import views
 
 
 urlpatterns = [
-    path('test', views.xml_view),
+    path('products/', views.get_products),
 ]
