@@ -1,7 +1,5 @@
-import datetime
 from decimal import Decimal
 
-from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
@@ -38,6 +36,7 @@ class Promotion(models.Model):
     discount = models.IntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(100)],
         help_text='Процент скидки',
+        db_index=True,
     )
     start_at = models.DateField(help_text='Дата начала акции')
     end_at = models.DateField(help_text='Дата завершения акции')
